@@ -8,8 +8,9 @@ namespace render {
             virtual void init() = 0;
 
             [[nodiscard]] virtual bool isRunning() const = 0;
-            virtual void update(float delta /*, UIType userInterface*/) = 0;
 
-            virtual void render() = 0;
+            virtual void setUIBuffer(/* std::vector<UIElement*> uiElements */) = 0;
+
+            virtual void update(float deltaTime /*, scene details*/) = 0;
     };
 } // namespace render

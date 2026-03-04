@@ -11,6 +11,7 @@ set(CPM_USE_LOCAL_PACKAGES ON)
 
 include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
+CPMGetPackage(Common)
 CPMGetPackage(Raylib)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -37,14 +38,18 @@ if (CMAKE_BUILD_TYPE STREQUAL "Asan")
     endif()
 endif()
 
+add_library(Common INTERFACE)
+
 add_library(orbital_render SHARED
+    src/RendererExtern.cpp
     src/RenderEngine.cpp
 )
 
-target_link_libraries(orbital_render PRIVATE raylib)
+target_link_libraries(orbital_render PRIVATE Common raylib)
 
 target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Common_SOURCE_DIR}/include
 )
 
 if(WIN32)

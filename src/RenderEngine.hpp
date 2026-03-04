@@ -15,11 +15,14 @@ namespace render {
             void init() override;
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
+
+            void setUIBuffer() override;
+
             void update(float deltaTime) override;
 
-            void render() override;
-
         private:
+            void render();
+
             bool _running = false;
 
             int _width;

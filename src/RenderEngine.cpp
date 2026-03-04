@@ -1,14 +1,4 @@
 #include "RenderEngine.hpp"
-#include <iostream>
-#include <memory>
-
-extern "C++" {
-    std::unique_ptr<render::IRenderEngine> get_render_engine()
-    {
-        std::cout << "Hello from render engine" << std::endl;
-        return std::make_unique<render::RenderEngine>();
-    }
-}
 
 render::RenderEngine::RenderEngine() :
     _running(false), _width(0), _height(0), _fps(60), _title("Raylib - The next generation")
@@ -45,11 +35,15 @@ void render::RenderEngine::init()
     this->_running = true;
 }
 
+void render::RenderEngine::setUIBuffer() {}
+
 void render::RenderEngine::update(float /*deltaTime*/)
 {
     if (WindowShouldClose()) {
         this->_running = false;
     }
+
+    this->render();
 }
 
 void render::RenderEngine::render()
