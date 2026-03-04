@@ -1,7 +1,7 @@
 #include "RenderEngine.hpp"
 
 render::RenderEngine::RenderEngine() :
-    _running(false), _width(0), _height(0), _fps(60), _title("Raylib - The next generation")
+    _running(false), _width(0), _height(0), _fps(60)
 {}
 
 render::RenderEngine::~RenderEngine()
@@ -22,7 +22,7 @@ void render::RenderEngine::init()
     SetTraceLogLevel(LOG_NONE);
 
     SetConfigFlags(FLAG_FULLSCREEN_MODE);
-    InitWindow(this->_width, this->_height, this->_title);
+    InitWindow(this->_width, this->_height, DEFAULT_TITLE);
     SetTargetFPS(this->_fps);
 
     // Setup camera 3D

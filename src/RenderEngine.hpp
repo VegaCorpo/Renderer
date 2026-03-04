@@ -28,8 +28,6 @@ namespace render {
 
             const int _fps;
 
-            const char* _title;
-
             Camera _camera{};
     };
 } // namespace render
