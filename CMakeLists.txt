@@ -38,8 +38,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Asan")
     endif()
 endif()
 
-add_library(Common INTERFACE)
-
 add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp

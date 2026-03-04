@@ -37,7 +37,7 @@ void render::RenderEngine::init()
 
 void render::RenderEngine::setUIBuffer() {}
 
-void render::RenderEngine::update(float /*deltaTime*/)
+void render::RenderEngine::update()
 {
     if (WindowShouldClose()) {
         this->_running = false;
