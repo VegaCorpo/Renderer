@@ -12,6 +12,9 @@ set(CPM_USE_LOCAL_PACKAGES ON)
 include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
 
+CPMGetPackage(godot_cpp)
+
+
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -40,7 +43,14 @@ add_library(orbital_render SHARED
     src/RenderEngine.cpp
 )
 
+
+target_link_libraries(orbital_render
+    PRIVATE godot-cpp
+)
+
 # target_link_libraries(orbital_render PRIVATE)
+
+target_compile_definitions(orbital_render PRIVATE GD_EXTENSION)
 
 target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
