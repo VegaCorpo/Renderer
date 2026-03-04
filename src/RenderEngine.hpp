@@ -1,24 +1,22 @@
 #pragma once
 
-#include <memory>
 #include <raylib.h>
-#include "IRenderEngine.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
 
-    class RenderEngine : public IRenderEngine {
+    class RenderEngine {
         public:
             RenderEngine();
-            ~RenderEngine() override;
+            ~RenderEngine();
 
-            void init() override;
+            void init();
 
-            [[nodiscard]] bool isRunning() const override { return this->_running; }
+            [[nodiscard]] bool isRunning() const { return this->_running; }
 
-            void setUIBuffer() override;
+            void setUIBuffer(/* std::vector<UIElement*> uiElements */);
 
-            void update(float deltaTime) override;
+            void update();
 
         private:
             void render();
@@ -35,7 +33,3 @@ namespace render {
             Camera _camera{};
     };
 } // namespace render
-
-extern "C++" {
-    std::unique_ptr<render::IRenderEngine> get_render_engine();
-}
