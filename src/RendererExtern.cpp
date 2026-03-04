@@ -1,16 +1,19 @@
+#include <iostream>
+#include <memory>
 #include "RenderEngine.hpp"
 #include "types/types.hpp"
 
 static render::RenderEngine renderer;
 
 extern "C++" {
-    void init() { renderer.init(); }
+    std::unique_ptr<render::IRenderEngine> get_render_engine()
+    {
+        std::cout << "Hello from render engine" << std::endl;
+        return std::make_unique<render::RenderEngine>();
+    }
 
-    bool is_running() { return renderer.isRunning(); }
-
-    void set_ui_buffer(/* std::vector<UIElement*> uiElements */) { renderer.setUIBuffer(); }
-
-    void update() { renderer.update(); }
-
-    common::ModuleType get_module_type() { return common::ModuleType::RENDERER; }
+    common::ModuleType get_module_type()
+    {
+        return common::ModuleType::RENDERER;
+    }
 }

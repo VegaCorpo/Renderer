@@ -1,4 +1,5 @@
 #include "RenderEngine.hpp"
+#include <raylib.h>
 
 render::RenderEngine::RenderEngine() :
     _running(false), _width(0), _height(0), _fps(60)
