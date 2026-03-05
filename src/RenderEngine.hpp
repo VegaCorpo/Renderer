@@ -21,6 +21,8 @@ namespace render {
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
+            void *getWindowHandle() override { return GetWindowHandle(); }
+
             void setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) override;
 
             void update() override;

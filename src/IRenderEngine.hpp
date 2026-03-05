@@ -18,6 +18,13 @@ namespace render {
             [[nodiscard]] virtual bool isRunning() const = 0;
 
             /**
+             * @brief Get the window handle
+             *
+             * @return void* to the window
+             */
+            virtual void *getWindowHandle() = 0;
+
+            /**
              * @brief update the vertex buffer
              *
              * @param vertexBuffer the elements to be drawn
