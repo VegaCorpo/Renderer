@@ -6,6 +6,14 @@ CPMDeclarePackage(Raylib
     EXCLUDE_FROM_ALL YES
 )
 
+#raylib-cpp
+CPMDeclarePackage(raylib_cpp
+    GIT_TAG v5.5.0
+    GITHUB_REPOSITORY robloach/raylib-cpp
+    SYSTEM YES
+    EXCLUDE_FROM_ALL YES
+)
+
 # Common
 CPMDeclarePackage(Common
     GIT_TAG main

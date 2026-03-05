@@ -13,6 +13,7 @@ include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage(Common)
 CPMGetPackage(Raylib)
+CPMGetPackage(raylib_cpp)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -43,7 +44,7 @@ add_library(orbital_render SHARED
     src/RenderEngine.cpp
 )
 
-target_link_libraries(orbital_render PRIVATE Common raylib)
+target_link_libraries(orbital_render PRIVATE Common raylib raylib_cpp)
 
 target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src

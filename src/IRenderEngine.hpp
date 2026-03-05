@@ -18,11 +18,11 @@ namespace render {
             [[nodiscard]] virtual bool isRunning() const = 0;
 
             /**
-             * @brief update the UI buffer
+             * @brief update the vertex buffer
              *
-             * @param uiElements the elements to be drawn
+             * @param vertexBuffer the elements to be drawn
              */
-            virtual void setUIBuffer(/* std::vector<UIElement*> uiElements */) = 0;
+            virtual void setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) = 0;
 
             /**
              * @brief update the rendering engine

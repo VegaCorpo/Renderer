@@ -1,6 +1,7 @@
 #pragma once
 
-#include <raylib.h>
+#include <memory>
+#include <raylib-cpp.hpp>
 #include "IRenderEngine.hpp"
 
 namespace render {
@@ -9,13 +10,13 @@ namespace render {
     class RenderEngine : public IRenderEngine {
         public:
             RenderEngine();
-            ~RenderEngine();
+            ~RenderEngine() = default;
 
             void init() override;
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
-            void setUIBuffer(/* std::vector<UIElement*> uiElements */) override;
+            void setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) override;
 
             void update() override;
 
@@ -27,8 +28,12 @@ namespace render {
             int _width;
             int _height;
 
-            const int _fps;
+            int _fps;
 
-            Camera _camera{};
+            std::unique_ptr<raylib::Window> _window;
+            raylib::Camera _camera{};
+
+            std::unique_ptr<raylib::Model> _sphere;
+            std::unique_ptr<raylib::Model> _plane;
     };
 } // namespace render
