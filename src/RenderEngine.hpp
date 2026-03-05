@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Camera3D.hpp>
+#include <Model.hpp>
+#include <Window.hpp>
 #include <memory>
-#include <raylib-cpp.hpp>
 #include "IRenderEngine.hpp"
 
 namespace render {
