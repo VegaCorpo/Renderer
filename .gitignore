@@ -50,3 +50,6 @@ orbital-engine
 build
 compile_commands.json
 plugins
+
+#local
+testmain.cpp
