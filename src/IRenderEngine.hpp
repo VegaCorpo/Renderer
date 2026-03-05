@@ -1,5 +1,7 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 namespace render {
     class IRenderEngine {
         public:
@@ -22,7 +24,7 @@ namespace render {
              *
              * @return void* to the window
              */
-            virtual void *getWindowHandle() = 0;
+            virtual void* getWindowHandle() = 0;
 
             /**
              * @brief update the vertex buffer
@@ -33,9 +35,12 @@ namespace render {
 
             /**
              * @brief update the rendering engine
-             *
-             * also render the actual frame
              */
-            virtual void update() = 0;
+            virtual void update(entt::registry& registry) = 0;
+
+            /**
+             * @brief render the current scene
+             */
+            virtual void render() = 0;
     };
 } // namespace render

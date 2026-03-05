@@ -25,11 +25,11 @@ namespace render {
 
             void setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) override;
 
-            void update() override;
+            void update(entt::registry& registry) override;
+
+            void render() override;
 
         private:
-            void render();
-
             bool _running = false;
 
             int _width;
