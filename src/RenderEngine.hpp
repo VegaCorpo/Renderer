@@ -8,6 +8,9 @@
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
+    constexpr int DEFAULT_WIDTH = 1280;
+    constexpr int DEFAULT_HEIGHT = 800;
+    constexpr int DEFAULT_FPS = 60;
 
     class RenderEngine : public IRenderEngine {
         public:

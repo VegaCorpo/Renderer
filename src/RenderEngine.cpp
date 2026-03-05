@@ -3,7 +3,7 @@
 #include <raylib.h>
 
 render::RenderEngine::RenderEngine() :
-    _running(false), _width(0), _height(0), _fps(60), _window(nullptr)
+    _running(false), _width(DEFAULT_WIDTH), _height(DEFAULT_HEIGHT), _fps(DEFAULT_FPS), _window(nullptr)
 {}
 
 void render::RenderEngine::init()
