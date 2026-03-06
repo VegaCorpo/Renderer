@@ -1,35 +1,32 @@
 #include "InputHandler.hpp"
-#include "types/types.hpp"
-#include "raylib.h"
 
-static const std::unordered_map<inputs::Key, common::Action> commands = {
-    { {key: KEY_UP, status: inputs::Status::PRESSED }, common::Action::MOVE_CAMERA_UP },
-    { {key: KEY_DOWN, status: inputs::Status::PRESSED }, common::Action::MOVE_CAMERA_DOWN },
-    { {key: KEY_RIGHT, status: inputs::Status::PRESSED }, common::Action::MOVE_CAMERA_RIGHT },
-    { {key: KEY_LEFT, status: inputs::Status::PRESSED }, common::Action::MOVE_CAMERA_LEFT }
+static const std::unordered_map<KeyboardKey, std::unordered_map<inputs::Status, common::Action>> commands = {
+    { KEY_UP, { inputs::Status::PRESSED, common::Action::MOVE_CAMERA_UP } },
+    { KEY_DOWN, { inputs::Status::PRESSED, common::Action::MOVE_CAMERA_DOWN } },
+    { KEY_RIGHT, { inputs::Status::PRESSED, common::Action::MOVE_CAMERA_RIGHT } },
+    { KEY_LEFT, { inputs::Status::PRESSED, common::Action::MOVE_CAMERA_LEFT } }
 };
 
-void inputs::InputHandler::updateKeys()
+inputs::Status inputs::InputHandler::_updateKeys(KeyboardKey key)
 {
-    for (auto &command : commands) {
-        if (IsKeyDown(command.first.key)) {
-            this->_keysHandler[command.first.key] = inputs::Status::PRESSED;
-        } else {
-            if (this->_keysHandler[command.first.key] == inputs::Status::RELEASED)
-                this->_keysHandler[command.first.key] = inputs::Status::DEFAULT;
-            if (this->_keysHandler[command.first.key] == inputs::Status::PRESSED)
-                this->_keysHandler[command.first.key] = inputs::Status::RELEASED;
-        }
+    inputs::Status keyStatus = this->_keysHandler[key];
+
+    if (IsKeyDown(key)) {
+        return inputs::Status::PRESSED;
+    } else {
+        if (keyStatus == inputs::Status::PRESSED)
+            return inputs::Status::RELEASED;
     }
-    return;
+    return inputs::Status::DEFAULT;
 }
 
-void inputs::InputHandler::getActions(std::list<common::Action> &actions)
+void inputs::InputHandler::getActions(std::vector<common::Action> &actions)
 {
-    this->updateKeys();
-    for (auto &command : commands) {
-        if (this->_keysHandler[command.first.key] == command.first.status)
-            actions.push_back(command.second);
+    for (const auto &[key, command] : commands) {
+        inputs::Status newKeyStatus = this->_updateKeys(key);
+        this->_keysHandler[key] = newKeyStatus;
+        auto it = command.find(newKeyStatus);
+        if (it != command.end())
+            actions.push_back(*it);
     }
-    return;
 }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <unordered_map>
-#include <list>
-
-using KeycodeRaylib = int;
+#include <vector>
+#include "types/types.hpp"
+#include "raylib.h"
 
 namespace inputs {
 
@@ -13,10 +13,10 @@ namespace inputs {
         RELEASED
     };
 
-    typedef struct Key_s {
-        KeycodeRaylib key;
+    struct Key {
+        KeyboardKey key;
         Status status;
-    } Key;
+    };
 
     class InputHandler {
         public:
@@ -24,11 +24,11 @@ namespace inputs {
             ~InputHandler() = default;
 
             // getActions detects inputs and adds actions in list given in parameters.
-            void getActions(std::list<common::Action> &actions);
+            void getActions(std::vector<common::Action> &actions);
         private:
             // updateKeys checks keyboards input status and updates _keysHandler.
-            void updateKeys();
+            inputs::Status _updateKeys(KeyboardKey key)
 
-            std::unordered_map<KeycodeRaylib, inputs::Status> _keysHandler;
+            std::unordered_map<KeyboardKey, inputs::Status> _keysHandler;
     };
 }
