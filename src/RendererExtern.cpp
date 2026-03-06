@@ -6,7 +6,7 @@
 static render::RenderEngine renderer;
 
 extern "C++" {
-    std::unique_ptr<render::IRenderEngine> get_engine()
+    std::unique_ptr<common::IRenderEngine> get_engine()
     {
         std::cout << "Hello from render engine" << std::endl;
         return std::make_unique<render::RenderEngine>();

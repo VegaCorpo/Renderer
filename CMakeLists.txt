@@ -43,6 +43,7 @@ endif()
 add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp
+    src/RenderDataHandler.cpp
 )
 
 target_link_libraries(orbital_render PRIVATE
