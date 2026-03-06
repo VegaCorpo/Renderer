@@ -32,9 +32,9 @@ void render::RenderEngine::init()
     this->_plane = std::make_unique<raylib::Model>(raylib::Mesh::Plane(10.f, 10.f, 5, 5));
 }
 
-void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& renderDataBuffer)
+void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
-    this->_renderDataHandler.setVertexBuffer(renderDataBuffer);
+    this->_renderDataHandler.update(buffer);
 }
 
 void render::RenderEngine::update(entt::registry& /*registry*/)
