@@ -1,24 +1,32 @@
+# Common
+CPMDeclarePackage(Common
+    GITHUB_REPOSITORY VegaCorpo/Common
+    GIT_TAG main
+    SYSTEM YES
+    EXCLUDE_FROM_ALL YES
+    DOWNLOAD_ONLY YES
+)
+
+#entt
+CPMDeclarePackage(EnTT
+    GITHUB_REPOSITORY skypjack/entt
+    GIT_TAG v3.16.0
+    SYSTEM YES
+    EXCLUDE_FROM_ALL YES
+)
+
 #raylib
 CPMDeclarePackage(Raylib
-    GIT_TAG 5.5
     GITHUB_REPOSITORY raysan5/raylib
+    GIT_TAG 5.5
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )
 
 #raylib-cpp
 CPMDeclarePackage(raylib_cpp
-    GIT_TAG v5.5.0
     GITHUB_REPOSITORY robloach/raylib-cpp
+    GIT_TAG v5.5.0
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
-)
-
-# Common
-CPMDeclarePackage(Common
-    GIT_TAG main
-    GITHUB_REPOSITORY VegaCorpo/Common
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-    DOWNLOAD_ONLY YES
 )

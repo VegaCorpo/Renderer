@@ -1,10 +1,11 @@
 #pragma once
 
 #include <Camera3D.hpp>
+#include <memory>
 #include <Model.hpp>
 #include <Window.hpp>
-#include <memory>
-#include "IRenderEngine.hpp"
+#include "interfaces/IRenderEngine.hpp"
+#include "RenderDataHandler.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
@@ -12,7 +13,7 @@ namespace render {
     constexpr int DEFAULT_HEIGHT = 800;
     constexpr int DEFAULT_FPS = 60;
 
-    class RenderEngine : public IRenderEngine {
+    class RenderEngine : public common::IRenderEngine {
         public:
             RenderEngine();
             ~RenderEngine() = default;
@@ -21,15 +22,15 @@ namespace render {
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
-            void *getWindowHandle() override { return GetWindowHandle(); }
+            void* getWindowHandle() override { return GetWindowHandle(); }
 
-            void setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) override;
+            void setVertexBuffer(common::RenderDataBuffer& renderDataBuffer) override;
 
-            void update() override;
+            void update(entt::registry& registry) override;
+
+            void render() override;
 
         private:
-            void render();
-
             bool _running = false;
 
             int _width;
@@ -39,6 +40,8 @@ namespace render {
 
             std::unique_ptr<raylib::Window> _window;
             raylib::Camera _camera{};
+
+            RenderDataHandler _renderDataHandler;
 
             std::unique_ptr<raylib::Model> _sphere;
             std::unique_ptr<raylib::Model> _plane;

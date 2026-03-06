@@ -32,9 +32,12 @@ void render::RenderEngine::init()
     this->_plane = std::make_unique<raylib::Model>(raylib::Mesh::Plane(10.f, 10.f, 5, 5));
 }
 
-void render::RenderEngine::setVertexBuffer(/* std::vector<Vertex> vertexBuffer */) {}
+void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& renderDataBuffer)
+{
+    this->_renderDataHandler.setVertexBuffer(renderDataBuffer);
+}
 
-void render::RenderEngine::update()
+void render::RenderEngine::update(entt::registry& /*registry*/)
 {
     if (this->_window->ShouldClose()) {
         this->_running = false;
@@ -54,11 +57,13 @@ void render::RenderEngine::render()
 
     BeginMode3D(this->_camera);
 
-    this->_sphere->Draw({0,0,0}, 1.0f, RED);
+    this->_sphere->Draw({0, 0, 0}, 1.0f, RED);
     this->_plane->Draw({0, 0, 0}, 0.2f, BLUE);
     this->_plane->Draw({0, -1, 0}, 1.0f, WHITE);
 
     EndMode3D();
+
+    this->_renderDataHandler.render();
 
     this->_window->DrawFPS();
 
