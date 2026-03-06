@@ -24,7 +24,7 @@ namespace render {
 
             void* getWindowHandle() override { return GetWindowHandle(); }
 
-            void setVertexBuffer(common::RenderDataBuffer& renderDataBuffer) override;
+            void setVertexBuffer(common::RenderDataBuffer& buffer) override;
 
             void update(entt::registry& registry) override;
 

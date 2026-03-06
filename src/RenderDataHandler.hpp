@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <Mesh.hpp>
 #include "types/RenderDataBuffer.hpp"
 
@@ -9,11 +10,11 @@ namespace render {
             RenderDataHandler() = default;
             ~RenderDataHandler() = default;
 
-            void setVertexBuffer(common::RenderDataBuffer& renderDataBuffer);
+            void update(common::RenderDataBuffer& renderDataBuffer);
 
             void render();
 
         private:
-            raylib::Mesh _mesh;
+            std::unique_ptr<raylib::Mesh> _mesh;
     };
 } // namespace render
