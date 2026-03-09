@@ -1,19 +1,24 @@
-#include <iostream>
 #include <memory>
+#include <queue>
+#include "InputHandler.hpp"
 #include "RenderEngine.hpp"
 #include "types/types.hpp"
 
-static render::RenderEngine renderer;
+static inputs::InputHandler inputHandler;
 
-extern "C++" {
+extern "C" {
     std::unique_ptr<common::IRenderEngine> get_engine()
     {
-        std::cout << "Hello from render engine" << std::endl;
         return std::make_unique<render::RenderEngine>();
     }
 
     common::ModuleType get_module_type()
     {
         return common::ModuleType::RENDERER;
+    }
+
+    void updateActions(std::queue<common::Action>& actions)
+    {
+        inputHandler.updateActions(actions);
     }
 }

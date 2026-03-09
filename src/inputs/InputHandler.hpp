@@ -26,7 +26,7 @@ namespace inputs {
             ~InputHandler() = default;
 
             // getActions detects inputs and adds actions in list given in parameters.
-            void getActions(std::queue<common::Action>& actions);
+            void updateActions(std::queue<common::Action>& actions);
 
         private:
             // updateKeys checks keyboards input status and updates _keysHandler.

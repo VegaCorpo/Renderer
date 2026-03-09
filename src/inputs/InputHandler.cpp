@@ -11,7 +11,7 @@ inputs::Status inputs::InputHandler::_updateKeys(KeyboardKey key)
     return inputs::Status::DEFAULT;
 }
 
-void inputs::InputHandler::getActions(std::queue<common::Action>& actions)
+void inputs::InputHandler::updateActions(std::queue<common::Action>& actions)
 {
     for (const auto& [key, command] : commands) {
         inputs::Status newKeyStatus = this->_updateKeys(key);

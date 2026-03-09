@@ -1,35 +1,19 @@
 #include "RenderEngine.hpp"
-#include <Mesh.hpp>
-#include <raylib.h>
 
-render::RenderEngine::RenderEngine() :
-    _running(false), _width(DEFAULT_WIDTH), _height(DEFAULT_HEIGHT), _fps(DEFAULT_FPS), _window(nullptr)
+render::RenderEngine::RenderEngine() : _running(false), _renderDataHandler(), _window(nullptr), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()
 {
-    if (this->_width <= 0)
-        this->_width = GetScreenWidth();
-    if (this->_height <= 0)
-        this->_height = GetScreenHeight();
-
     // Disable Raylib logs
     SetTraceLogLevel(LOG_NONE);
 
-    this->_window = std::make_unique<raylib::Window>(this->_width, this->_height, DEFAULT_TITLE, FLAG_FULLSCREEN_MODE);
-    this->_window->SetTargetFPS(this->_fps);
+    this->_window = std::make_unique<RenderWindow>(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_FPS);
 
-    // Setup camera 3D
-    this->_camera.position = {10.0f, 10.0f, 10.0f}; // Camera position
-    this->_camera.target = {0.0f, 0.0f, 0.0f}; // Look at point
-    this->_camera.up = {0.0f, 1.0f, 0.0f}; // Up vector
-    this->_camera.fovy = 45.0f; // Field of view
-    this->_camera.projection = CAMERA_PERSPECTIVE; // Camera projection type
+    this->_scene = std::make_unique<Scene>();
+    this->_scene->init();
 
     this->_running = true;
-
-    this->_sphere = std::make_unique<raylib::Model>(raylib::Mesh::Sphere(1.0f, 32, 32));
-    this->_plane = std::make_unique<raylib::Model>(raylib::Mesh::Plane(10.f, 10.f, 5, 5));
 }
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
@@ -43,27 +27,26 @@ void render::RenderEngine::update(entt::registry& /*registry*/)
         this->_running = false;
     }
 
-    this->_camera.Update(CAMERA_ORBITAL);
+    if (this->_scene) {
+        this->_scene->update();
+    }
+
     this->render();
 }
 
 void render::RenderEngine::render()
 {
-    if (!this->_running)
+    if (!this->_running || !this->_window || !this->_scene)
         return;
 
     this->_window->BeginDrawing();
     this->_window->ClearBackground(DARKBLUE);
 
-    BeginMode3D(this->_camera);
+    BeginMode3D(this->_scene->getCamera());
 
-    this->_sphere->Draw({0, 0, 0}, 1.0f, RED);
-    this->_plane->Draw({0, 0, 0}, 0.2f, BLUE);
-    this->_plane->Draw({0, -1, 0}, 1.0f, WHITE);
+    this->_scene->render();
 
     EndMode3D();
-
-    this->_renderDataHandler.render();
 
     this->_window->DrawFPS();
 
