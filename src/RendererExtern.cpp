@@ -5,7 +5,7 @@
 
 static render::RenderEngine renderer;
 
-extern "C++" {
+extern "C" {
     std::unique_ptr<common::IRenderEngine> get_engine()
     {
         std::cout << "Hello from render engine" << std::endl;
