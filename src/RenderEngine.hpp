@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Camera3D.hpp>
 #include <memory>
-#include <Model.hpp>
-#include <Window.hpp>
 #include "interfaces/IRenderEngine.hpp"
 #include "RenderDataHandler.hpp"
+#include "RenderWindow.hpp"
+#include "Scene.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
@@ -33,17 +32,9 @@ namespace render {
         private:
             bool _running = false;
 
-            int _width;
-            int _height;
-
-            int _fps;
-
-            std::unique_ptr<raylib::Window> _window;
-            raylib::Camera _camera{};
-
             RenderDataHandler _renderDataHandler;
 
-            std::unique_ptr<raylib::Model> _sphere;
-            std::unique_ptr<raylib::Model> _plane;
+            std::unique_ptr<RenderWindow> _window;
+            std::unique_ptr<Scene> _scene;
     };
 } // namespace render
