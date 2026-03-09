@@ -4,8 +4,6 @@
 #include "RenderEngine.hpp"
 #include "types/types.hpp"
 
-static inputs::InputHandler inputHandler;
-
 extern "C" {
     std::unique_ptr<common::IRenderEngine> get_engine()
     {
@@ -19,6 +17,6 @@ extern "C" {
 
     void updateActions(std::queue<common::Action>& actions)
     {
-        inputHandler.updateActions(actions);
+        inputs::InputHandler::updateActions(actions);
     }
 }
