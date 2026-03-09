@@ -1,5 +1,4 @@
 #include "InputHandler.hpp"
-#include <raylib.h>
 
 inputs::Status inputs::InputHandler::_updateKeys(KeyboardKey key)
 {

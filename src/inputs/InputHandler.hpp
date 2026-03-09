@@ -3,7 +3,7 @@
 #include <functional>
 #include <queue>
 #include <unordered_map>
-#include "raylib.h"
+#include <raylib.h>
 #include "types/types.hpp"
 
 namespace inputs {
