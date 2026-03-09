@@ -1,7 +1,7 @@
 #pragma once
 
+#include <queue>
 #include <unordered_map>
-#include <vector>
 #include "raylib.h"
 #include "types/types.hpp"
 
@@ -14,13 +14,19 @@ namespace inputs {
             Status status;
     };
 
+    static const std::unordered_map<KeyboardKey, std::unordered_map<inputs::Status, common::Action>> commands = {
+        {KEY_UP, {{inputs::Status::PRESSED, common::Action::MOVE_CAMERA_UP}}},
+        {KEY_DOWN, {{inputs::Status::PRESSED, common::Action::MOVE_CAMERA_DOWN}}},
+        {KEY_RIGHT, {{inputs::Status::PRESSED, common::Action::MOVE_CAMERA_RIGHT}}},
+        {KEY_LEFT, {{inputs::Status::PRESSED, common::Action::MOVE_CAMERA_LEFT}}}};
+
     class InputHandler {
         public:
             InputHandler() = default;
             ~InputHandler() = default;
 
             // getActions detects inputs and adds actions in list given in parameters.
-            void getActions(std::vector<common::Action>& actions);
+            void getActions(std::queue<common::Action>& actions);
 
         private:
             // updateKeys checks keyboards input status and updates _keysHandler.
