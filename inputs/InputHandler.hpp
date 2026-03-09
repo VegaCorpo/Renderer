@@ -27,7 +27,7 @@ namespace inputs {
             void getActions(std::vector<common::Action> &actions);
         private:
             // updateKeys checks keyboards input status and updates _keysHandler.
-            inputs::Status _updateKeys(KeyboardKey key)
+            inputs::Status _updateKeys(KeyboardKey key);
 
             std::unordered_map<KeyboardKey, inputs::Status> _keysHandler;
     };
