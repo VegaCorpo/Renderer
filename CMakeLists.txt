@@ -49,6 +49,8 @@ add_library(orbital_render SHARED
 
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
+
+    src/inputs/InputHandler.cpp #! to change
 )
 
 target_link_libraries(orbital_render PRIVATE
@@ -60,6 +62,7 @@ target_link_libraries(orbital_render PRIVATE
 
 target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
     ${Common_SOURCE_DIR}/include
