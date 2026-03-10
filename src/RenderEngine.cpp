@@ -49,6 +49,14 @@ unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, 
     return id;
 }
 
+unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, int width, int height)
+{
+    Image img = {pixels, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+
+    Texture2D tex = LoadTextureFromImage(img);
+    return tex.id;
+}
+
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
     this->_currentBuffer = buffer;
