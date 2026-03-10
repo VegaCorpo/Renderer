@@ -52,10 +52,9 @@ void render::Scene::update(entt::registry& registry)
         direction.z /= length;
     }
 
-    float d = DIST_EARTH_MOON_SCALED;
-
-    this->_moon = {this->_earth.x + direction.x * d, this->_earth.y + direction.y * d,
-                   this->_earth.z + direction.z * d};
+    this->_moon = {this->_earth.x + direction.x * DIST_EARTH_MOON_SCALED,
+                   this->_earth.y + direction.y * DIST_EARTH_MOON_SCALED,
+                   this->_earth.z + direction.z * DIST_EARTH_MOON_SCALED};
 }
 
 void render::Scene::render()
