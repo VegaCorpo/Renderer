@@ -1,9 +1,7 @@
 #include "Scene.hpp"
 #include <components/mass.hpp>
 #include <components/position.hpp>
-#include <iostream>
 #include <Mesh.hpp>
-#include <vector>
 #include "SolarSystemValues.hpp"
 
 render::Scene::Scene() : _camera(nullptr)
@@ -42,15 +40,11 @@ void render::Scene::update(entt::registry& registry)
             }
         });
 
-        Vector3 direction = {
-        this->_moon.x - this->_earth.x,
-        this->_moon.y - this->_earth.y,
-        this->_moon.z - this->_earth.z
-    };
+    // Move the moon away from the earth because of the size
+    Vector3 direction = {this->_moon.x - this->_earth.x, this->_moon.y - this->_earth.y,
+                         this->_moon.z - this->_earth.z};
 
-    float length = sqrtf(direction.x * direction.x +
-                         direction.y * direction.y +
-                         direction.z * direction.z);
+    float length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
 
     if (length > 0.000001f) {
         direction.x /= length;
@@ -60,35 +54,12 @@ void render::Scene::update(entt::registry& registry)
 
     float d = DIST_EARTH_MOON_SCALED;
 
-    this->_moon = {
-        this->_earth.x + direction.x * d,
-        this->_earth.y + direction.y * d,
-        this->_earth.z + direction.z * d
-    };
+    this->_moon = {this->_earth.x + direction.x * d, this->_earth.y + direction.y * d,
+                   this->_earth.z + direction.z * d};
 }
 
 void render::Scene::render()
 {
-    int i = 0;
-    std::vector<Color> colors = {GRAY, GREEN, ORANGE};
-
-    // for (const auto& [entity, position] : _positions) {
-    //     std::cout << "Drawing planet " << i++ << " at (" << position.x << ", " << position.y << ", " << position.z
-    //               << ")" << std::endl;
-    //     if (position.x == EARTH_POS * POSITION_SCALE) {
-    //         _sphereModel->Draw(position, EARTH_RADIUS_RENDER, GREEN);
-    //         continue;
-    //     }
-    //     if (position.x == MOON_POS * POSITION_SCALE) {
-    //         _sphereModel->Draw(position, MOON_RADIUS_RENDER, GRAY);
-    //         continue;
-    //     }
-    //     if (position.x == 0.f) {
-    //         _sphereModel->Draw(position, SUN_RADIUS_RENDER, ORANGE);
-    //         continue;
-    //     }
-    //     std::cerr << "Error: Position not handled\n" << std::endl;
-    // }
     _sphereModel->Draw(this->_earth, EARTH_RADIUS_RENDER, GREEN);
     _sphereModel->Draw(this->_moon, MOON_RADIUS_RENDER, GRAY);
     _sphereModel->Draw(this->_sun, SUN_RADIUS_RENDER, ORANGE);
