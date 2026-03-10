@@ -10,7 +10,7 @@ namespace render {
             RenderDataHandler();
             ~RenderDataHandler() = default;
 
-            void update(common::RenderDataBuffer& renderDataBuffer);
+            void update(common::RenderDataBuffer renderDataBuffer);
 
             void render();
 

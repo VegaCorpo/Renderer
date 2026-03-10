@@ -4,7 +4,7 @@
 render::RenderDataHandler::RenderDataHandler() : _mesh(nullptr)
 {}
 
-void render::RenderDataHandler::update(common::RenderDataBuffer& buffer)
+void render::RenderDataHandler::update(common::RenderDataBuffer buffer)
 {
     if (buffer.vertices.empty() || buffer.indices.empty()) {
         return;
@@ -18,10 +18,10 @@ void render::RenderDataHandler::update(common::RenderDataBuffer& buffer)
     mesh->vertexCount = vertexCount;
     mesh->triangleCount = indexCount / 3;
 
-    mesh->vertices = new float[vertexCount * 3];
-    mesh->texcoords = new float[vertexCount * 2];
-    mesh->colors = new unsigned char[vertexCount * 4];
-    mesh->indices = new unsigned short[indexCount];
+    mesh->vertices = static_cast<float*>(malloc(sizeof(float) * vertexCount * 3));
+    mesh->texcoords = static_cast<float*>(malloc(sizeof(float) * vertexCount * 2));
+    mesh->colors = static_cast<unsigned char*>(malloc(sizeof(unsigned char) * vertexCount * 4));
+    mesh->indices = static_cast<unsigned short*>(malloc(sizeof(unsigned short) * indexCount));
 
     for (size_t i = 0; i < vertexCount; ++i) {
         const auto& v = buffer.vertices[i];
