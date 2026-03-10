@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Camera3D.hpp>
+#include <entt/entt.hpp>
 #include <memory>
 #include <Model.hpp>
+#include <unordered_map>
 #include "RenderCamera.hpp"
 
 namespace render {
@@ -15,14 +16,18 @@ namespace render {
 
             raylib::Camera getCamera() { return this->_camera->getCamera(); }
 
-            void update();
+            void update(entt::registry& registry);
 
             void render();
 
         private:
             std::unique_ptr<render::RenderCamera> _camera;
 
-            std::unique_ptr<raylib::Model> _sphere;
-            std::unique_ptr<raylib::Model> _plane;
+            std::unique_ptr<raylib::Model> _sphereModel;
+            std::unordered_map<entt::entity, Vector3> _positions;
+
+            Vector3 _earth = {};
+            Vector3 _moon = {};
+            Vector3 _sun = {};
     };
 } // namespace render

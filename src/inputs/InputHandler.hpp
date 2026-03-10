@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include <queue>
 #include <unordered_map>
 #include <raylib.h>

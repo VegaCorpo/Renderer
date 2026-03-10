@@ -1,6 +1,9 @@
 #include "RenderDataHandler.hpp"
 #include <Matrix.hpp>
 
+render::RenderDataHandler::RenderDataHandler() : _mesh(nullptr)
+{}
+
 void render::RenderDataHandler::update(common::RenderDataBuffer& buffer)
 {
     if (buffer.vertices.empty() || buffer.indices.empty()) {

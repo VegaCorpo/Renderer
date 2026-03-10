@@ -21,14 +21,14 @@ void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
     this->_renderDataHandler.update(buffer);
 }
 
-void render::RenderEngine::update(entt::registry& /*registry*/)
+void render::RenderEngine::update(entt::registry& registry)
 {
     if (this->_window->ShouldClose()) {
         this->_running = false;
     }
 
     if (this->_scene) {
-        this->_scene->update();
+        this->_scene->update(registry);
     }
 
     this->render();
