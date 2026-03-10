@@ -27,7 +27,6 @@ namespace render {
 
     // ----------------------------
     // 3. Visual size scale (indépendant des positions)
-    //    On exagère les tailles pour les rendre visibles
     // ----------------------------
     constexpr float SIZE_SCALE = 500.0f / UA; // ~15x plus grand que réel
 
