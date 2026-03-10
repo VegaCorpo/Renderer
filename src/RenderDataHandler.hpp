@@ -7,7 +7,7 @@
 namespace render {
     class RenderDataHandler {
         public:
-            RenderDataHandler() = default;
+            RenderDataHandler();
             ~RenderDataHandler() = default;
 
             void update(common::RenderDataBuffer& renderDataBuffer);
