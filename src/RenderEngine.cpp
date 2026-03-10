@@ -16,6 +16,14 @@ void render::RenderEngine::init()
     this->_running = true;
 }
 
+unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, int width, int height)
+{
+    Image img = {pixels, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+
+    Texture2D tex = LoadTextureFromImage(img);
+    return tex.id;
+}
+
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
     this->_renderDataHandler.update(buffer);

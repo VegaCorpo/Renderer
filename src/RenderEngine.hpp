@@ -21,6 +21,8 @@ namespace render {
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
+            unsigned int loadTextureFromPixels(unsigned char* pixels, int width, int height) override;
+
             void* getWindowHandle() override { return GetWindowHandle(); }
 
             void setVertexBuffer(common::RenderDataBuffer& buffer) override;
