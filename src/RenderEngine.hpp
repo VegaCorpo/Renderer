@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <queue>
 #include "interfaces/IRenderEngine.hpp"
 #include "RenderDataHandler.hpp"
 #include "RenderWindow.hpp"
@@ -24,6 +25,8 @@ namespace render {
             void* getWindowHandle() override { return GetWindowHandle(); }
 
             void setVertexBuffer(common::RenderDataBuffer& buffer) override;
+
+            void handleActions(std::queue<common::Action>& actions); //! override
 
             void update(entt::registry& registry) override;
 

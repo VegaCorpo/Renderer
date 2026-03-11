@@ -15,6 +15,15 @@ void render::Scene::init()
     this->_sphereModel = std::make_unique<raylib::Model>(raylib::Mesh::Sphere(1.0f, 32, 32));
 }
 
+void render::Scene::handleAction(common::Action action)
+{
+    auto it = dispatchTable.find(action);
+
+    if (it != dispatchTable.end()) {
+        it->second(*this);
+    }
+}
+
 void render::Scene::update(entt::registry& registry)
 {
     if (this->_camera)
