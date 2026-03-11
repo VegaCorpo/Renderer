@@ -25,7 +25,7 @@ void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 
 void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
 {
-    std::queue<common::Action> remaining; // actions non consommées
+    std::queue<common::Action> remaining;
 
     while (!actions.empty()) {
         common::Action action = actions.front();
@@ -33,19 +33,17 @@ void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
 
         bool consumed = false;
 
-        // ---- Dispatch vers la scène ----
         if (this->_scene && std::ranges::find(render::sceneActions, action) != render::sceneActions.end()) {
             this->_scene->handleAction(action);
             consumed = true;
         }
 
-        // ---- Si pas consommée → on la garde ----
         if (!consumed) {
             remaining.push(action);
         }
     }
 
-    // Remplace les anciennes actions par les restantes
+    actions = std::move(remaining);
 }
 
 void render::RenderEngine::update(entt::registry& registry)

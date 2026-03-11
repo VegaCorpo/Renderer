@@ -53,7 +53,7 @@ void render::RenderCamera::_move()
 
 void render::RenderCamera::_rotate()
 {
-    if (Vector2Length(_rotationDir) == 0.f)
+    if (Vector2Length(_rotationDir) <= 0.0001f)
         return;
 
     Vector3 forward = Vector3Normalize(Vector3Subtract(_camera.target, _camera.position));
