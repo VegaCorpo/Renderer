@@ -1,4 +1,6 @@
 #include "RenderEngine.hpp"
+#include "InputHandler.hpp"
+#include "RenderActions.hpp"
 
 #include <iostream>
 #include "rlgl.h"
@@ -52,11 +54,39 @@ void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
     this->_renderDataHandler.update(buffer);
 }
 
+void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
+{
+    std::queue<common::Action> remaining;
+
+    while (!actions.empty()) {
+        common::Action action = actions.front();
+        actions.pop();
+
+        bool consumed = false;
+
+        if (this->_scene && std::ranges::find(render::sceneActions, action) != render::sceneActions.end()) {
+            this->_scene->handleAction(action);
+            consumed = true;
+        }
+
+        if (!consumed) {
+            remaining.push(action);
+        }
+    }
+
+    actions = std::move(remaining);
+}
+
 void render::RenderEngine::update(entt::registry& registry)
 {
     if (this->_window->ShouldClose()) {
         this->_running = false;
     }
+
+    //! to remove when inputs will be handle in "Inputs" module
+    std::queue<common::Action> actions = {};
+    inputs::InputHandler::updateActions(actions);
+    this->handleActions(actions);
 
     if (this->_scene) {
         this->_scene->update(registry);
