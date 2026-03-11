@@ -4,19 +4,6 @@
 #include <Mesh.hpp>
 #include "SolarSystemValues.hpp"
 
-const std::unordered_map<common::Action, std::function<void(render::Scene&)>> render::Scene::dispatchTable = {
-    {common::Action::MOVE_CAMERA_FORWARD, [](Scene& s) { s._camera->addMovement({0, 0, 1}); }},
-    {common::Action::MOVE_CAMERA_BACKWARD, [](Scene& s) { s._camera->addMovement({0, 0, -1}); }},
-    {common::Action::MOVE_CAMERA_UP, [](Scene& s) { s._camera->addMovement({0, 1, 0}); }},
-    {common::Action::MOVE_CAMERA_DOWN, [](Scene& s) { s._camera->addMovement({0, -1, 0}); }},
-    {common::Action::MOVE_CAMERA_LEFT, [](Scene& s) { s._camera->addMovement({-1, 0, 0}); }},
-    {common::Action::MOVE_CAMERA_RIGHT, [](Scene& s) { s._camera->addMovement({1, 0, 0}); }},
-    {common::Action::ROTATE_CAMERA_UP, [](Scene& s) { s._camera->addRotation({0, -1}); }},
-    {common::Action::ROTATE_CAMERA_DOWN, [](Scene& s) { s._camera->addRotation({0, 1}); }},
-    {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s) { s._camera->addRotation({-1, 0}); }},
-    {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s) { s._camera->addRotation({1, 0}); }},
-};
-
 render::Scene::Scene() : _camera(nullptr)
 {}
 
