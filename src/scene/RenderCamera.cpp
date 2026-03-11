@@ -34,7 +34,7 @@ void render::RenderCamera::update()
 
 void render::RenderCamera::_move()
 {
-    if (Vector3Length(_movementDir) == 0.f)
+    if (Vector3Length(_movementDir) == 0.0001f)
         return;
 
     Vector3 forward = Vector3Normalize(Vector3Subtract(_camera.target, _camera.position));
