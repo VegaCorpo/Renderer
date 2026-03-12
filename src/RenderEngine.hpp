@@ -46,6 +46,9 @@ namespace render {
             common::RenderDataBuffer _currentBuffer;
             std::unordered_map<unsigned int, Texture2D> _textures; 
 
+            common::RenderDataBuffer _currentBuffer;
+            std::unordered_map<unsigned int, Texture2D> _textures; 
+
             std::unique_ptr<RenderWindow> _window;
             std::unique_ptr<Scene> _scene;
     };
