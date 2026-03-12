@@ -1,5 +1,7 @@
 #include "RenderDataHandler.hpp"
 #include <Matrix.hpp>
+#include "rlgl.h"
+#include <iostream>
 
 render::RenderDataHandler::RenderDataHandler() : _mesh(nullptr)
 {}
@@ -47,11 +49,65 @@ void render::RenderDataHandler::update(common::RenderDataBuffer buffer)
     _mesh = std::move(mesh);
 }
 
-void render::RenderDataHandler::render()
+void render::RenderDataHandler::render(const common::RenderDataBuffer& buffer)
 {
-    if (!_mesh) {
-        return;
+    if (buffer.vertices.empty()) return;
+
+    rlDrawRenderBatchActive();      // On vide le batch Raylib actuel
+    rlDisableDepthTest();
+    rlDisableBackfaceCulling();
+
+    rlMatrixMode(RL_PROJECTION);
+    rlPushMatrix();
+    rlLoadIdentity();
+    rlOrtho(0.0, 1280.0, 800.0, 0.0, -1.0, 1.0);
+
+    rlMatrixMode(RL_MODELVIEW);
+    rlPushMatrix();
+    rlLoadIdentity();
+
+    // Correction des noms de fonctions ici :
+    rlEnableColorBlend();
+    rlSetBlendFactorsSeparate(RL_SRC_ALPHA, RL_ONE_MINUS_SRC_ALPHA, RL_ONE, RL_ONE_MINUS_SRC_ALPHA, RL_FUNC_ADD, RL_FUNC_ADD);
+
+    for (const auto& cmd : buffer.commands) {
+        BeginScissorMode(
+            (int)cmd.clipX, (int)cmd.clipY,
+            (int)(cmd.clipZ - cmd.clipX),
+            (int)(cmd.clipW - cmd.clipY)
+        );
+
+        rlEnableTexture(cmd.textureID); 
+        rlSetTexture(cmd.textureID);
+
+        rlBegin(RL_TRIANGLES);
+        for (uint32_t i = 0; i < cmd.elementCount; i++) {
+            uint32_t idx = buffer.indices[cmd.indexOffset + i];
+            const auto& v = buffer.vertices[idx];
+            
+            rlColor4ub(
+                (v.color >> 0)  & 0xFF,
+                (v.color >> 8)  & 0xFF,
+                (v.color >> 16) & 0xFF,
+                (v.color >> 24) & 0xFF
+            );
+            rlTexCoord2f(v.u, v.v);
+            rlVertex2f(v.x, v.y);
+        }
+        rlEnd();
+
+        rlDisableTexture();
+        rlSetTexture(0);
+        EndScissorMode();
     }
 
-    DrawMesh(*_mesh, LoadMaterialDefault(), MatrixIdentity());
+    rlDisableColorBlend(); // Correction ici aussi
+
+    rlMatrixMode(RL_PROJECTION);
+    rlPopMatrix();
+    rlMatrixMode(RL_MODELVIEW);
+    rlPopMatrix();
+
+    rlEnableBackfaceCulling();
+    rlEnableDepthTest();
 }

@@ -12,7 +12,7 @@ namespace render {
 
             void update(common::RenderDataBuffer renderDataBuffer);
 
-            void render();
+            void render(const common::RenderDataBuffer& buffer);
 
         private:
             std::unique_ptr<raylib::Mesh> _mesh;
