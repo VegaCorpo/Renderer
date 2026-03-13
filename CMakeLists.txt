@@ -50,6 +50,9 @@ add_library(orbital_render SHARED
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
 
+    src/scene/celestial/CelestialManager.cpp
+    src/scene/celestial/CelestialBody.cpp
+
     src/inputs/InputHandler.cpp #! to change
 )
 
@@ -65,6 +68,7 @@ target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${Common_SOURCE_DIR}/include
 )
 

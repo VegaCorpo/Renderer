@@ -7,7 +7,7 @@ render::RenderCamera::RenderCamera() : _camera(), _movementDir(0, 0, 0), _rotati
 
 void render::RenderCamera::init()
 {
-    this->_camera.position = {1.5f, .2f, .5f}; // Camera position
+    this->_camera.position = {150.f, 20.f, 50.f}; // Camera position
     this->_camera.target = {.0f, .0f, .0f}; // Look at point
     this->_camera.up = {0.0f, 1.0f, 0.0f}; // Up vector
     this->_camera.fovy = 45.0f; // Field of view

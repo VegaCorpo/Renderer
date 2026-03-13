@@ -12,13 +12,13 @@ namespace render {
     // 1. Distance scale (km → UA)
     // ----------------------------
     constexpr float UA = 149'597'870.700f; // km
-    constexpr float POSITION_SCALE = 1.0f / UA; // 1 UA = 1.0 unité scène
+    constexpr float SCALE = 10.0f / UA; // 1 UA = 1.0 unité scène
 
     // ----------------------------
     // 2. Real radius (km)
     // ----------------------------
-    constexpr float SUN_RADIUS = 696'340.f;
-    constexpr float EARTH_RADIUS = 6'371.f;
+    constexpr float SUN_RADIUS = 696'342.f;
+    constexpr float EARTH_RADIUS = 6'378.137f;
     constexpr float MOON_RADIUS = 1'737.4f;
 
     constexpr float SUN_POS = 0.f;
@@ -28,15 +28,9 @@ namespace render {
     // ----------------------------
     // 3. Visual size scale (indépendant des positions)
     // ----------------------------
-    constexpr float SIZE_SCALE = 500.0f / UA; // ~15x plus grand que réel
+    constexpr float SIZE_SCALE_MULTIPLIER = 250.f;
 
-    constexpr float DIST_EARTH_MOON = 384400.f;
-    constexpr float DIST_EARTH_MOON_SCALED = DIST_EARTH_MOON * SIZE_SCALE / 20;
-
-    // ----------------------------
-    // 4. Final render radius
-    // ----------------------------
-    constexpr float SUN_RADIUS_RENDER = SUN_RADIUS * SIZE_SCALE / 20;
-    constexpr float EARTH_RADIUS_RENDER = EARTH_RADIUS * SIZE_SCALE;
-    constexpr float MOON_RADIUS_RENDER = MOON_RADIUS * SIZE_SCALE;
+    constexpr float VISUAL_MIN_SEPARATION_MULT = 1.0f;
+    constexpr float SHRINK_FACTOR = 0.85f;
+    constexpr int RELAX_ITERATIONS = 8;
 } // namespace render
