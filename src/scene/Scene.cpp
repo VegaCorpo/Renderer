@@ -25,10 +25,15 @@ void render::Scene::update(entt::registry& registry)
     if (this->_camera)
         this->_camera->update();
 
-    this->_celestialManager->update(registry);
+    if (this->_celestialManager)
+        this->_celestialManager->update(registry);
 }
 
 void render::Scene::render()
 {
+    BeginMode3D(this->_camera->getCamera());
+
     this->_celestialManager->render();
+
+    EndMode3D();
 }

@@ -12,7 +12,7 @@ namespace render {
     // 1. Distance scale (km → UA)
     // ----------------------------
     constexpr float UA = 149'597'870.700f; // km
-    constexpr float SCALE = 10.0f / UA; // 1 UA = 1.0 unité scène
+    constexpr float SCALE = 100.0f / UA; // 1 UA = 1.0 unité scène
 
     // ----------------------------
     // 2. Real radius (km)
@@ -30,7 +30,4 @@ namespace render {
     // ----------------------------
     constexpr float SIZE_SCALE_MULTIPLIER = 250.f;
 
-    constexpr float VISUAL_MIN_SEPARATION_MULT = 1.0f;
-    constexpr float SHRINK_FACTOR = 0.85f;
-    constexpr int RELAX_ITERATIONS = 8;
 } // namespace render

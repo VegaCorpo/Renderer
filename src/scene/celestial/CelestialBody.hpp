@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <Model.hpp>
+#include <raylib.h>
 #include <string>
 
 namespace render {
