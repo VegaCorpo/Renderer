@@ -56,6 +56,8 @@ add_library(orbital_render SHARED
     src/scene/celestial/scaleMode/VisualScaleMode.cpp
     src/scene/celestial/scaleMode/RealisticScaleMode.cpp
 
+    src/scene/celestial/resources/ResourceManager.cpp
+
     src/inputs/InputHandler.cpp #! to change
 )
 
@@ -74,7 +76,8 @@ target_include_directories(orbital_render PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
-    ${Common_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
+    ${Common_SOURCE_DIR}
 )
 
 if(WIN32)

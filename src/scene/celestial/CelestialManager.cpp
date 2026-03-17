@@ -42,19 +42,19 @@ void render::CelestialManager::addOrUpdateBody(entt::entity entity, const std::s
 void render::CelestialManager::update(entt::registry& registry)
 {
     registry
-        .view<components::Mass, components::Position /*, component::Radius component::Color, component::texture ??*/>()
+        .view<common::components::Mass, common::components::Position /*, component::Radius component::Color, component::texture ??*/>()
         .each(
-            [&](entt::entity entity, const components::Mass& mass, const components::Position& pos)
+            [&](entt::entity entity, const common::components::Mass& mass, const common::components::Position& pos)
             {
                 if (mass.mantissa == EARTH_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Earth", {pos.x, pos.y, pos.z}, EARTH_RADIUS, GREEN,
+                    this->addOrUpdateBody(entity, "Earth", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, EARTH_RADIUS, GREEN,
                                           this->_sphereModel);
                 }
                 if (mass.mantissa == MOON_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Moon", {pos.x, pos.y, pos.z}, MOON_RADIUS, GRAY, this->_sphereModel);
+                    this->addOrUpdateBody(entity, "Moon", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, MOON_RADIUS, GRAY, this->_sphereModel);
                 }
                 if (mass.mantissa == SUN_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Sun", {pos.x, pos.y, pos.z}, SUN_RADIUS, WHITE, this->_sphereModel);
+                    this->addOrUpdateBody(entity, "Sun", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, SUN_RADIUS, WHITE, this->_sphereModel);
                 }
             });
 
