@@ -35,6 +35,8 @@ namespace render {
 
             void render() override;
 
+            unsigned int loadTextureFromPixels(unsigned char* pixels, int width, int height) override { return 0; }
+
         private:
             bool _running = false;
 
