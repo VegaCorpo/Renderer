@@ -1,62 +1,53 @@
 #include "CelestialManager.hpp"
-#include <components/mass.hpp>
-#include <components/position.hpp>
-#include <Mesh.hpp>
-#include <raylib.h>
+#include <components/name.hpp>
+#include <components/textureId.hpp>
+#include <memory>
 #include <raymath.h>
+#include <utils/assets.hpp>
 #include "CelestialBody.hpp"
-#include "SolarSystemValues.hpp"
 
 render::CelestialManager::CelestialManager() :
-    _bodies(), _scaleMode(ScaleMode::VISUAL), _visualConfig(), _scaleStrategy(nullptr), _sphereModel(),
-    _defaultTexture()
+    _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _visualConfig(), _scaleStrategy(nullptr)
 {
-    Mesh mesh = raylib::Mesh::Sphere(1, 32, 32);
-    this->_sphereModel = std::make_shared<raylib::Model>(mesh);
-    this->_defaultTexture = LoadTexture("Renderer/assets/textures/2k_earth_texture.jpg");
-
-    this->_sphereModel->materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = this->_defaultTexture;
+    this->_resourceManager = std::make_unique<ResourceManager>();
 
     this->_updateScaleStrategy();
 }
 
-void render::CelestialManager::addOrUpdateBody(entt::entity entity, const std::string& name,
-                                               const Vector3& realPosition, float realRadiusKm, Color color,
-                                               std::shared_ptr<raylib::Model>& model)
+void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::registry& registry,
+                                                const common::components::Position& pos,
+                                                const common::components::Radius& radius)
 {
-    CelestialBody body = {};
+    auto& body = this->_bodies[entity];
 
-    if (this->_bodies.find(entity) != this->_bodies.end()) {
-        body = this->_bodies.at(entity);
+    body.setRealPositionKm(Vector3(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
+    body.setRealRadiusKm(radius.value);
+
+    if (body.hasBeenInitialized()) {
+        return;
     }
 
-    body.setName(name);
-    body.setRealPositionKm(realPosition);
-    body.setRealRadiusKm(realRadiusKm);
-    body.setModel(model);
-    body.setColor(color);
+    if (auto nameCpn = registry.try_get<common::components::Name>(entity)) {
+        body.setName(nameCpn->value);
+    }
 
-    this->_bodies[entity] = body;
+    if (auto textureId = registry.try_get<common::components::TextureId>(entity)) {
+        auto model = this->_resourceManager->getOrCreateModel(textureId->value);
+        body.setModel(model);
+    }
+
+    if (!body.getModel()) {
+        body.setModel(this->_resourceManager->getOrCreateModel(common::DEFAULT_TEXTURE_ID));
+    }
+
+    body.init();
 }
 
 void render::CelestialManager::update(entt::registry& registry)
 {
-    registry
-        .view<common::components::Mass, common::components::Position /*, component::Radius component::Color, component::texture ??*/>()
-        .each(
-            [&](entt::entity entity, const common::components::Mass& mass, const common::components::Position& pos)
-            {
-                if (mass.mantissa == EARTH_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Earth", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, EARTH_RADIUS, GREEN,
-                                          this->_sphereModel);
-                }
-                if (mass.mantissa == MOON_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Moon", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, MOON_RADIUS, GRAY, this->_sphereModel);
-                }
-                if (mass.mantissa == SUN_MANTISSA) {
-                    this->addOrUpdateBody(entity, "Sun", {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)}, SUN_RADIUS, WHITE, this->_sphereModel);
-                }
-            });
+    registry.view<common::components::Position, common::components::Radius>().each(
+        [&](entt::entity entity, const common::components::Position& pos, const common::components::Radius& radius)
+        { _addOrUpdateBody(entity, registry, pos, radius); });
 
     if (this->_scaleStrategy && this->_hasBodiesBeenModified()) {
         this->_scaleStrategy->rescale(this->_bodies);

@@ -2,8 +2,7 @@
 #include <raymath.h>
 
 render::CelestialBody::CelestialBody() :
-    _name(), _realPositionKm(0.0f), _scenePosition(0.0f), _realRadiusKm(0.0f), _renderScale(0.0f), _model(nullptr),
-    _color(WHITE), _hasBeenModified(true)
+    _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(0.0f), _scenePosition(0.0f), _realRadiusKm(0.0f), _renderScale(0.0f), _model(nullptr)
 {}
 
 bool render::CelestialBody::hasBeenModified()
@@ -56,5 +55,5 @@ void render::CelestialBody::render() const
         return;
     }
 
-    this->_model->Draw(this->_scenePosition, this->_renderScale, this->_color);
+    this->_model->Draw(this->_scenePosition, this->_renderScale);
 }

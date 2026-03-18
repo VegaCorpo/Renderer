@@ -11,6 +11,9 @@ namespace render {
             CelestialBody();
             ~CelestialBody() = default;
 
+            [[nodiscard]] bool hasBeenInitialized() const { return this->_hasBeenInitialized; }
+            void init() { this->_hasBeenInitialized = true; }
+
             /**
              * @brief Has the celestial body been modified since last checked?
              * This determine when to compute the new render scale and when a new render scale is needed
@@ -34,11 +37,8 @@ namespace render {
             void setRenderScale(float scale) { this->_renderScale = scale; }
             [[nodiscard]] float getRenderScale() const { return this->_renderScale; }
 
-            void setModel(std::shared_ptr<raylib::Model>& model) { this->_model = model; }
+            void setModel(std::shared_ptr<raylib::Model> model) { this->_model = std::move(model); }
             [[nodiscard]] const std::shared_ptr<raylib::Model>& getModel() const { return this->_model; }
-
-            void setColor(const Color& color) { this->_color = color; }
-            [[nodiscard]] const Color& getColor() const { return this->_color; }
 
             void computePositionAndScale(float scaleFactor);
             void computeScenePosition(float scaleFactor);
@@ -49,6 +49,9 @@ namespace render {
         protected:
             void _modified() { this->_hasBeenModified = true; }
 
+            bool _hasBeenInitialized;
+            bool _hasBeenModified;
+
             std::string _name;
 
             Vector3 _realPositionKm;
@@ -58,8 +61,5 @@ namespace render {
             float _renderScale;
 
             std::shared_ptr<raylib::Model> _model;
-            Color _color;
-
-            bool _hasBeenModified;
     };
 } // namespace render

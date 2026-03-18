@@ -1,11 +1,14 @@
 #pragma once
 
+#include <components/position.hpp>
+#include <components/radius.hpp>
 #include <entt/entt.hpp>
 #include <memory>
 #include <Model.hpp>
 #include <raylib.h>
 #include <unordered_map>
 #include "CelestialBody.hpp"
+#include "ResourceManager.hpp"
 #include "scaleMode/RealisticScaleMode.hpp"
 #include "scaleMode/VisualScaleMode.hpp"
 
@@ -21,9 +24,6 @@ namespace render {
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
-            void addOrUpdateBody(entt::entity entity, const std::string& name, const Vector3& realPosition,
-                                 float realRadiusKm, Color color, std::shared_ptr<raylib::Model>& model);
-
             void update(entt::registry& registry);
 
             const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
@@ -31,8 +31,13 @@ namespace render {
             void render() const;
 
         private:
+            void _addOrUpdateBody(entt::entity entity, entt::registry& registry, const common::components::Position& pos,
+                                 const common::components::Radius& radius);
+
             void _updateScaleStrategy() { this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)(); }
             [[nodiscard]] bool _hasBodiesBeenModified();
+
+            std::unique_ptr<ResourceManager> _resourceManager;
 
             std::unordered_map<entt::entity, CelestialBody> _bodies;
 
@@ -40,9 +45,6 @@ namespace render {
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
             std::unique_ptr<IScaleMode> _scaleStrategy;
-
-            std::shared_ptr<raylib::Model> _sphereModel;
-            Texture2D _defaultTexture;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},
