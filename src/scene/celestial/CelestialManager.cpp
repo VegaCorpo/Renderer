@@ -30,24 +30,27 @@ void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::regis
         body.setName(nameCpn->value);
     }
 
-    if (auto textureId = registry.try_get<common::components::TextureId>(entity)) {
-        auto model = this->_resourceManager->getOrCreateModel(textureId->value);
+    if (auto texture = registry.try_get<common::components::Texture>(entity)) {
+        auto model = this->_resourceManager->getOrCreateModel(texture->path);
         body.setModel(model);
     }
 
     if (!body.getModel()) {
-        body.setModel(this->_resourceManager->getOrCreateModel(common::DEFAULT_TEXTURE_ID));
+        body.setModel(this->_resourceManager->getOrCreateModel(common::DEFAULT_TEXTURE_PATH));
     }
 
     body.init();
 }
 
-void render::CelestialManager::update(entt::registry& registry)
+void render::CelestialManager::syncIn(entt::registry& registry)
 {
     registry.view<common::components::Position, common::components::Radius>().each(
         [&](entt::entity entity, common::components::Position pos, common::components::Radius radius)
         { _addOrUpdateBody(entity, registry, pos, radius); });
+}
 
+void render::CelestialManager::update()
+{
     if (this->_scaleStrategy && this->_hasBodiesBeenModified()) {
         this->_scaleStrategy->rescale(this->_bodies);
     }

@@ -78,7 +78,15 @@ void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
     actions = std::move(remaining);
 }
 
-void render::RenderEngine::update(entt::registry& registry)
+void render::RenderEngine::syncIn(entt::registry& registry)
+{
+    if (this->_scene) {
+        this->_scene->syncIn(registry);
+    }
+
+}
+
+void render::RenderEngine::update()
 {
     if (this->_window->ShouldClose()) {
         this->_running = false;
@@ -90,10 +98,8 @@ void render::RenderEngine::update(entt::registry& registry)
     this->handleActions(actions);
 
     if (this->_scene) {
-        this->_scene->update(registry);
+        this->_scene->update();
     }
-
-    this->render();
 }
 
 void render::RenderEngine::render()

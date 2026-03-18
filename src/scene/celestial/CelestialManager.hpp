@@ -24,7 +24,8 @@ namespace render {
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
-            void update(entt::registry& registry);
+            void syncIn(entt::registry& registry);
+            void update();
 
             const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
 
@@ -32,7 +33,7 @@ namespace render {
 
         private:
             void _addOrUpdateBody(entt::entity entity, entt::registry& registry, common::components::Position pos,
-                                 common::components::Radius radius);
+                                  common::components::Radius radius);
 
             void _updateScaleStrategy() { this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)(); }
             [[nodiscard]] bool _hasBodiesBeenModified();

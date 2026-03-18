@@ -19,8 +19,7 @@ namespace render {
             void setDefaultTexture(Texture2D tex) { _defaultTexture = tex; }
 
         private:
-            static Texture2D _loadTexturePath(const std::string& path);
-            std::shared_ptr<raylib::Model> _createModel(const std::string& textureId);
+            std::shared_ptr<raylib::Model> _createModelFromTexture(const std::string& texturePath);
 
             std::unordered_map<std::string, std::shared_ptr<raylib::Model>> _modelCache;
 
