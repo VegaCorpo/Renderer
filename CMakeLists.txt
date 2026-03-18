@@ -4,7 +4,7 @@ project(orbital_render)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard")
+set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CPM_USE_LOCAL_PACKAGES ON)
@@ -52,6 +52,14 @@ add_library(orbital_render SHARED
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
 
+    src/scene/celestial/CelestialManager.cpp
+    src/scene/celestial/CelestialBody.cpp
+
+    src/scene/celestial/scaleMode/VisualScaleMode.cpp
+    src/scene/celestial/scaleMode/RealisticScaleMode.cpp
+
+    src/scene/celestial/resources/ResourceManager.cpp
+
     src/inputs/InputHandler.cpp #! to change
 
     src/ui/UIEngine.cpp
@@ -76,12 +84,16 @@ target_link_libraries(orbital_render PRIVATE
 )
 
 target_include_directories(orbital_render PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
-    ${Common_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
+    ${Common_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui

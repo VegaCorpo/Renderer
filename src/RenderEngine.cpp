@@ -1,4 +1,5 @@
 #include "RenderEngine.hpp"
+#include <raylib.h>
 #include "InputHandler.hpp"
 #include "RenderActions.hpp"
 
@@ -11,7 +12,7 @@ render::RenderEngine::RenderEngine() : _running(false), _renderDataHandler(), _w
 void render::RenderEngine::init()
 {
     // Disable Raylib logs
-    SetTraceLogLevel(LOG_NONE);
+    SetTraceLogLevel(LOG_WARNING);
 
     this->_window = std::make_unique<RenderWindow>(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_FPS);
 
@@ -101,9 +102,7 @@ void render::RenderEngine::render()
         return;
 
     this->_window->BeginDrawing();
-    this->_window->ClearBackground(DARKBLUE);
-
-    BeginMode3D(this->_scene->getCamera());
+    this->_window->ClearBackground();
 
     this->_scene->render();
 

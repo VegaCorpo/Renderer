@@ -26,7 +26,7 @@ namespace render {
             Vector3 _movementDir;
             Vector2 _rotationDir;
 
-            static constexpr float MOVE_SPEED = 0.05f;
+            static constexpr float MOVE_SPEED = 0.5f;
             static constexpr float ROTATION_SPEED = 0.02f;
     };
 } // namespace render
