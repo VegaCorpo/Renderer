@@ -4,7 +4,7 @@
 #include <memory>
 #include <Model.hpp>
 #include <types/types.hpp>
-#include <unordered_map>
+#include "CelestialManager.hpp"
 #include "RenderCamera.hpp"
 
 namespace render {
@@ -16,7 +16,7 @@ namespace render {
             void init();
 
             raylib::Camera getCamera() { return this->_camera->getCamera(); }
-            render::RenderCamera &getRenderCamera() { return *_camera; }
+            render::RenderCamera& getRenderCamera() { return *_camera; }
 
             void handleAction(common::Action action);
 
@@ -27,12 +27,7 @@ namespace render {
         private:
             std::unique_ptr<render::RenderCamera> _camera;
 
-            std::unique_ptr<raylib::Model> _sphereModel;
-            std::unordered_map<entt::entity, Vector3> _positions;
-
-            Vector3 _earth = {};
-            Vector3 _moon = {};
-            Vector3 _sun = {};
+            std::unique_ptr<CelestialManager> _celestialManager;
 
             const std::unordered_map<common::Action, std::function<void(Scene&)>> dispatchTable = {
                 {common::Action::MOVE_CAMERA_FORWARD, [](Scene& s) { s._camera->addMovement({0, 0, 1}); }},
