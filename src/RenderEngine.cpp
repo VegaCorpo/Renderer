@@ -71,7 +71,7 @@ void render::RenderEngine::render()
         return;
 
     this->_window->BeginDrawing();
-    this->_window->ClearBackground(DARKBLUE);
+    this->_window->ClearBackground(BLACK);
 
     this->_scene->render();
 
