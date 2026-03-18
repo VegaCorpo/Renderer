@@ -22,19 +22,21 @@ namespace render {
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
+            unsigned int loadTextureFromPixels(unsigned char* pixels, int width, int height) override { return 0; }
+
             void* getWindowHandle() override { return GetWindowHandle(); }
 
             void setVertexBuffer(common::RenderDataBuffer& buffer) override;
 
             void handleActions(std::queue<common::Action>& actions); //! override
 
-            void update(entt::registry& registry) override;
+            void syncIn(entt::registry& registry) override;
+            void update() override;
 
             void render() override;
 
-            unsigned int loadTextureFromPixels(unsigned char* pixels, int width, int height) override { return 0; }
-
         private:
+
             bool _running = false;
 
             RenderDataHandler _renderDataHandler;

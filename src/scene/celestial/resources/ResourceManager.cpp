@@ -6,7 +6,7 @@ render::ResourceManager::ResourceManager() : _baseMesh()
 {
     this->_baseMesh = raylib::Mesh::Sphere(1, 32, 32);
 
-    this->_modelCache[common::DEFAULT_TEXTURE_ID] = std::make_shared<raylib::Model>(_baseMesh);
+    this->_modelCache[common::DEFAULT_TEXTURE_PATH] = this->_createModelFromTexture(common::DEFAULT_TEXTURE_PATH);
 }
 
 render::ResourceManager::~ResourceManager()
@@ -23,7 +23,7 @@ std::shared_ptr<raylib::Model> render::ResourceManager::getOrCreateModel(const s
         return it->second;
     }
 
-    auto model = _createModel(textureId);
+    auto model = _createModelFromTexture(textureId);
     _modelCache[textureId] = model;
 
     return model;
@@ -42,27 +42,17 @@ std::shared_ptr<raylib::Model> render::ResourceManager::getOrCreateModelFromFile
     return model;
 }
 
-Texture2D render::ResourceManager::_loadTexturePath(const std::string& path)
+std::shared_ptr<raylib::Model> render::ResourceManager::_createModelFromTexture(const std::string& texturePath)
 {
-    Texture2D tex = LoadTexture(path.c_str());
+    std::string fullPath = common::TEXTURE_PATH + texturePath;
+    Texture2D tex = LoadTexture(fullPath.c_str());
+
     if (tex.id == 0) {
-        std::cerr << "[ResourceManager] Failed to load texture: " << path << "\n";
+        std::cerr << "[ResourceManager] Error loading " << fullPath << " — using default texture\n";
+        return this->_modelCache["default.jpg"];
     }
-    return tex;
-}
 
-std::shared_ptr<raylib::Model> render::ResourceManager::_createModel(const std::string& textureId)
-{
     auto model = std::make_shared<raylib::Model>(_baseMesh);
-
-    Texture2D tex = _defaultTexture;
-
-    auto it = common::textureMap.find(textureId);
-    if (it != common::textureMap.end()) {
-        Texture2D loaded = _loadTexturePath(it->second);
-        if (loaded.id != 0)
-            tex = loaded;
-    }
 
     model->materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
 

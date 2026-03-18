@@ -20,13 +20,22 @@ void render::Scene::handleAction(common::Action action)
     }
 }
 
-void render::Scene::update(entt::registry& registry)
+void render::Scene::syncIn(entt::registry& registry)
 {
-    if (this->_camera)
-        this->_camera->update();
+    if (this->_celestialManager) {
+        this->_celestialManager->syncIn(registry);
+    }
+}
 
-    if (this->_celestialManager)
-        this->_celestialManager->update(registry);
+void render::Scene::update()
+{
+    if (this->_camera) {
+        this->_camera->update();
+    }
+
+    if (this->_celestialManager) {
+        this->_celestialManager->update();
+    }
 }
 
 void render::Scene::render()
