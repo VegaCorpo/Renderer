@@ -20,7 +20,8 @@ namespace render {
 
             void handleAction(common::Action action);
 
-            void update(entt::registry& registry);
+            void syncIn(entt::registry& registry);
+            void update();
 
             void render();
 
