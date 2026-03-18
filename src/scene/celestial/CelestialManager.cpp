@@ -15,8 +15,7 @@ render::CelestialManager::CelestialManager() :
 }
 
 void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::registry& registry,
-                                                const common::components::Position& pos,
-                                                const common::components::Radius& radius)
+                                                common::components::Position pos, common::components::Radius radius)
 {
     auto& body = this->_bodies[entity];
 
@@ -46,7 +45,7 @@ void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::regis
 void render::CelestialManager::update(entt::registry& registry)
 {
     registry.view<common::components::Position, common::components::Radius>().each(
-        [&](entt::entity entity, const common::components::Position& pos, const common::components::Radius& radius)
+        [&](entt::entity entity, common::components::Position pos, common::components::Radius radius)
         { _addOrUpdateBody(entity, registry, pos, radius); });
 
     if (this->_scaleStrategy && this->_hasBodiesBeenModified()) {
@@ -68,6 +67,7 @@ bool render::CelestialManager::_hasBodiesBeenModified()
     for (auto& [_, body] : this->_bodies) {
         if (body.hasBeenModified()) {
             isModified = true;
+            return isModified;
         }
     }
 

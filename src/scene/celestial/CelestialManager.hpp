@@ -31,8 +31,8 @@ namespace render {
             void render() const;
 
         private:
-            void _addOrUpdateBody(entt::entity entity, entt::registry& registry, const common::components::Position& pos,
-                                 const common::components::Radius& radius);
+            void _addOrUpdateBody(entt::entity entity, entt::registry& registry, common::components::Position pos,
+                                 common::components::Radius radius);
 
             void _updateScaleStrategy() { this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)(); }
             [[nodiscard]] bool _hasBodiesBeenModified();
