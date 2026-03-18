@@ -34,6 +34,7 @@ void render::Scene::render()
     BeginMode3D(this->_camera->getCamera());
 
     this->_celestialManager->render();
+    DrawGrid(10, 100);
 
     EndMode3D();
 }
