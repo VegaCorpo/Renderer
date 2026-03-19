@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-render::RenderCamera::RenderCamera() : _camera(), _movementDir(0, 0, 0), _rotationDir(0, 0)
+render::RenderCamera::RenderCamera() : _camera(), _movementDir(0, 0, 0), _rotationDir(0, 0), _isFollowing(false), _followedEntity()
 {}
 
 void render::RenderCamera::init()
@@ -30,6 +30,12 @@ void render::RenderCamera::update()
 {
     this->_move();
     this->_rotate();
+}
+
+void render::RenderCamera::follow(entt::entity entity)
+{
+    this->_isFollowing = true;
+    this->_followedEntity = entity;
 }
 
 void render::RenderCamera::_move()

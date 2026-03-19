@@ -3,7 +3,7 @@
 #include "IRenderFeature.hpp"
 
 namespace render {
-    class CelestialLabels : public IRenderFeature {
+    class CelestialIcons : public IRenderFeature {
         public:
             static constexpr int DEFAULT_FONT_SIZE = 12;
 

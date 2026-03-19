@@ -5,7 +5,6 @@
 #include <raymath.h>
 #include <utils/assets.hpp>
 #include "CelestialBody.hpp"
-#include "CelestialLabels.hpp"
 #include "OrbitTrail.hpp"
 
 render::CelestialManager::CelestialManager() :
@@ -16,7 +15,7 @@ render::CelestialManager::CelestialManager() :
 
     this->_updateScaleStrategy();
 
-    this->_features.push_back(std::make_unique<CelestialLabels>());
+    // this->_features.push_back(std::make_unique<CelestialIcons>());
     this->_features.push_back(std::make_unique<OrbitTrail>());
 }
 
@@ -78,6 +77,16 @@ void render::CelestialManager::update()
             feature->update(entity, body);
         }
     }
+}
+
+Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
+{
+    auto it = this->_bodies.find(entity);
+
+    if (it == this->_bodies.end()) {
+        return Vector3{0, 0, 0};
+    }
+    return it->second.getScenePosition();
 }
 
 void render::CelestialManager::render3D(const raylib::Camera& camera) const

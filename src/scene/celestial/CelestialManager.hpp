@@ -32,6 +32,8 @@ namespace render {
 
             const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
 
+            Vector3 getBodyPosition(entt::entity entity) const;
+
             void render3D(const raylib::Camera& camera) const;
             void render2D(const raylib::Camera& camera) const;
 
