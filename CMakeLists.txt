@@ -15,6 +15,8 @@ CPMGetPackage("Common")
 CPMGetPackage("EnTT")
 CPMGetPackage("Raylib")
 CPMGetPackage("raylib_cpp")
+CPMGetPackage("ImGui")
+CPMGetPackage("glfw")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -51,21 +53,39 @@ add_library(orbital_render SHARED
     src/scene/RenderCamera.cpp
 
     src/inputs/InputHandler.cpp #! to change
+
+    src/ui/UIEngine.cpp
+    src/ui/ImGUILayer.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp 
 )
+
+find_package(OpenGL REQUIRED)
 
 target_link_libraries(orbital_render PRIVATE
     Common
     EnTT::EnTT
     raylib
     raylib_cpp
+    glfw
+    OpenGL::GL
 )
 
-target_include_directories(orbital_render PRIVATE
+target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${Common_SOURCE_DIR}/include
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
+    ${CPM_PACKAGE_glfw_SOURCE_DIR}/include
 )
 
 if(WIN32)

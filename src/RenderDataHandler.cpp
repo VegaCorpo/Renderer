@@ -53,7 +53,7 @@ void render::RenderDataHandler::render(const common::RenderDataBuffer& buffer)
 {
     if (buffer.vertices.empty()) return;
 
-    rlDrawRenderBatchActive();      // On vide le batch Raylib actuel
+    rlDrawRenderBatchActive();
     rlDisableDepthTest();
     rlDisableBackfaceCulling();
 
@@ -66,7 +66,6 @@ void render::RenderDataHandler::render(const common::RenderDataBuffer& buffer)
     rlPushMatrix();
     rlLoadIdentity();
 
-    // Correction des noms de fonctions ici :
     rlEnableColorBlend();
     rlSetBlendFactorsSeparate(RL_SRC_ALPHA, RL_ONE_MINUS_SRC_ALPHA, RL_ONE, RL_ONE_MINUS_SRC_ALPHA, RL_FUNC_ADD, RL_FUNC_ADD);
 
@@ -101,7 +100,7 @@ void render::RenderDataHandler::render(const common::RenderDataBuffer& buffer)
         EndScissorMode();
     }
 
-    rlDisableColorBlend(); // Correction ici aussi
+    rlDisableColorBlend();
 
     rlMatrixMode(RL_PROJECTION);
     rlPopMatrix();

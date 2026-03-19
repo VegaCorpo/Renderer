@@ -17,13 +17,14 @@ void render::RenderEngine::init()
     this->_scene->init();
 
     this->_running = true;
+    GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(GetWindowHandle());
+    this->_uiEngine.init(glfwWindow);
 }
 
 unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, int width, int height)
 {
     if (pixels == nullptr || width <= 0 || height <= 0) return 0;
 
-    // 1. Charger la texture via rlgl directement pour éviter les surcouches
     unsigned int id = rlLoadTexture(pixels, width, height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
 
     if (id > 0) {
@@ -31,7 +32,6 @@ unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, 
         rlTextureParameters(id, RL_TEXTURE_MIN_FILTER, TEXTURE_FILTER_BILINEAR);
     }
 
-    // 2. On crée l'objet Texture2D pour Raylib
     Texture2D tex = {
         .id = id,
         .width = width,
@@ -82,12 +82,9 @@ void render::RenderEngine::render()
 
     this->_window->DrawFPS();
 
-    this->_renderDataHandler.render(this->_currentBuffer);
-
-    if (!this->_textures.empty()) {
-        auto& tex = this->_textures.begin()->second;
-        DrawTexture(tex, 900, 0, WHITE);
-    }
+    // this->_renderDataHandler.render(this->_currentBuffer);
+    
+    this->_uiEngine.render();
 
     this->_window->EndDrawing();
 }

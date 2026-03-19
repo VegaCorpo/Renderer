@@ -5,6 +5,7 @@
 #include "RenderDataHandler.hpp"
 #include "RenderWindow.hpp"
 #include "Scene.hpp"
+#include "./ui/UIEngine.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
@@ -35,6 +36,7 @@ namespace render {
             bool _running = false;
 
             RenderDataHandler _renderDataHandler;
+            UIEngine _uiEngine;
 
             common::RenderDataBuffer _currentBuffer;
             std::unordered_map<unsigned int, Texture2D> _textures; 
