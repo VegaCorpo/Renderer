@@ -24,31 +24,6 @@ void render::RenderEngine::init()
     this->_uiEngine.init(glfwWindow);
 }
 
-unsigned int render::RenderEngine::loadTextureFromPixels(unsigned char* pixels, int width, int height)
-{
-    if (pixels == nullptr || width <= 0 || height <= 0) return 0;
-
-    unsigned int id = rlLoadTexture(pixels, width, height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
-
-    if (id > 0) {
-        rlTextureParameters(id, RL_TEXTURE_MAG_FILTER, TEXTURE_FILTER_BILINEAR);
-        rlTextureParameters(id, RL_TEXTURE_MIN_FILTER, TEXTURE_FILTER_BILINEAR);
-    }
-
-    Texture2D tex = {
-        .id = id,
-        .width = width,
-        .height = height,
-        .mipmaps = 1,
-        .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
-    };
-
-    this->_textures[id] = tex;
-    std::cout << "[Renderer] Font Texture Loaded: ID=" << id << " (" << width << "x" << height << ")" << std::endl;
-    
-    return id;
-}
-
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
     this->_currentBuffer = buffer;

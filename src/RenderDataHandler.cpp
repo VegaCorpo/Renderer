@@ -6,6 +6,8 @@
 render::RenderDataHandler::RenderDataHandler() : _mesh(nullptr)
 {}
 
+// REMOVE UPDATE LATER AND SEE IF RENDER IS USEFULL
+
 void render::RenderDataHandler::update(common::RenderDataBuffer buffer)
 {
     if (buffer.vertices.empty() || buffer.indices.empty()) {
