@@ -13,10 +13,12 @@ include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
-CPMGetPackage("glfw")
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 CPMGetPackage("ImGui")
+
+set(RAYLIB_GLFW_INCLUDE_DIR "${raylib_SOURCE_DIR}/src/external/glfw/include")
+
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -98,6 +100,7 @@ target_include_directories(orbital_render PUBLIC
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CPM_PACKAGE_glfw_SOURCE_DIR}/include
+    ${RAYLIB_GLFW_INCLUDE_DIR}
 )
 
 if(WIN32)
