@@ -52,6 +52,8 @@ namespace render {
                 _updateCounters.clear();
             }
 
+            [[nodiscard]] bool is2D() const override { return false; }
+
         private:
             int _updateInterval;
 

@@ -42,8 +42,10 @@ void render::Scene::render()
 {
     BeginMode3D(this->_camera->getCamera());
 
-    this->_celestialManager->render(this->_camera->getCamera());
+    this->_celestialManager->render3D(this->_camera->getCamera());
     DrawGrid(10, 100);
 
     EndMode3D();
+
+    this->_celestialManager->render2D(this->_camera->getCamera());
 }

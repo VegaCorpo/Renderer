@@ -13,5 +13,7 @@ namespace render {
             virtual void render(entt::entity entity, const CelestialBody& body, const raylib::Camera& camera) const = 0;
 
             virtual void reset() = 0;
+
+            [[nodiscard]] virtual bool is2D() const = 0;
     };
 } // namespace render

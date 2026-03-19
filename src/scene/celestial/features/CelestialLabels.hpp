@@ -5,7 +5,7 @@
 namespace render {
     class CelestialLabels : public IRenderFeature {
         public:
-            static constexpr int DEFAULT_FONT_SIZE = 100;
+            static constexpr int DEFAULT_FONT_SIZE = 12;
 
             void update(entt::entity entity, const CelestialBody& body) override {}
 
@@ -20,5 +20,7 @@ namespace render {
             }
 
             void reset() override {}
+
+            [[nodiscard]] bool is2D() const override { return true; }
     };
 } // namespace render

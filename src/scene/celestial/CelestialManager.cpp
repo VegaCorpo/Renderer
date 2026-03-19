@@ -80,14 +80,27 @@ void render::CelestialManager::update()
     }
 }
 
-void render::CelestialManager::render(const raylib::Camera& camera) const
+void render::CelestialManager::render3D(const raylib::Camera& camera) const
 {
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
-            feature->render(entity, body, camera);
+            if (!feature->is2D()) {
+                feature->render(entity, body, camera);
+            }
         }
 
         body.render();
+    }
+}
+
+void render::CelestialManager::render2D(const raylib::Camera& camera) const
+{
+    for (auto& [entity, body] : this->_bodies) {
+        for (auto& feature : this->_features) {
+            if (feature->is2D()) {
+                feature->render(entity, body, camera);
+            }
+        }
     }
 }
 
