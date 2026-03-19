@@ -21,7 +21,6 @@ CPMDeclarePackage(raylib
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
     OPTIONS
-        "USE_EXTERNAL_GLFW ON"
         "BUILD_EXAMPLES OFF"
         "BUILD_GAMES OFF"
 )
