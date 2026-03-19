@@ -79,9 +79,9 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(orbital_render PRIVATE
     Common
     EnTT::EnTT
+    glfw
     raylib
     raylib_cpp
-    glfw
     OpenGL::GL
 )
 
