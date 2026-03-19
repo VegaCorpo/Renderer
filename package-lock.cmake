@@ -15,11 +15,15 @@ CPMDeclarePackage(EnTT
 )
 
 #raylib
-CPMDeclarePackage(Raylib
+CPMDeclarePackage(raylib
     GITHUB_REPOSITORY raysan5/raylib
     GIT_TAG 5.5
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
+    OPTIONS
+        "USE_EXTERNAL_GLFW ON"
+        "BUILD_EXAMPLES OFF"
+        "BUILD_GAMES OFF"
 )
 
 #raylib-cpp
@@ -49,4 +53,6 @@ CPMDeclarePackage(glfw
         "GLFW_BUILD_DOCS OFF"
         "GLFW_BUILD_TESTS OFF"
         "GLFW_BUILD_EXAMPLES OFF"
+        "GLFW_BUILD_WAYLAND OFF"
+        "GLFW_BUILD_X11 ON"
 )
