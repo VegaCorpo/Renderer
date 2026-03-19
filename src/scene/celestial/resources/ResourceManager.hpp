@@ -7,21 +7,26 @@
 #include <unordered_map>
 
 namespace render {
+    struct ModelInfo {
+            raylib::Model model;
+            Color dominantColor;
+    };
+
     class ResourceManager {
         public:
             ResourceManager();
             ~ResourceManager();
 
-            std::shared_ptr<raylib::Model> getOrCreateModel(const std::string& textureId);
-            std::shared_ptr<raylib::Model> getOrCreateModelFromFile(const std::string& path);
+            std::shared_ptr<ModelInfo> getOrCreateModelInfo(const std::string& textureId);
 
             Texture2D getDefaultTexture() const { return _defaultTexture; }
             void setDefaultTexture(Texture2D tex) { _defaultTexture = tex; }
 
         private:
-            std::shared_ptr<raylib::Model> _createModelFromTexture(const std::string& texturePath);
+            std::shared_ptr<ModelInfo> _createModelInfoFromTexture(const std::string& texturePath);
+            static Color _computeDominantColor(const Texture2D& tex);
 
-            std::unordered_map<std::string, std::shared_ptr<raylib::Model>> _modelCache;
+            std::unordered_map<std::string, std::shared_ptr<ModelInfo>> _modelCache;
 
             Mesh _baseMesh;
 

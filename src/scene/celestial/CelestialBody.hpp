@@ -4,6 +4,7 @@
 #include <Model.hpp>
 #include <raylib.h>
 #include <string>
+#include "ResourceManager.hpp"
 
 namespace render {
     class CelestialBody {
@@ -38,8 +39,8 @@ namespace render {
             void setRenderScale(float scale) { this->_renderScale = scale; }
             [[nodiscard]] float getRenderScale() const { return this->_renderScale; }
 
-            void setModel(std::shared_ptr<raylib::Model> model) { this->_model = std::move(model); }
-            [[nodiscard]] const std::shared_ptr<raylib::Model>& getModel() const { return this->_model; }
+            void setModelInfo(std::shared_ptr<ModelInfo> modelInfo) { this->_modelInfo = std::move(modelInfo); }
+            [[nodiscard]] const std::shared_ptr<ModelInfo>& getModelInfo() const { return this->_modelInfo; }
 
             void computePositionAndScale(float scaleFactor);
             void computeScenePosition(float scaleFactor);
@@ -59,6 +60,6 @@ namespace render {
             float _realRadiusKm;
             float _renderScale;
 
-            std::shared_ptr<raylib::Model> _model;
+            std::shared_ptr<render::ModelInfo> _modelInfo;
     };
 } // namespace render

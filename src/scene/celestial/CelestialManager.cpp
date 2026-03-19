@@ -5,13 +5,19 @@
 #include <raymath.h>
 #include <utils/assets.hpp>
 #include "CelestialBody.hpp"
+#include "CelestialLabels.hpp"
+#include "OrbitTrail.hpp"
 
 render::CelestialManager::CelestialManager() :
-    _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _visualConfig(), _scaleStrategy(nullptr)
+    _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _scaleStrategy(nullptr), _visualConfig(),
+    _features()
 {
     this->_resourceManager = std::make_unique<ResourceManager>();
 
     this->_updateScaleStrategy();
+
+    this->_features.push_back(std::make_unique<CelestialLabels>());
+    this->_features.push_back(std::make_unique<OrbitTrail>());
 }
 
 void render::CelestialManager::changeScaleMode()
@@ -43,12 +49,12 @@ void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::regis
     }
 
     if (auto texture = registry.try_get<common::components::Texture>(entity)) {
-        auto model = this->_resourceManager->getOrCreateModel(texture->path);
-        body.setModel(model);
+        auto model = this->_resourceManager->getOrCreateModelInfo(texture->path);
+        body.setModelInfo(model);
     }
 
-    if (!body.getModel()) {
-        body.setModel(this->_resourceManager->getOrCreateModel(common::DEFAULT_TEXTURE_PATH));
+    if (!body.getModelInfo()) {
+        body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
     }
 
     body.init();
@@ -66,12 +72,31 @@ void render::CelestialManager::update()
     if (this->_scaleStrategy && this->_hasBodiesBeenModified()) {
         this->_scaleStrategy->rescale(this->_bodies);
     }
+
+    for (auto& [entity, body] : this->_bodies) {
+        for (auto& feature : this->_features) {
+            feature->update(entity, body);
+        }
+    }
 }
 
-void render::CelestialManager::render() const
+void render::CelestialManager::render(const raylib::Camera& camera) const
 {
-    for (auto& [_, body] : this->_bodies) {
+    for (auto& [entity, body] : this->_bodies) {
+        for (auto& feature : this->_features) {
+            feature->render(entity, body, camera);
+        }
+
         body.render();
+    }
+}
+
+void render::CelestialManager::_updateScaleStrategy()
+{
+    this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)();
+
+    for (auto& feature : this->_features) {
+        feature->reset();
     }
 }
 

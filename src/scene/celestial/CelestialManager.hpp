@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Camera3D.hpp>
 #include <components/position.hpp>
 #include <components/radius.hpp>
 #include <entt/entt.hpp>
@@ -7,10 +8,12 @@
 #include <Model.hpp>
 #include <raylib.h>
 #include <unordered_map>
+#include <vector>
 #include "CelestialBody.hpp"
+#include "IRenderFeature.hpp"
+#include "RealisticScaleMode.hpp"
 #include "ResourceManager.hpp"
-#include "scaleMode/RealisticScaleMode.hpp"
-#include "scaleMode/VisualScaleMode.hpp"
+#include "VisualScaleMode.hpp"
 
 namespace render {
     class CelestialManager {
@@ -29,13 +32,13 @@ namespace render {
 
             const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
 
-            void render() const;
+            void render(const raylib::Camera& camera) const;
 
         private:
             void _addOrUpdateBody(entt::entity entity, entt::registry& registry, common::components::Position pos,
                                   common::components::Radius radius);
 
-            void _updateScaleStrategy() { this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)(); }
+            void _updateScaleStrategy();
             [[nodiscard]] bool _hasBodiesBeenModified();
 
             std::unique_ptr<ResourceManager> _resourceManager;
@@ -43,9 +46,10 @@ namespace render {
             std::unordered_map<entt::entity, CelestialBody> _bodies;
 
             ScaleMode _scaleMode;
+            std::unique_ptr<IScaleMode> _scaleStrategy;
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
-            std::unique_ptr<IScaleMode> _scaleStrategy;
+            std::vector<std::unique_ptr<IRenderFeature>> _features;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},
