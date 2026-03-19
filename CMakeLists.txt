@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CPM_USE_LOCAL_PACKAGES ON)
-cmake_policy(SET CMP0002 OLD)
 
 include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
