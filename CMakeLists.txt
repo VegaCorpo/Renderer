@@ -47,7 +47,6 @@ endif()
 add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp
-    src/RenderDataHandler.cpp
 
     src/window/RenderWindow.cpp
 

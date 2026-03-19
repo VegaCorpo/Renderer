@@ -3,7 +3,6 @@
 #include <memory>
 #include <queue>
 #include "interfaces/IRenderEngine.hpp"
-#include "RenderDataHandler.hpp"
 #include "RenderWindow.hpp"
 #include "Scene.hpp"
 #include "./ui/UIEngine.hpp"
@@ -40,9 +39,6 @@ namespace render {
 
             bool _running = false;
 
-            RenderDataHandler _renderDataHandler;
-
-            common::RenderDataBuffer _currentBuffer;
             std::unordered_map<unsigned int, Texture2D> _textures; 
 
             std::unique_ptr<RenderWindow> _window;

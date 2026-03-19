@@ -6,7 +6,7 @@
 #include <iostream>
 #include "rlgl.h"
 
-render::RenderEngine::RenderEngine() : _running(false), _renderDataHandler(), _window(nullptr), _scene(nullptr)
+render::RenderEngine::RenderEngine() : _running(false), _window(nullptr), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()
@@ -24,8 +24,6 @@ void render::RenderEngine::init()
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
-    this->_currentBuffer = buffer;
-    this->_renderDataHandler.update(buffer);
 }
 
 void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
@@ -92,7 +90,9 @@ void render::RenderEngine::render(std::function<void()> uiRender)
 
     // this->_renderDataHandler.render(this->_currentBuffer);
 
-    if (uiRender)
+    if (uiRender) {
         uiRender();
+    }
+
     this->_window->EndDrawing();
 }
