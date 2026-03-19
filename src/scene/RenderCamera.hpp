@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Camera3D.hpp>
-#include <cstdint>
 #include <entt/entity/fwd.hpp>
 
 namespace render {
