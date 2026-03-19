@@ -99,7 +99,6 @@ target_include_directories(orbital_render PUBLIC
     ${CPM_PACKAGE_imgui_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
-    ${CPM_PACKAGE_glfw_SOURCE_DIR}/include
     ${RAYLIB_GLFW_INCLUDE_DIR}
 )
 
