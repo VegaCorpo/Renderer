@@ -34,14 +34,13 @@ namespace render {
             void syncIn(entt::registry& registry) override;
             void update() override;
 
-            void render() override;
+            void render(std::function<void()> uiRender = nullptr) override;
 
         private:
 
             bool _running = false;
 
             RenderDataHandler _renderDataHandler;
-            UIEngine _uiEngine;
 
             common::RenderDataBuffer _currentBuffer;
             std::unordered_map<unsigned int, Texture2D> _textures; 

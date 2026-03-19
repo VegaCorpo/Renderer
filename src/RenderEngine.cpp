@@ -20,8 +20,6 @@ void render::RenderEngine::init()
     this->_scene->init();
 
     this->_running = true;
-    GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(GetWindowHandle());
-    this->_uiEngine.init(glfwWindow);
 }
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
@@ -77,7 +75,7 @@ void render::RenderEngine::update()
     }
 }
 
-void render::RenderEngine::render()
+void render::RenderEngine::render(std::function<void()> uiRender)
 {
     if (!this->_running || !this->_window || !this->_scene)
         return;
@@ -93,8 +91,8 @@ void render::RenderEngine::render()
     this->_window->DrawFPS();
 
     // this->_renderDataHandler.render(this->_currentBuffer);
-    
-    this->_uiEngine.render();
 
+    if (uiRender)
+        uiRender();
     this->_window->EndDrawing();
 }

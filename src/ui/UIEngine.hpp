@@ -8,18 +8,18 @@
 namespace render {
 
     // Core UI engine interface responsible for generating render data.
-    class UIEngine {
+    class UIEngine : public common::IUIEngine {
         public:
             ~UIEngine() = default;
 
-            void init(GLFWwindow* window);
+            void init(void* window) override;
             
             // Update UI frame and convert it for the renderer
-            void update(float dt, float w, float h);
+            void update(float dt, float w, float h) override;
             
-            common::RenderDataBuffer getDataBuffer() { return this->_renderBuffer; }
+            common::RenderDataBuffer getDataBuffer() override { return this->_renderBuffer; }
 
-            void render();
+            void render() override;
         private:
 
             template<typename TLayer>
