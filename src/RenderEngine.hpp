@@ -35,7 +35,8 @@ namespace render {
             void render(std::function<void()> uiRender) override;
 
         private:
-            bool _running = false;
+            bool _running;
+            bool _drawUI;
 
             std::unique_ptr<RenderWindow> _window;
             std::unique_ptr<Scene> _scene;

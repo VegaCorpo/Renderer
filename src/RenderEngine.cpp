@@ -3,7 +3,7 @@
 #include "InputHandler.hpp"
 #include "RenderActions.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _window(nullptr), _scene(nullptr)
+render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _window(nullptr), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()

@@ -41,7 +41,7 @@ namespace render {
                 {common::Action::ROTATE_CAMERA_DOWN, [](Scene& s) { s._camera->addRotation({0, 1}); }},
                 {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s) { s._camera->addRotation({-1, 0}); }},
                 {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s) { s._camera->addRotation({1, 0}); }},
-                {common::Action::CHANGE_SELECTION, [](Scene& s) { s._celestialManager->changeScaleMode(); }}
+                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s) { s._celestialManager->changeScaleMode(); }}
             };
     };
 } // namespace render
