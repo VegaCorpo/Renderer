@@ -5,7 +5,6 @@
 #include "interfaces/IRenderEngine.hpp"
 #include "RenderWindow.hpp"
 #include "Scene.hpp"
-#include "./ui/UIEngine.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
@@ -33,13 +32,10 @@ namespace render {
             void syncIn(entt::registry& registry) override;
             void update() override;
 
-            void render(std::function<void()> uiRender = nullptr) override;
+            void render(std::function<void()> uiRender) override;
 
         private:
-
             bool _running = false;
-
-            std::unordered_map<unsigned int, Texture2D> _textures; 
 
             std::unique_ptr<RenderWindow> _window;
             std::unique_ptr<Scene> _scene;

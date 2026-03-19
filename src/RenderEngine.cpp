@@ -3,9 +3,6 @@
 #include "InputHandler.hpp"
 #include "RenderActions.hpp"
 
-#include <iostream>
-#include "rlgl.h"
-
 render::RenderEngine::RenderEngine() : _running(false), _window(nullptr), _scene(nullptr)
 {}
 
@@ -23,8 +20,7 @@ void render::RenderEngine::init()
 }
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
-{
-}
+{}
 
 void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
 {
@@ -54,7 +50,6 @@ void render::RenderEngine::syncIn(entt::registry& registry)
     if (this->_scene) {
         this->_scene->syncIn(registry);
     }
-
 }
 
 void render::RenderEngine::update()
@@ -84,9 +79,6 @@ void render::RenderEngine::render(std::function<void()> uiRender)
     this->_scene->render();
 
     EndMode3D();
-
-
-    this->_window->DrawFPS();
 
     if (uiRender) {
         uiRender();
