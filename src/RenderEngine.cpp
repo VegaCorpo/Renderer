@@ -80,7 +80,7 @@ void render::RenderEngine::render(std::function<void()> uiRender)
 
     EndMode3D();
 
-    if (uiRender) {
+    if (this->_drawUI && uiRender) {
         uiRender();
     }
 
