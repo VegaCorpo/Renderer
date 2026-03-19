@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include <entt/entity/fwd.hpp>
 
 render::Scene::Scene() : _camera(nullptr), _celestialManager()
 {}
@@ -9,6 +10,8 @@ void render::Scene::init()
     this->_camera->init();
 
     this->_celestialManager = std::make_unique<CelestialManager>();
+
+    this->_camera->follow(static_cast<entt::entity>(0));
 }
 
 void render::Scene::handleAction(common::Action action)
@@ -29,12 +32,18 @@ void render::Scene::syncIn(entt::registry& registry)
 
 void render::Scene::update()
 {
-    if (this->_camera) {
-        this->_camera->update();
+    if (!this->_camera || !this->_celestialManager) {
+        throw std::runtime_error("Scene not initialized");
     }
 
-    if (this->_celestialManager) {
-        this->_celestialManager->update();
+    this->_celestialManager->update();
+
+    this->_camera->update();
+
+    if (this->_camera->isFollowing()) {
+        Vector3 pos = this->_celestialManager->getBodyPosition(this->_camera->getFollowedEntity());
+
+        this->_camera->follow(pos);
     }
 }
 
@@ -42,8 +51,10 @@ void render::Scene::render()
 {
     BeginMode3D(this->_camera->getCamera());
 
-    this->_celestialManager->render();
+    this->_celestialManager->render3D(this->_camera->getCamera());
     DrawGrid(10, 100);
 
     EndMode3D();
+
+    this->_celestialManager->render2D(this->_camera->getCamera());
 }

@@ -63,6 +63,7 @@ namespace inputs {
              {inputs::Status::PRESSED, common::Action::ROTATE_CAMERA_RIGHT},
              {inputs::Status::RELEASED, common::Action::ROTATE_CAMERA_LEFT},
          }},
+        {KEY_R, {{inputs::Status::RELEASED, common::Action::CHANGE_SELECTION}}},
     };
 
     static const std::unordered_map<KeyboardKey, KeyboardKey> AzertyToQwertyKeys = {

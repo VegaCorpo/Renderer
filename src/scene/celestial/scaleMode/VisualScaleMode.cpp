@@ -48,7 +48,7 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
     }
 
     for (auto& [_, bodyA] : bodies) {
-        for (auto& [__, bodyB] : bodies) {
+        for (auto& [_, bodyB] : bodies) {
 
             if (&bodyA == &bodyB)
                 continue;

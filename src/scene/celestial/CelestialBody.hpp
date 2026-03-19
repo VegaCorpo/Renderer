@@ -4,6 +4,7 @@
 #include <Model.hpp>
 #include <raylib.h>
 #include <string>
+#include "ResourceManager.hpp"
 
 namespace render {
     class CelestialBody {
@@ -23,6 +24,7 @@ namespace render {
              * @return false
              */
             [[nodiscard]] bool hasBeenModified();
+            void modified() { this->_hasBeenModified = true; }
 
             void setName(const std::string& name) { this->_name = name; }
             [[nodiscard]] const std::string& getName() const { return this->_name; }
@@ -37,8 +39,8 @@ namespace render {
             void setRenderScale(float scale) { this->_renderScale = scale; }
             [[nodiscard]] float getRenderScale() const { return this->_renderScale; }
 
-            void setModel(std::shared_ptr<raylib::Model> model) { this->_model = std::move(model); }
-            [[nodiscard]] const std::shared_ptr<raylib::Model>& getModel() const { return this->_model; }
+            void setModelInfo(std::shared_ptr<ModelInfo> modelInfo) { this->_modelInfo = std::move(modelInfo); }
+            [[nodiscard]] const std::shared_ptr<ModelInfo>& getModelInfo() const { return this->_modelInfo; }
 
             void computePositionAndScale(float scaleFactor);
             void computeScenePosition(float scaleFactor);
@@ -47,8 +49,6 @@ namespace render {
             void render() const;
 
         protected:
-            void _modified() { this->_hasBeenModified = true; }
-
             bool _hasBeenInitialized;
             bool _hasBeenModified;
 
@@ -60,6 +60,6 @@ namespace render {
             float _realRadiusKm;
             float _renderScale;
 
-            std::shared_ptr<raylib::Model> _model;
+            std::shared_ptr<render::ModelInfo> _modelInfo;
     };
 } // namespace render
