@@ -14,7 +14,7 @@ CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
 CPMGetPackage("glfw")
-CPMGetPackage("Raylib")
+CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 CPMGetPackage("ImGui")
 
