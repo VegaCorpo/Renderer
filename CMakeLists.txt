@@ -88,16 +88,15 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
     ${Common_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${RAYLIB_GLFW_INCLUDE_DIR}
 )
 

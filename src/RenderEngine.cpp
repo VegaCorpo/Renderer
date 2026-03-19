@@ -88,8 +88,6 @@ void render::RenderEngine::render(std::function<void()> uiRender)
 
     this->_window->DrawFPS();
 
-    // this->_renderDataHandler.render(this->_currentBuffer);
-
     if (uiRender) {
         uiRender();
     }
