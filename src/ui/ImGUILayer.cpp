@@ -9,7 +9,6 @@
 
 void render::ImGUILayer::init(GLFWwindow* window)
 {
-    std::cout << "[ImGUILayer] init called, window=" << window << std::endl;
     this->_window = window;
     this->_isShutdown = false;
     IMGUI_CHECKVERSION();
@@ -19,7 +18,6 @@ void render::ImGUILayer::init(GLFWwindow* window)
     ImGui::StyleColorsDark();
     bool glfw_ok = ImGui_ImplGlfw_InitForOpenGL(window, true);
     bool gl_ok   = ImGui_ImplOpenGL3_Init("#version 130");
-    std::cout << "[ImGUILayer] glfw_ok=" << glfw_ok << " gl_ok=" << gl_ok << std::endl;
 }
 
 void render::ImGUILayer::render()
