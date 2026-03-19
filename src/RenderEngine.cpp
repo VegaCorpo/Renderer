@@ -3,7 +3,10 @@
 #include "InputHandler.hpp"
 #include "RenderActions.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _renderDataHandler(), _window(nullptr), _scene(nullptr)
+#include <iostream>
+#include "rlgl.h"
+
+render::RenderEngine::RenderEngine() : _running(false), _window(nullptr), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()
@@ -21,7 +24,6 @@ void render::RenderEngine::init()
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {
-    this->_renderDataHandler.update(buffer);
 }
 
 void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
@@ -71,7 +73,7 @@ void render::RenderEngine::update()
     }
 }
 
-void render::RenderEngine::render()
+void render::RenderEngine::render(std::function<void()> uiRender)
 {
     if (!this->_running || !this->_window || !this->_scene)
         return;
@@ -81,7 +83,14 @@ void render::RenderEngine::render()
 
     this->_scene->render();
 
+    EndMode3D();
+
+
     this->_window->DrawFPS();
+
+    if (uiRender) {
+        uiRender();
+    }
 
     this->_window->EndDrawing();
 }
