@@ -2,7 +2,8 @@
 #include <raymath.h>
 
 render::CelestialBody::CelestialBody() :
-    _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(0.0f), _scenePosition(0.0f), _realRadiusKm(0.0f), _renderScale(0.0f), _model(nullptr)
+    _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(0.0f), _scenePosition(0.0f),
+    _realRadiusKm(0.0f), _renderScale(0.0f), _model(nullptr)
 {}
 
 bool render::CelestialBody::hasBeenModified()
@@ -18,7 +19,7 @@ bool render::CelestialBody::hasBeenModified()
 void render::CelestialBody::setRealPositionKm(const Vector3& position)
 {
     if (!Vector3Equals(this->_realPositionKm, position)) {
-        this->_modified();
+        this->modified();
     }
 
     this->_realPositionKm = position;
@@ -27,7 +28,7 @@ void render::CelestialBody::setRealPositionKm(const Vector3& position)
 void render::CelestialBody::setRealRadiusKm(float radius)
 {
     if (this->_realRadiusKm != radius) {
-        this->_modified();
+        this->modified();
     }
 
     this->_realRadiusKm = radius;

@@ -13,7 +13,6 @@
 #include "scaleMode/VisualScaleMode.hpp"
 
 namespace render {
-
     class CelestialManager {
         public:
             enum class ScaleMode { VISUAL, REALISTIC, SCALE_MODE_NUMBER };
@@ -21,6 +20,7 @@ namespace render {
             CelestialManager();
             ~CelestialManager() = default;
 
+            void changeScaleMode();
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 

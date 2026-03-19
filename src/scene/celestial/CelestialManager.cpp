@@ -14,6 +14,18 @@ render::CelestialManager::CelestialManager() :
     this->_updateScaleStrategy();
 }
 
+void render::CelestialManager::changeScaleMode()
+{
+    this->_scaleMode = static_cast<ScaleMode>((static_cast<int>(this->_scaleMode) + 1) %
+                                              static_cast<int>(ScaleMode::SCALE_MODE_NUMBER));
+
+    this->_updateScaleStrategy();
+
+    if (!this->_bodies.empty()) {
+        this->_bodies.begin()->second.modified();
+    }
+}
+
 void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::registry& registry,
                                                 common::components::Position pos, common::components::Radius radius)
 {

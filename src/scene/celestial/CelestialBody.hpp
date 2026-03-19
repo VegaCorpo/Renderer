@@ -23,6 +23,7 @@ namespace render {
              * @return false
              */
             [[nodiscard]] bool hasBeenModified();
+            void modified() { this->_hasBeenModified = true; }
 
             void setName(const std::string& name) { this->_name = name; }
             [[nodiscard]] const std::string& getName() const { return this->_name; }
@@ -47,8 +48,6 @@ namespace render {
             void render() const;
 
         protected:
-            void _modified() { this->_hasBeenModified = true; }
-
             bool _hasBeenInitialized;
             bool _hasBeenModified;
 
