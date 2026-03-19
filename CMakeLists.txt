@@ -94,6 +94,7 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
     ${Common_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
