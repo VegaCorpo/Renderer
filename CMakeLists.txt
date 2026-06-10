@@ -110,3 +110,25 @@ if(WIN32)
 
     set(TARGET_DIR "${PROJECT_DIR}")
 endif()
+
+add_executable(test_render src/testmain.cpp)
+
+# Include the RenderEngine headers
+target_include_directories(test_render PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/window
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
+    ${Common_SOURCE_DIR}/include
+)
+
+# Link the RenderEngine shared library
+target_link_libraries(test_render PRIVATE
+    orbital_render
+    Common
+    EnTT::EnTT
+    raylib
+    raylib_cpp
+)
+
+# Set runtime library search path so it finds liborbital_render.so
+set_target_properties(test_render PROPERTIES BUILD_RPATH "${CMAKE_BINARY_DIR}")
