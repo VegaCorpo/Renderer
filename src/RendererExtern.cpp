@@ -10,6 +10,7 @@ extern "C" {
     {
         return std::make_unique<render::UIEngine>();
     }
+
     std::unique_ptr<common::IRenderEngine> get_engine()
     {
         return std::make_unique<render::RenderEngine>();

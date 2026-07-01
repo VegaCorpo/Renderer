@@ -11,6 +11,7 @@ namespace render {
     constexpr int DEFAULT_WIDTH = 1280;
     constexpr int DEFAULT_HEIGHT = 800;
     constexpr int DEFAULT_FPS = 60;
+    constexpr TraceLogLevel LOG_LEVEL = LOG_DEBUG;
 
     class RenderEngine : public common::IRenderEngine {
         public:
