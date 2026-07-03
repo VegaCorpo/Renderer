@@ -8,7 +8,8 @@ render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _window(n
 
 void render::RenderEngine::init()
 {
-    this->_window = std::make_unique<RenderWindow>(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_FPS, LOG_LEVEL);
+    this->_window =
+        std::make_unique<RenderWindow>(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_FPS, LOG_LEVEL);
 
     this->_scene = std::make_unique<Scene>();
     this->_scene->init();
@@ -51,7 +52,10 @@ void render::RenderEngine::syncIn(entt::registry& registry)
 
 void render::RenderEngine::update()
 {
-    if (this->_window->ShouldClose()) {
+    if (!this->_running || !this->_window || !this->_scene)
+        return;
+
+    if (this->_window->ShouldClose()) { // NOLINT(readability-static-accessed-through-instance)
         this->_running = false;
         return;
     }
@@ -61,9 +65,7 @@ void render::RenderEngine::update()
     inputs::InputHandler::updateActions(actions);
     this->handleActions(actions);
 
-    if (this->_scene) {
-        this->_scene->update();
-    }
+    this->_scene->update();
 }
 
 void render::RenderEngine::render(std::function<void()> uiRender)

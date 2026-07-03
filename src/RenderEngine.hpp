@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <queue>
+#include "GLFW/glfw3.h"
 #include "interfaces/IRenderEngine.hpp"
 #include "RenderWindow.hpp"
 #include "Scene.hpp"
@@ -11,7 +12,7 @@ namespace render {
     constexpr int DEFAULT_WIDTH = 1280;
     constexpr int DEFAULT_HEIGHT = 800;
     constexpr int DEFAULT_FPS = 60;
-    constexpr TraceLogLevel LOG_LEVEL = LOG_DEBUG;
+    constexpr TraceLogLevel LOG_LEVEL = LOG_NONE;
 
     class RenderEngine : public common::IRenderEngine {
         public:
@@ -24,7 +25,7 @@ namespace render {
 
             unsigned int loadTextureFromPixels(unsigned char* pixels, int width, int height) override { return 0; }
 
-            void* getWindowHandle() override { return GetWindowHandle(); }
+            void* getWindowHandle() override { return glfwGetCurrentContext(); }
 
             void setVertexBuffer(common::RenderDataBuffer& buffer) override;
 
