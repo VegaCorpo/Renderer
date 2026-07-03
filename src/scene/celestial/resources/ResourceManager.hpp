@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <Mesh.hpp>
 #include <raylib.h>
@@ -28,7 +29,7 @@ namespace render {
 
             std::unordered_map<std::string, std::shared_ptr<ModelInfo>> _modelCache;
 
-            Mesh _baseMesh;
+            std::function<Mesh ()> _baseMeshFunction;
 
             Texture2D _defaultTexture = {0};
     };
