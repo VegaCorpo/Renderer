@@ -15,10 +15,14 @@ CPMGetPackage("Common")
 CPMGetPackage("EnTT")
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
+
+# Allow jpg file extension
+target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
+
+# UI Packages
 CPMGetPackage("ImGui")
 
 set(RAYLIB_GLFW_INCLUDE_DIR "${raylib_SOURCE_DIR}/src/external/glfw/include")
-
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -63,6 +67,7 @@ add_library(orbital_render SHARED
 
     src/inputs/InputHandler.cpp #! to change
 
+    # UI library
     src/ui/UIEngine.cpp
     src/ui/ImGUILayer.cpp
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui.cpp
@@ -70,7 +75,7 @@ add_library(orbital_render SHARED
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_tables.cpp
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_widgets.cpp
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp 
+    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 )
 
 find_package(OpenGL REQUIRED)
@@ -78,24 +83,26 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(orbital_render PRIVATE
     Common
     EnTT::EnTT
-    glfw
     raylib
     raylib_cpp
     OpenGL::GL
 )
 
 target_include_directories(orbital_render PUBLIC
+    ${Common_SOURCE_DIR}
+
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
-    ${Common_SOURCE_DIR}
+
+    # UI include directories
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CPM_PACKAGE_imgui_SOURCE_DIR}
     ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
     ${RAYLIB_GLFW_INCLUDE_DIR}

@@ -1,6 +1,5 @@
 #include "UIEngine.hpp"
 #include "ImGUILayer.hpp"
-#include <iostream>
 
 void render::UIEngine::init(void* windowHandle)
 {
@@ -12,12 +11,15 @@ void render::UIEngine::init(void* windowHandle)
 
 void render::UIEngine::render()
 {
-    if (this->_layer)
+    if (this->_layer) {
         this->_layer->render();
+    }
 }
 
 // TO DELETE LATER
 void render::UIEngine::update(float dt, float w, float h)
 {
-    (void)dt; (void)w; (void)h;
+    (void)dt;
+    (void)w;
+    (void)h;
 }
