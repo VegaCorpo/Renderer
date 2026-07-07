@@ -17,7 +17,7 @@ CPMDeclarePackage(EnTT
 #raylib
 CPMDeclarePackage(raylib
     GITHUB_REPOSITORY raysan5/raylib
-    GIT_TAG 5.5
+    GIT_TAG 6.0
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
     OPTIONS
@@ -29,7 +29,7 @@ CPMDeclarePackage(raylib
 #raylib-cpp
 CPMDeclarePackage(raylib_cpp
     GITHUB_REPOSITORY robloach/raylib-cpp
-    GIT_TAG v5.5.0
+    GIT_TAG v6.0.2
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )
