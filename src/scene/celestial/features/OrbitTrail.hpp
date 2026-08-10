@@ -27,7 +27,7 @@ namespace render {
                 }
             }
 
-            void render(entt::entity entity, const CelestialBody& body, const raylib::Camera&) const override
+            void draw(entt::entity entity, const CelestialBody& body, const raylib::Camera&) const override
             {
                 auto it = _trails.find(entity);
                 if (it == _trails.end())

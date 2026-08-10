@@ -1,11 +1,10 @@
 #include "ResourceManager.hpp"
 #include <iostream>
-#include <utils/assets.hpp>
+#include <raylib.h>
 
-render::ResourceManager::ResourceManager()
+render::ResourceManager::ResourceManager() : _baseModel(UVSPHERE_MODEL_PATH)
+// _baseMesh(this->_baseModel.meshes[0])
 {
-    // this->_baseMeshFunction = [](){ raylib::Mesh::Sphere(1, 32, 32); };
-
     this->_modelCache[common::DEFAULT_TEXTURE_PATH] = this->_createModelInfoFromTexture(common::DEFAULT_TEXTURE_PATH);
 }
 
@@ -40,10 +39,7 @@ std::shared_ptr<render::ModelInfo> render::ResourceManager::_createModelInfoFrom
 
     auto info = std::make_shared<ModelInfo>();
 
-    info->model = raylib::Model(raylib::Mesh::Sphere(1, 32, 32));
-
-    info->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
-
+    info->texture = tex;
     info->dominantColor = _computeDominantColor(tex);
 
     return info;

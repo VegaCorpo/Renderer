@@ -91,14 +91,16 @@ Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
 
 void render::CelestialManager::render3D(const raylib::Camera& camera) const
 {
+    auto& baseModel = this->_resourceManager->getBaseModel();
+
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (!feature->is2D()) {
-                feature->render(entity, body, camera);
+                feature->draw(entity, body, camera);
             }
         }
 
-        body.render();
+        body.draw(baseModel);
     }
 }
 
@@ -107,7 +109,7 @@ void render::CelestialManager::render2D(const raylib::Camera& camera) const
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (feature->is2D()) {
-                feature->render(entity, body, camera);
+                feature->draw(entity, body, camera);
             }
         }
     }

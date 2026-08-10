@@ -46,7 +46,7 @@ namespace render {
             void computeScenePosition(float scaleFactor);
             void computeRenderScale(float sizeScaleFactor);
 
-            void render() const;
+            void draw(const raylib::Model &model) const;
 
         protected:
             bool _hasBeenInitialized;

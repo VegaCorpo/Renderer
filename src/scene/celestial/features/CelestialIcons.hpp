@@ -9,7 +9,7 @@ namespace render {
 
             void update(entt::entity entity, const CelestialBody& body) override {}
 
-            void render(entt::entity entity, const CelestialBody& body, const raylib::Camera& camera) const override
+            void draw(entt::entity entity, const CelestialBody& body, const raylib::Camera& camera) const override
             {
                 Vector3 pos = body.getScenePosition();
 

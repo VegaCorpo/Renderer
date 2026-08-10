@@ -50,11 +50,12 @@ void render::CelestialBody::computeRenderScale(float sizeScaleFactor)
     this->_renderScale = this->_realRadiusKm * sizeScaleFactor;
 }
 
-void render::CelestialBody::render() const
+void render::CelestialBody::draw(const raylib::Model& model) const
 {
     if (!this->_modelInfo) {
         return;
     }
 
-    this->_modelInfo->model.Draw(this->_scenePosition, this->_renderScale);
+    model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = this->_modelInfo->texture;
+    model.Draw(this->_scenePosition, this->_renderScale);
 }
