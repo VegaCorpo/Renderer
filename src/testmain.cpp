@@ -19,8 +19,7 @@
 //     }
 // }
 
-#include "raylib-cpp.hpp"
-#include <iostream>
+#include <raylib-cpp.hpp>
 
 int main()
 {
@@ -32,28 +31,18 @@ int main()
 
     // Simple camera
     raylib::Camera3D camera(
-        raylib::Vector3(5.0f, 3.0f, 5.0f),   // position
+        raylib::Vector3(2.0f, 2.0f, 2.0f),   // position
         raylib::Vector3(0.0f, 0.0f, 0.0f),   // target
         raylib::Vector3(0.0f, 1.0f, 0.0f),   // up
         45.0f,                               // fov
         CAMERA_PERSPECTIVE
     );
 
-    // 1) Charger le modèle complet depuis l'OBJ
-    raylib::Model tempModel("../assets/models/UVSphere.obj");
+    raylib::Model earthModel("../assets/models/UVSphere.obj");
 
-    // 2) Extraire le mesh et l'uploader seul
-    raylib::Mesh sphereMesh = tempModel.meshes[0];
-
-    // 3) Créer un nouveau modèle propre depuis le mesh
     raylib::Texture textureEarth("../assets/textures/earth.jpg");
 
-    raylib::Model earthModel = LoadModelFromMesh(sphereMesh);
     earthModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textureEarth;
-
-    // sphereModel.transform = MatrixTranslate(0.0f, 0.0f, 0.0f);
-
-    // raylib::Model modelGlb("../assets/models/Venus.glb");   // textures intégrées, recommandé
 
     while (!window.ShouldClose())
     {
