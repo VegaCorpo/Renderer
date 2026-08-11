@@ -13,14 +13,19 @@ include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
+set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 
+if (TARGET glfw)
+    set_target_properties(glfw PROPERTIES
+        C_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN OFF
+    )
+endif()
+
 # Allow jpg file extension
 target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
-
-# UI Packages
-CPMGetPackage("ImGui")
 
 set(RAYLIB_GLFW_INCLUDE_DIR "${raylib_SOURCE_DIR}/src/external/glfw/include")
 
@@ -67,16 +72,6 @@ add_library(orbital_render SHARED
     src/scene/celestial/resources/ResourceManager.cpp
 
     src/inputs/InputHandler.cpp #! to change
-
-    # UI library
-    src/ui/UIEngine.cpp
-    src/ui/ImGUILayer.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_draw.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_tables.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/imgui_widgets.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 )
 
 find_package(OpenGL REQUIRED)
@@ -108,12 +103,6 @@ target_include_directories(orbital_render PUBLIC
     # Renderer includes (raylib)
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
-
-    # UI include directories
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}
-    ${CPM_PACKAGE_imgui_SOURCE_DIR}/backends
-    ${RAYLIB_GLFW_INCLUDE_DIR}
 )
 
 if(WIN32)
