@@ -70,15 +70,14 @@ void render::RenderEngine::update()
 
 void render::RenderEngine::render(std::function<void()> uiRender)
 {
-    if (!this->_running || !this->_window || !this->_scene)
+    if (!this->_running || !this->_window || !this->_scene) {
         return;
+    }
 
     this->_window->BeginDrawing();
     this->_window->ClearBackground();
 
     this->_scene->render();
-
-    EndMode3D();
 
     if (this->_drawUI && uiRender) {
         uiRender();
