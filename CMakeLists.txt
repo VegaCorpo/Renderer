@@ -52,7 +52,8 @@ add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp
 
-    src/window/RenderWindow.cpp
+    src/renderer/ARenderer.cpp
+    src/renderer/raylib/RaylibRenderer.cpp
 
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
@@ -100,6 +101,13 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
+
+    # Math
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/math
+
+    # Renderer includes (raylib)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
 
     # UI include directories
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui

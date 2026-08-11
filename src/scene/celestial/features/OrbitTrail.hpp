@@ -1,14 +1,16 @@
 #pragma once
 
-#include "IRenderFeature.hpp"
+#include "ARenderFeature.hpp"
 
 namespace render {
-    class OrbitTrail : public IRenderFeature {
+    class OrbitTrail : public ARenderFeature {
         public:
             static constexpr int DEFAULT_UPDATE_INTERVAL = 10;
             static constexpr size_t MAX_TRAIL_POINTS = 1000;
 
-            explicit OrbitTrail(int updateInterval = DEFAULT_UPDATE_INTERVAL) : _updateInterval(updateInterval) {}
+            explicit OrbitTrail(std::shared_ptr<ARenderer>& renderer, int updateInterval = DEFAULT_UPDATE_INTERVAL) :
+                ARenderFeature(renderer), _updateInterval(updateInterval)
+            {}
 
             void update(entt::entity entity, const CelestialBody& body) override
             {
@@ -27,7 +29,7 @@ namespace render {
                 }
             }
 
-            void draw(entt::entity entity, const CelestialBody& body, const raylib::Camera&) const override
+            void draw(entt::entity entity, const CelestialBody& body, const render::CameraView&) const override
             {
                 auto it = _trails.find(entity);
                 if (it == _trails.end())
@@ -42,7 +44,7 @@ namespace render {
                 for (size_t i = 1; i < total; i++) {
                     float t = static_cast<float>(i) / static_cast<float>(total - 1);
 
-                    DrawLine3D(trail[i - 1], trail[i], body.getModelInfo()->dominantColor);
+                    this->_renderer->drawLine3D(trail[i - 1], trail[i], body.getModelInfo()->dominantColor);
                 }
             }
 

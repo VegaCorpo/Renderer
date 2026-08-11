@@ -4,16 +4,10 @@
 #include <queue>
 #include "GLFW/glfw3.h"
 #include "interfaces/IRenderEngine.hpp"
-#include "RenderWindow.hpp"
 #include "Scene.hpp"
+#include "renderer/ARenderer.hpp"
 
 namespace render {
-    constexpr const char* DEFAULT_TITLE = "Orbital Engine Renderer";
-    constexpr int DEFAULT_WIDTH = 1280;
-    constexpr int DEFAULT_HEIGHT = 800;
-    constexpr int DEFAULT_FPS = 60;
-    constexpr TraceLogLevel LOG_LEVEL = LOG_NONE;
-
     class RenderEngine : public common::IRenderEngine {
         public:
             RenderEngine();
@@ -40,7 +34,8 @@ namespace render {
             bool _running;
             bool _drawUI;
 
-            std::unique_ptr<RenderWindow> _window;
+            std::shared_ptr<ARenderer> _renderer;
+
             std::unique_ptr<Scene> _scene;
     };
 } // namespace render

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Camera3D.hpp>
 #include <entt/entt.hpp>
 #include "CelestialBody.hpp"
+#include "RenderTypes.hpp"
 
 namespace render {
     class IRenderFeature {
@@ -10,7 +10,7 @@ namespace render {
             virtual ~IRenderFeature() = default;
 
             virtual void update(entt::entity entity, const CelestialBody& body) = 0;
-            virtual void draw(entt::entity entity, const CelestialBody& body, const raylib::Camera& camera) const = 0;
+            virtual void draw(entt::entity entity, const CelestialBody& body, const render::CameraView& cameraView) const = 0;
 
             virtual void reset() = 0;
 

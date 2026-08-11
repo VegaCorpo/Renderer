@@ -1,29 +1,28 @@
 #include "RenderCamera.hpp"
-#include <raylib.h>
-#include <raymath.h>
+#include "RenderMath.hpp"
 
-render::RenderCamera::RenderCamera() : _camera(), _movementDir(0, 0, 0), _rotationDir(0, 0), _isFollowing(false), _followedEntity()
+render::RenderCamera::RenderCamera() :
+    _cameraView(), _movementDir(), _rotationDir(), _isFollowing(false), _followedEntity()
 {}
 
 void render::RenderCamera::init()
 {
-    this->_camera.position = {150.f, 20.f, 50.f}; // Camera position
-    this->_camera.target = {.0f, .0f, .0f}; // Look at point
-    this->_camera.up = {0.0f, 1.0f, 0.0f}; // Up vector
-    this->_camera.fovy = 45.0f; // Field of view
-    this->_camera.projection = CAMERA_PERSPECTIVE; // Camera projection type
+    this->_cameraView.position = {150.f, 20.f, 50.f}; // Camera position
+    this->_cameraView.target = {.0f, .0f, .0f}; // Look at point
+    this->_cameraView.up = {0.0f, 1.0f, 0.0f}; // Up vector
+    this->_cameraView.fovy = 45.0f; // Field of view
 }
 
 void render::RenderCamera::addMovement(Vector3 dir)
 {
-    _movementDir = Vector3Add(_movementDir, dir);
-    _movementDir = Vector3Clamp(_movementDir, {-1, -1, -1}, {1, 1, 1});
+    _movementDir += dir;
+    _movementDir.clamp({-1, -1, -1}, {1, 1, 1});
 }
 
-void render::RenderCamera::addRotation(Vector2 rot)
+void render::RenderCamera::addRotation(Vector3 rot)
 {
-    _rotationDir = Vector2Add(_rotationDir, rot);
-    _rotationDir = Vector2Clamp(_rotationDir, {-1, -1}, {1, 1});
+    _rotationDir += rot;
+    _rotationDir.clamp({-1, -1, -1}, {1, 1, 1});
 }
 
 void render::RenderCamera::update()
@@ -40,36 +39,39 @@ void render::RenderCamera::follow(entt::entity entity)
 
 void render::RenderCamera::_move()
 {
-    if (Vector3Length(_movementDir) == 0.0001f)
+    if (_movementDir.length() <= 0.0001f)
         return;
 
-    Vector3 forward = Vector3Normalize(Vector3Subtract(_camera.target, _camera.position));
-    Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, _camera.up));
-    Vector3 up = _camera.up;
+    Vector3 forward = (_cameraView.target - _cameraView.position).normalized();
+    Vector3 right = Vector3::cross(forward, _cameraView.up).normalized();
+    Vector3 up = _cameraView.up;
 
-    Vector3 moveWorld = {forward.x * _movementDir.z + right.x * _movementDir.x + up.x * _movementDir.y,
-                         forward.y * _movementDir.z + right.y * _movementDir.x + up.y * _movementDir.y,
-                         forward.z * _movementDir.z + right.z * _movementDir.x + up.z * _movementDir.y};
+    Vector3 moveWorld = forward * _movementDir.z + right * _movementDir.x + up * _movementDir.y;
 
-    moveWorld = Vector3Scale(moveWorld, MOVE_SPEED);
-
-    _camera.position = Vector3Add(_camera.position, moveWorld);
-    _camera.target = Vector3Add(_camera.target, moveWorld);
+    moveWorld *= MOVE_SPEED;
+    _cameraView.position += moveWorld;
+    _cameraView.target += moveWorld;
 }
 
 void render::RenderCamera::_rotate()
 {
-    if (Vector2Length(_rotationDir) <= 0.0001f)
+    if (_rotationDir.length() <= 0.0001f)
         return;
 
-    Vector3 forward = Vector3Normalize(Vector3Subtract(_camera.target, _camera.position));
+    Vector3 forward = (_cameraView.target - _cameraView.position).normalized();
 
-    Matrix yawMat = MatrixRotateY(-_rotationDir.x * ROTATION_SPEED);
-    forward = Vector3Transform(forward, yawMat);
+    if (std::abs(_rotationDir.x) > 0.0001f) {
+        forward = Matrix4::rotateY(forward, -_rotationDir.x * ROTATION_SPEED);
+    }
 
-    Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, _camera.up));
-    Matrix pitchMat = MatrixRotate(right, -_rotationDir.y * ROTATION_SPEED);
-    forward = Vector3Transform(forward, pitchMat);
+    if (std::abs(_rotationDir.y) > 0.0001f) {
+        Vector3 right = Vector3::cross(forward, _cameraView.up).normalized();
+        forward = Matrix4::rotateAxis(forward, right, -_rotationDir.y * ROTATION_SPEED);
+    }
 
-    _camera.target = Vector3Add(_camera.position, forward);
+    if (std::abs(_rotationDir.z) > 0.0001f) {
+        _cameraView.up = Matrix4::rotateAxis(_cameraView.up, forward, _rotationDir.z * ROTATION_SPEED);
+    }
+
+    _cameraView.target = _cameraView.position + forward;
 }

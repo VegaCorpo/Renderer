@@ -1,8 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <Model.hpp>
-#include <raylib.h>
 #include <string>
 #include "ResourceManager.hpp"
 
@@ -29,10 +27,10 @@ namespace render {
             void setName(const std::string& name) { this->_name = name; }
             [[nodiscard]] const std::string& getName() const { return this->_name; }
 
-            void setRealPositionKm(const Vector3& position);
-            [[nodiscard]] const Vector3& getRealPositionKm() const { return this->_realPositionKm; }
-            void setScenePosition(const Vector3& position) { this->_scenePosition = position; }
-            [[nodiscard]] const Vector3& getScenePosition() const { return this->_scenePosition; }
+            void setRealPositionKm(const render::Vector3& position);
+            [[nodiscard]] const render::Vector3& getRealPositionKm() const { return this->_realPositionKm; }
+            void setScenePosition(const render::Vector3& position) { this->_scenePosition = position; }
+            [[nodiscard]] const render::Vector3& getScenePosition() const { return this->_scenePosition; }
 
             void setRealRadiusKm(float radius);
             [[nodiscard]] float getRealRadiusKm() const { return this->_realRadiusKm; }
@@ -46,7 +44,7 @@ namespace render {
             void computeScenePosition(float scaleFactor);
             void computeRenderScale(float sizeScaleFactor);
 
-            void draw(const raylib::Model &model) const;
+            void draw(const std::shared_ptr<ARenderer>& renderer, MeshHandle baseMesh) const;
 
         protected:
             bool _hasBeenInitialized;
@@ -54,8 +52,8 @@ namespace render {
 
             std::string _name;
 
-            Vector3 _realPositionKm;
-            Vector3 _scenePosition;
+            render::Vector3 _realPositionKm;
+            render::Vector3 _scenePosition;
 
             float _realRadiusKm;
             float _renderScale;

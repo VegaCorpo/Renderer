@@ -1,22 +1,18 @@
 #include "CelestialManager.hpp"
 #include <components/name.hpp>
-#include <components/textureId.hpp>
-#include <memory>
-#include <raymath.h>
 #include <utils/assets.hpp>
-#include "CelestialBody.hpp"
 #include "OrbitTrail.hpp"
 
-render::CelestialManager::CelestialManager() :
-    _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _scaleStrategy(nullptr), _visualConfig(),
-    _features()
+render::CelestialManager::CelestialManager(std::shared_ptr<ARenderer>& renderer) :
+    _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _scaleStrategy(nullptr),
+    _visualConfig(), _features()
 {
-    this->_resourceManager = std::make_unique<ResourceManager>();
+    this->_resourceManager = std::make_unique<ResourceManager>(this->_renderer);
 
     this->_updateScaleStrategy();
 
-    // this->_features.push_back(std::make_unique<CelestialIcons>());
-    this->_features.push_back(std::make_unique<OrbitTrail>());
+    // this->_features.push_back(std::make_unique<CelestialIcons>(this->_renderer));
+    this->_features.push_back(std::make_unique<OrbitTrail>(this->_renderer));
 }
 
 void render::CelestialManager::changeScaleMode()
@@ -79,7 +75,7 @@ void render::CelestialManager::update()
     }
 }
 
-Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
+render::Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
 {
     auto it = this->_bodies.find(entity);
 
@@ -89,27 +85,27 @@ Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
     return it->second.getScenePosition();
 }
 
-void render::CelestialManager::render3D(const raylib::Camera& camera) const
+void render::CelestialManager::render3D(const render::CameraView& cameraView) const
 {
-    auto& baseModel = this->_resourceManager->getBaseModel();
+    MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
 
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (!feature->is2D()) {
-                feature->draw(entity, body, camera);
+                feature->draw(entity, body, cameraView);
             }
         }
 
-        body.draw(baseModel);
+        body.draw(this->_renderer, baseMesh);
     }
 }
 
-void render::CelestialManager::render2D(const raylib::Camera& camera) const
+void render::CelestialManager::render2D(const render::CameraView& cameraView) const
 {
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (feature->is2D()) {
-                feature->draw(entity, body, camera);
+                feature->draw(entity, body, cameraView);
             }
         }
     }

@@ -1,25 +1,19 @@
 #include "ResourceManager.hpp"
 #include <iostream>
-#include <raylib.h>
 
-render::ResourceManager::ResourceManager() : _baseModel(UVSPHERE_MODEL_PATH)
-// _baseMesh(this->_baseModel.meshes[0])
+render::ResourceManager::ResourceManager(std::shared_ptr<ARenderer> renderer) : _renderer(std::move(renderer))
 {
+    this->_baseMesh = this->_renderer->loadMesh(UVSPHERE_MODEL_PATH);
+
     this->_modelCache[common::DEFAULT_TEXTURE_PATH] = this->_createModelInfoFromTexture(common::DEFAULT_TEXTURE_PATH);
-}
-
-render::ResourceManager::~ResourceManager()
-{
-    if (_defaultTexture.id != 0) {
-        UnloadTexture(_defaultTexture);
-    }
 }
 
 std::shared_ptr<render::ModelInfo> render::ResourceManager::getOrCreateModelInfo(const std::string& textureId)
 {
     auto it = _modelCache.find(textureId);
-    if (it != _modelCache.end())
+    if (it != _modelCache.end()) {
         return it->second;
+    }
 
     auto info = _createModelInfoFromTexture(textureId);
     _modelCache[textureId] = info;
@@ -27,41 +21,25 @@ std::shared_ptr<render::ModelInfo> render::ResourceManager::getOrCreateModelInfo
     return info;
 }
 
+render::TextureHandle render::ResourceManager::getDefaultTexture() const
+{
+    auto it = _modelCache.find(common::DEFAULT_TEXTURE_PATH);
+    return it != _modelCache.end() ? it->second->texture : INVALID_TEXTURE;
+}
+
 std::shared_ptr<render::ModelInfo> render::ResourceManager::_createModelInfoFromTexture(const std::string& texturePath)
 {
     std::string fullPath = common::TEXTURE_PATH + texturePath;
-    Texture2D tex = LoadTexture(fullPath.c_str());
+    TextureHandle tex = _renderer->loadTexture(fullPath);
 
-    if (tex.id == 0) {
+    if (tex == INVALID_TEXTURE) {
         std::cerr << "[ResourceManager] Error loading " << fullPath << " — using default texture\n";
-        return _modelCache["default.jpg"];
+        return _modelCache.at(common::DEFAULT_TEXTURE_PATH);
     }
 
     auto info = std::make_shared<ModelInfo>();
-
     info->texture = tex;
-    info->dominantColor = _computeDominantColor(tex);
+    info->dominantColor = _renderer->getTextureDominantColor(tex);
 
     return info;
-}
-
-Color render::ResourceManager::_computeDominantColor(const Texture2D& tex)
-{
-    Image img = LoadImageFromTexture(tex);
-    Color* pixels = LoadImageColors(img);
-
-    long r = 0, g = 0, b = 0;
-    const size_t count = img.width * img.height;
-
-    for (size_t i = 0; i < count; i++) {
-        r += pixels[i].r;
-        g += pixels[i].g;
-        b += pixels[i].b;
-    }
-
-    UnloadImageColors(pixels);
-    UnloadImage(img);
-
-    return Color{static_cast<unsigned char>(r / count), static_cast<unsigned char>(g / count),
-                 static_cast<unsigned char>(b / count), 255};
 }
