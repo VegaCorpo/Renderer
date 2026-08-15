@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IScaleMode.hpp"
+#include "Vector3.hpp"
 
 namespace render {
 

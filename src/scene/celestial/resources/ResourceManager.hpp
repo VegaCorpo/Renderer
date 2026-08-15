@@ -1,36 +1,37 @@
 #pragma once
 
-#include <functional>
 #include <memory>
-#include <Mesh.hpp>
-#include <raylib.h>
 #include <string>
 #include <unordered_map>
+#include <utils/assets.hpp>
+#include "renderer/ARenderer.hpp"
 
 namespace render {
+    inline const std::string UVSPHERE_MODEL_PATH = common::ASSETS_PATH + "models/UVSphere.obj";
+
     struct ModelInfo {
-            raylib::Model model;
-            Color dominantColor;
+            TextureHandle texture = INVALID_TEXTURE;
+            Color dominantColor{255, 255, 255, 255};
     };
 
     class ResourceManager {
         public:
-            ResourceManager();
-            ~ResourceManager();
+            explicit ResourceManager(std::shared_ptr<ARenderer> renderer);
+            ~ResourceManager() = default;
+
+            [[nodiscard]] MeshHandle getBaseMesh() const { return _baseMesh; }
 
             std::shared_ptr<ModelInfo> getOrCreateModelInfo(const std::string& textureId);
 
-            Texture2D getDefaultTexture() const { return _defaultTexture; }
-            void setDefaultTexture(Texture2D tex) { _defaultTexture = tex; }
+            [[nodiscard]] TextureHandle getDefaultTexture() const;
 
         private:
             std::shared_ptr<ModelInfo> _createModelInfoFromTexture(const std::string& texturePath);
-            static Color _computeDominantColor(const Texture2D& tex);
+
+            std::shared_ptr<ARenderer> _renderer;
 
             std::unordered_map<std::string, std::shared_ptr<ModelInfo>> _modelCache;
 
-            std::function<Mesh ()> _baseMeshFunction;
-
-            Texture2D _defaultTexture = {0};
+            MeshHandle _baseMesh = INVALID_MESH;
     };
 } // namespace render

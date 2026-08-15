@@ -2,7 +2,7 @@
 #include <raymath.h>
 
 render::CelestialBody::CelestialBody() :
-    _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(0.0f), _scenePosition(0.0f),
+    _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(), _scenePosition(),
     _realRadiusKm(0.0f), _renderScale(0.0f), _modelInfo(nullptr)
 {}
 
@@ -16,13 +16,15 @@ bool render::CelestialBody::hasBeenModified()
     return true;
 }
 
-void render::CelestialBody::setRealPositionKm(const Vector3& position)
+void render::CelestialBody::setRealPositionKm(const render::Vector3& position)
 {
-    if (!Vector3Equals(this->_realPositionKm, position)) {
-        this->modified();
+    if (this->_realPositionKm.x == position.x && this->_realPositionKm.y == position.y &&
+        this->_realPositionKm.z == position.z) {
+        return;
     }
 
     this->_realPositionKm = position;
+    this->modified();
 }
 
 void render::CelestialBody::setRealRadiusKm(float radius)
@@ -42,7 +44,8 @@ void render::CelestialBody::computePositionAndScale(float scaleFactor)
 
 void render::CelestialBody::computeScenePosition(float scaleFactor)
 {
-    this->_scenePosition = Vector3Scale(_realPositionKm, scaleFactor);
+    this->_scenePosition = {this->_realPositionKm.x * scaleFactor, this->_realPositionKm.y * scaleFactor,
+                            this->_realPositionKm.z * scaleFactor};
 }
 
 void render::CelestialBody::computeRenderScale(float sizeScaleFactor)
@@ -50,11 +53,13 @@ void render::CelestialBody::computeRenderScale(float sizeScaleFactor)
     this->_renderScale = this->_realRadiusKm * sizeScaleFactor;
 }
 
-void render::CelestialBody::render() const
+void render::CelestialBody::draw(const std::shared_ptr<ARenderer>& renderer, MeshHandle baseMesh) const
 {
-    if (!this->_modelInfo) {
-        return;
-    }
+    {
+        if (!this->_modelInfo || baseMesh == INVALID_MESH) {
+            return;
+        }
 
-    this->_modelInfo->model.Draw(this->_scenePosition, this->_renderScale);
+        renderer->drawMesh(baseMesh, this->_modelInfo->texture, this->_scenePosition, this->_renderScale);
+    }
 }

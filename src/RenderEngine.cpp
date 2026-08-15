@@ -1,18 +1,18 @@
 #include "RenderEngine.hpp"
-#include <raylib.h>
 #include "InputHandler.hpp"
+#include "RaylibRenderer.hpp"
 #include "RenderActions.hpp"
+#include "RenderTypes.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _window(nullptr), _scene(nullptr)
+render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<RaylibRenderer>()), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()
 {
-    this->_window =
-        std::make_unique<RenderWindow>(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_FPS, LOG_LEVEL);
+    this->_renderer->initialize(RendererConfig());
 
     this->_scene = std::make_unique<Scene>();
-    this->_scene->init();
+    this->_scene->init(this->_renderer);
 
     this->_running = true;
 }
@@ -52,10 +52,10 @@ void render::RenderEngine::syncIn(entt::registry& registry)
 
 void render::RenderEngine::update()
 {
-    if (!this->_running || !this->_window || !this->_scene)
+    if (!this->_running || !this->_scene)
         return;
 
-    if (this->_window->ShouldClose()) { // NOLINT(readability-static-accessed-through-instance)
+    if (this->_renderer->windowShouldClose()) {
         this->_running = false;
         return;
     }
@@ -70,12 +70,12 @@ void render::RenderEngine::update()
 
 void render::RenderEngine::render(std::function<void()> uiRender)
 {
-    if (!this->_running || !this->_window || !this->_scene) {
+    if (!this->_running || !this->_renderer || !this->_scene) {
         return;
     }
 
-    this->_window->BeginDrawing();
-    this->_window->ClearBackground();
+    this->_renderer->beginFrame();
+    this->_renderer->clear(Color::Black());
 
     this->_scene->render();
 
@@ -83,5 +83,5 @@ void render::RenderEngine::render(std::function<void()> uiRender)
         uiRender();
     }
 
-    this->_window->EndDrawing();
+    this->_renderer->endFrame();
 }

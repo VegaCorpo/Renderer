@@ -4,12 +4,14 @@
 render::Scene::Scene() : _camera(nullptr), _celestialManager()
 {}
 
-void render::Scene::init()
+void render::Scene::init(std::shared_ptr<ARenderer>& renderer)
 {
+    this->_renderer = renderer;
+
     this->_camera = std::make_unique<RenderCamera>();
     this->_camera->init();
 
-    this->_celestialManager = std::make_unique<CelestialManager>();
+    this->_celestialManager = std::make_unique<CelestialManager>(renderer);
 
     this->_camera->follow(static_cast<entt::entity>(0));
 }
@@ -49,12 +51,12 @@ void render::Scene::update()
 
 void render::Scene::render()
 {
-    BeginMode3D(this->_camera->getCamera());
+    this->_renderer->beginMode3D(this->_camera->getCameraView());
 
-    this->_celestialManager->render3D(this->_camera->getCamera());
-    DrawGrid(10, 100);
+    this->_celestialManager->render3D(this->_camera->getCameraView());
+    // DrawGrid(10, 100);
 
-    EndMode3D();
+    this->_renderer->endMode3D();
 
-    this->_celestialManager->render2D(this->_camera->getCamera());
+    this->_celestialManager->render2D(this->_camera->getCameraView());
 }

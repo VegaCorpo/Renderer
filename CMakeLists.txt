@@ -11,23 +11,19 @@ set(CPM_USE_LOCAL_PACKAGES ON)
 
 include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
+
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
+CPMGetPackage("glfw")
+
+set(glfw3_FOUND TRUE)
+
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 
-if (TARGET glfw)
-    set_target_properties(glfw PROPERTIES
-        C_VISIBILITY_PRESET default
-        VISIBILITY_INLINES_HIDDEN OFF
-    )
-endif()
-
 # Allow jpg file extension
 target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
-
-set(RAYLIB_GLFW_INCLUDE_DIR "${raylib_SOURCE_DIR}/src/external/glfw/include")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -57,7 +53,8 @@ add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp
 
-    src/window/RenderWindow.cpp
+    src/renderer/ARenderer.cpp
+    src/renderer/raylib/RaylibRenderer.cpp
 
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
@@ -81,6 +78,7 @@ target_link_libraries(orbital_render PRIVATE
     raylib
     raylib_cpp
     OpenGL::GL
+    glfw
 )
 
 target_include_directories(orbital_render PUBLIC
@@ -95,6 +93,13 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
+
+    # Math
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/math
+
+    # Renderer includes (raylib)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
 )
 
 if(WIN32)

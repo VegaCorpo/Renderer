@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Camera3D.hpp>
 #include <entt/entity/fwd.hpp>
+#include "renderer/RenderTypes.hpp"
 
 namespace render {
     class RenderCamera {
@@ -11,27 +11,28 @@ namespace render {
 
             void init();
 
-            raylib::Camera getCamera() { return this->_camera; }
+            [[nodiscard]] render::CameraView getCameraView() const { return this->_cameraView; }
 
             void update();
 
             void addMovement(Vector3 dir);
-            void addRotation(Vector2 rot);
+            void addRotation(Vector3 rot);
 
             [[nodiscard]] bool isFollowing() const { return this->_isFollowing; }
             [[nodiscard]] entt::entity getFollowedEntity() const { return this->_followedEntity; }
-            void stopFollowing() { this->_isFollowing = false; }
+
             void follow(entt::entity entity);
-            void follow(Vector3 targetPos) { this->_camera.target = targetPos; }
+            void follow(Vector3 targetPos) { this->_cameraView.target = targetPos; }
+            void stopFollowing() { this->_isFollowing = false; }
 
         private:
             void _move();
             void _rotate();
 
-            raylib::Camera _camera;
+            render::CameraView _cameraView;
 
             Vector3 _movementDir;
-            Vector2 _rotationDir;
+            Vector3 _rotationDir;
 
             bool _isFollowing;
             entt::entity _followedEntity;

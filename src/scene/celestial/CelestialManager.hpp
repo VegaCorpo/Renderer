@@ -1,16 +1,11 @@
 #pragma once
 
-#include <Camera3D.hpp>
 #include <components/position.hpp>
 #include <components/radius.hpp>
 #include <entt/entt.hpp>
-#include <memory>
-#include <Model.hpp>
-#include <raylib.h>
-#include <unordered_map>
 #include <vector>
+#include "ARenderFeature.hpp"
 #include "CelestialBody.hpp"
-#include "IRenderFeature.hpp"
 #include "RealisticScaleMode.hpp"
 #include "ResourceManager.hpp"
 #include "VisualScaleMode.hpp"
@@ -20,7 +15,7 @@ namespace render {
         public:
             enum class ScaleMode { VISUAL, REALISTIC, SCALE_MODE_NUMBER };
 
-            CelestialManager();
+            explicit CelestialManager(std::shared_ptr<ARenderer>& renderer);
             ~CelestialManager() = default;
 
             void changeScaleMode();
@@ -32,10 +27,10 @@ namespace render {
 
             const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
 
-            Vector3 getBodyPosition(entt::entity entity) const;
+            render::Vector3 getBodyPosition(entt::entity entity) const;
 
-            void render3D(const raylib::Camera& camera) const;
-            void render2D(const raylib::Camera& camera) const;
+            void render3D(const render::CameraView& cameraView) const;
+            void render2D(const render::CameraView& cameraView) const;
 
         private:
             void _addOrUpdateBody(entt::entity entity, entt::registry& registry, common::components::Position pos,
@@ -43,6 +38,8 @@ namespace render {
 
             void _updateScaleStrategy();
             [[nodiscard]] bool _hasBodiesBeenModified();
+
+            std::shared_ptr<ARenderer> _renderer;
 
             std::unique_ptr<ResourceManager> _resourceManager;
 
@@ -52,7 +49,7 @@ namespace render {
             std::unique_ptr<IScaleMode> _scaleStrategy;
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
-            std::vector<std::unique_ptr<IRenderFeature>> _features;
+            std::vector<std::unique_ptr<ARenderFeature>> _features;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},

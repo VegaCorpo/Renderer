@@ -1,7 +1,4 @@
 #include "VisualScaleMode.hpp"
-#include <algorithm>
-#include <cmath>
-#include <raymath.h>
 
 render::VisualScaleMode::VisualScaleMode(const VisualScaleConfig& c) : _config(c)
 {}
@@ -17,7 +14,7 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
     for (const auto& [_, body] : bodies) {
         maxRadius = std::max(maxRadius, body.getRealRadiusKm());
 
-        float dist = Vector3Length(body.getRealPositionKm());
+        float dist = (body.getRealPositionKm()).length();
         maxDistance = std::max(maxDistance, dist);
     }
 
@@ -53,14 +50,16 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
             if (&bodyA == &bodyB)
                 continue;
 
-            float dist = Vector3Distance(bodyA.getScenePosition(), bodyB.getScenePosition());
+            Vector3 delta = bodyB.getScenePosition() - bodyA.getScenePosition();
+            float dist = delta.length();
+
             float minDist = bodyA.getRenderScale() + bodyB.getRenderScale();
 
             if (dist < minDist && dist > 0.0f) {
 
-                Vector3 dir = Vector3Normalize(Vector3Subtract(bodyB.getScenePosition(), bodyA.getScenePosition()));
+                Vector3 dir = (bodyB.getScenePosition() - bodyA.getScenePosition()).normalized();
 
-                Vector3 corrected = Vector3Add(bodyA.getScenePosition(), Vector3Scale(dir, minDist));
+                Vector3 corrected = bodyA.getScenePosition() + dir * minDist;
 
                 bodyB.setScenePosition(corrected);
             }
@@ -83,12 +82,12 @@ float render::VisualScaleMode::_logSizeScale(float realRadius, float maxRadius) 
     return std::max(visual, _config.minVisualRadius);
 }
 
-Vector3 render::VisualScaleMode::_logPositionScale(const Vector3& realPos, float maxDistance) const
+render::Vector3 render::VisualScaleMode::_logPositionScale(const Vector3& realPos, float maxDistance) const
 {
     if (maxDistance <= 0.0f)
         return {0, 0, 0};
 
-    const float magnitude = Vector3Length(realPos);
+    const float magnitude = realPos.length();
 
     if (magnitude <= 0.0f)
         return {0, 0, 0};
@@ -101,5 +100,5 @@ Vector3 render::VisualScaleMode::_logPositionScale(const Vector3& realPos, float
 
     const float visualMag = logScale * _config.maxVisualDistance;
 
-    return Vector3Scale(Vector3Normalize(realPos), visualMag);
+    return realPos.normalized() * visualMag;
 }

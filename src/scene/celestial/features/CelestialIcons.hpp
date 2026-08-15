@@ -1,22 +1,31 @@
 #pragma once
 
-#include "IRenderFeature.hpp"
+#include "ARenderFeature.hpp"
+#include "RenderMath.hpp"
 
 namespace render {
-    class CelestialIcons : public IRenderFeature {
+    class CelestialIcons : public ARenderFeature {
         public:
+            explicit CelestialIcons(std::shared_ptr<ARenderer>& renderer) : ARenderFeature(renderer) {}
+
             static constexpr int DEFAULT_FONT_SIZE = 12;
 
-            void update(entt::entity entity, const CelestialBody& body) override {}
+            void update(entt::entity entity, const CelestialBody& body) override {
+            } //! to implement to save cameraview and if changed recompute icon
 
-            void render(entt::entity entity, const CelestialBody& body, const raylib::Camera& camera) const override
+            void draw(entt::entity entity, const CelestialBody& body,
+                      const render::CameraView& cameraView) const override
             {
                 Vector3 pos = body.getScenePosition();
 
-                Vector2 screenPos = GetWorldToScreen(pos, camera);
+                auto screenWidth = static_cast<float>(this->_renderer->getWidth());
+                auto screenHeight = static_cast<float>(this->_renderer->getHeight());
 
-                DrawText(body.getName().c_str(), static_cast<int>(screenPos.x), static_cast<int>(screenPos.y),
-                         DEFAULT_FONT_SIZE, body.getModelInfo()->dominantColor);
+                Vector2 screenPos = Matrix4::GetWorldToScreen(pos, cameraView, screenWidth, screenHeight);
+
+                // this->_renderer->drawText(body.getName().c_str(), static_cast<int>(screenPos.x),
+                //                           static_cast<int>(screenPos.y), DEFAULT_FONT_SIZE,
+                //                           body.getModelInfo()->dominantColor);
             }
 
             void reset() override {}
