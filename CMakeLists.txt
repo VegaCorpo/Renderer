@@ -14,6 +14,7 @@ CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+CPMGetPackage("glfw")
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 
