@@ -4,8 +4,8 @@
 #include <queue>
 #include "GLFW/glfw3.h"
 #include "interfaces/IRenderEngine.hpp"
-#include "Scene.hpp"
 #include "renderer/ARenderer.hpp"
+#include "Scene.hpp"
 
 namespace render {
     class RenderEngine : public common::IRenderEngine {

@@ -1,9 +1,9 @@
 #pragma once
 
+#include <GLFW/glfw3.h>
 #include <raylib-cpp.hpp>
 #include <raylib.h>
 #include "ARenderer.hpp"
-#include "GLFW/glfw3.h"
 
 namespace render {
     constexpr TraceLogLevel LOG_LEVEL = LOG_ERROR;

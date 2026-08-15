@@ -14,14 +14,16 @@ CPMUsePackageLock(package-lock.cmake)
 
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
+CPMGetPackage("glfw")
+
+set(glfw3_FOUND TRUE)
+
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
 
 # Allow jpg file extension
 target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
-
-set(RAYLIB_GLFW_INCLUDE_DIR "${raylib_SOURCE_DIR}/src/external/glfw/include")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -76,6 +78,7 @@ target_link_libraries(orbital_render PRIVATE
     raylib
     raylib_cpp
     OpenGL::GL
+    glfw
 )
 
 target_include_directories(orbital_render PUBLIC
@@ -95,7 +98,6 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/math
 
     # Renderer includes (raylib)
-    ${RAYLIB_GLFW_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
 )

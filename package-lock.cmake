@@ -34,3 +34,18 @@ CPMDeclarePackage(raylib_cpp
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )
+
+# GLFW
+CPMDeclarePackage(glfw
+    GITHUB_REPOSITORY glfw/glfw
+    GIT_TAG 3.4
+    OPTIONS
+        "GLFW_BUILD_EXAMPLES OFF"
+        "GLFW_BUILD_TESTS OFF"
+        "GLFW_BUILD_DOCS OFF"
+        "BUILD_SHARED_LIBS ON"
+        "GLFW_BUILD_X11 ON"
+        "GLFW_BUILD_WAYLAND OFF"
+    SYSTEM YES
+    EXCLUDE_FROM_ALL YES
+)
