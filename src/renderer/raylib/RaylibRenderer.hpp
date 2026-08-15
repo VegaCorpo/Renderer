@@ -42,7 +42,7 @@ namespace render {
             std::unordered_map<TextureHandle, Texture2D> _textures;
             std::unordered_map<MeshHandle, raylib::Model> _models;
 
-            static ::Color _toRaylibColor(Color c) { return ::Color{c.r, c.g, c.b, c.a}; }
-            static ::Vector3 _toRaylibVec3(const Vector3& v) { return ::Vector3{v.x, v.y, v.z}; }
+            static raylib::Color _toRaylibColor(Color c) { return raylib::Color{c.r, c.g, c.b, c.a}; }
+            static raylib::Vector3 _toRaylibVec3(const Vector3& v) { return raylib::Vector3{v.x, v.y, v.z}; }
     };
 } // namespace render

@@ -20,13 +20,11 @@ namespace render {
         return *this;
     }
 
-    // Note: Pas de mot-clé 'static' ici !
     inline Vector3 Vector3::clamp(const Vector3& v, const Vector3& min, const Vector3& max)
     {
         return {std::clamp(v.x, min.x, max.x), std::clamp(v.y, min.y, max.y), std::clamp(v.z, min.z, max.z)};
     }
 
-    // Note: Pas de mot-clé 'static' ici !
     inline Vector3 Vector3::cross(const Vector3& a, const Vector3& b)
     {
         return {a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x};

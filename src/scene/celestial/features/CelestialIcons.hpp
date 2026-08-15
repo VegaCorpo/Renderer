@@ -18,8 +18,8 @@ namespace render {
             {
                 Vector3 pos = body.getScenePosition();
 
-                float screenWidth = static_cast<float>(this->_renderer->getWidth());
-                float screenHeight = static_cast<float>(this->_renderer->getHeight());
+                auto screenWidth = static_cast<float>(this->_renderer->getWidth());
+                auto screenHeight = static_cast<float>(this->_renderer->getHeight());
 
                 Vector2 screenPos = Matrix4::GetWorldToScreen(pos, cameraView, screenWidth, screenHeight);
 
