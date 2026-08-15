@@ -11,19 +11,12 @@ set(CPM_USE_LOCAL_PACKAGES ON)
 
 include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
+
 CPMGetPackage("Common")
 CPMGetPackage("EnTT")
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-CPMGetPackage("glfw")
 CPMGetPackage("raylib")
 CPMGetPackage("raylib_cpp")
-
-if (TARGET glfw)
-    set_target_properties(glfw PROPERTIES
-        C_VISIBILITY_PRESET default
-        VISIBILITY_INLINES_HIDDEN OFF
-    )
-endif()
 
 # Allow jpg file extension
 target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
