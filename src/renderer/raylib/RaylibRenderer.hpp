@@ -10,11 +10,10 @@ namespace render {
 
     class RaylibRenderer : public ARenderer {
         public:
-
             RaylibRenderer() = default;
             ~RaylibRenderer() override;
 
-            bool initialize(const RendererConfig &config) override;
+            bool initialize(const RendererConfig& config) override;
             void shutdown() override;
 
             void clear(Color color) override { ClearBackground(_toRaylibColor(color)); }
