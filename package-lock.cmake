@@ -22,7 +22,7 @@ CPMDeclarePackage(raylib
     EXCLUDE_FROM_ALL YES
     OPTIONS
         "BUILD_SHARED_LIBS ON"
-        "USE_EXTERNAL_GLFW ON"
+        "CUSTOMIZE_BUILD ON"
         "BUILD_EXAMPLES OFF"
         "BUILD_GAMES OFF"
 )
