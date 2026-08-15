@@ -95,6 +95,7 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/math
 
     # Renderer includes (raylib)
+    ${RAYLIB_GLFW_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
 )
