@@ -112,6 +112,6 @@ render::MeshHandle render::RaylibRenderer::_loadMeshImpl(const std::string& file
     }
 
     MeshHandle handle = _nextMeshHandle();
-    this->_models[handle] = std::move(model);
+    this->_models.try_emplace(handle, std::move(model));
     return handle;
 }
