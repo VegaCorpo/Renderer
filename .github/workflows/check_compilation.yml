@@ -19,6 +19,7 @@ jobs:
             uses: awalsh128/cache-apt-pkgs-action@latest
             with:
               packages: >
+                g++-14
                 cmake
                 libx11-dev
                 libxcursor-dev
@@ -29,6 +30,8 @@ jobs:
                 libglu1-mesa-dev
 
           - name: Compile Repo
+            env:
+              CXX: g++-14
             run:  |
                 cmake -S . -B .build
                 cmake --build .build
