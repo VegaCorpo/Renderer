@@ -3,7 +3,6 @@
 #include <Eigen/Dense>
 #include <memory>
 #include <string>
-#include <Eigen/Dense>
 #include "ResourceManager.hpp"
 
 namespace render {
