@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <Eigen/Dense>
 #include "ResourceManager.hpp"
 
 namespace render {
@@ -27,10 +28,10 @@ namespace render {
             void setName(const std::string& name) { this->_name = name; }
             [[nodiscard]] const std::string& getName() const { return this->_name; }
 
-            void setRealPositionKm(const render::Vector3& position);
-            [[nodiscard]] const render::Vector3& getRealPositionKm() const { return this->_realPositionKm; }
-            void setScenePosition(const render::Vector3& position) { this->_scenePosition = position; }
-            [[nodiscard]] const render::Vector3& getScenePosition() const { return this->_scenePosition; }
+            void setRealPositionKm(const Eigen::Vector3f& position);
+            [[nodiscard]] const Eigen::Vector3f& getRealPositionKm() const { return this->_realPositionKm; }
+            void setScenePosition(const Eigen::Vector3f& position) { this->_scenePosition = position; }
+            [[nodiscard]] const Eigen::Vector3f& getScenePosition() const { return this->_scenePosition; }
 
             void setRealRadiusKm(float radius);
             [[nodiscard]] float getRealRadiusKm() const { return this->_realRadiusKm; }
@@ -52,8 +53,8 @@ namespace render {
 
             std::string _name;
 
-            render::Vector3 _realPositionKm;
-            render::Vector3 _scenePosition;
+            Eigen::Vector3f _realPositionKm;
+            Eigen::Vector3f _scenePosition;
 
             float _realRadiusKm;
             float _renderScale;

@@ -32,7 +32,8 @@ void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::regis
 {
     auto& body = this->_bodies[entity];
 
-    body.setRealPositionKm(Vector3(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
+    body.setRealPositionKm(
+        Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
     body.setRealRadiusKm(radius.value);
 
     if (body.hasBeenInitialized()) {
@@ -75,12 +76,12 @@ void render::CelestialManager::update()
     }
 }
 
-render::Vector3 render::CelestialManager::getBodyPosition(entt::entity entity) const
+Eigen::Vector3f render::CelestialManager::getBodyPosition(entt::entity entity) const
 {
     auto it = this->_bodies.find(entity);
 
     if (it == this->_bodies.end()) {
-        return Vector3{0, 0, 0};
+        return Eigen::Vector3f{0, 0, 0};
     }
     return it->second.getScenePosition();
 }

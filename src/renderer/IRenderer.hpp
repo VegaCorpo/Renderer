@@ -8,7 +8,7 @@ namespace render {
         public:
             virtual ~IRenderer() = default;
 
-            virtual bool initialize(const RendererConfig &config) = 0;
+            virtual bool initialize(const RendererConfig& config) = 0;
             virtual void shutdown() = 0;
 
             [[nodiscard]] virtual int getWidth() const = 0;
@@ -32,7 +32,8 @@ namespace render {
             virtual MeshHandle loadMesh(const std::string& filepath) = 0;
             virtual void unloadMesh(MeshHandle handle) = 0;
 
-            virtual void drawMesh(MeshHandle mesh, TextureHandle texture, const Vector3& position, float scale) = 0;
-            virtual void drawLine3D(const Vector3& start, const Vector3& end, Color color) = 0;
+            virtual void drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position,
+                                  float scale) = 0;
+            virtual void drawLine3D(const Eigen::Vector3f& start, const Eigen::Vector3f& end, Color color) = 0;
     };
 } // namespace render

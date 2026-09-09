@@ -16,10 +16,10 @@ bool render::CelestialBody::hasBeenModified()
     return true;
 }
 
-void render::CelestialBody::setRealPositionKm(const render::Vector3& position)
+void render::CelestialBody::setRealPositionKm(const Eigen::Vector3f& position)
 {
-    if (this->_realPositionKm.x == position.x && this->_realPositionKm.y == position.y &&
-        this->_realPositionKm.z == position.z) {
+    if (this->_realPositionKm.x() == position.x() && this->_realPositionKm.y() == position.y() &&
+        this->_realPositionKm.z() == position.z()) {
         return;
     }
 
@@ -44,8 +44,7 @@ void render::CelestialBody::computePositionAndScale(float scaleFactor)
 
 void render::CelestialBody::computeScenePosition(float scaleFactor)
 {
-    this->_scenePosition = {this->_realPositionKm.x * scaleFactor, this->_realPositionKm.y * scaleFactor,
-                            this->_realPositionKm.z * scaleFactor};
+    this->_scenePosition = this->_realPositionKm * scaleFactor;
 }
 
 void render::CelestialBody::computeRenderScale(float sizeScaleFactor)

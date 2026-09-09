@@ -42,7 +42,8 @@ void render::RaylibRenderer::beginMode3D(const CameraView& camera)
     ::BeginMode3D(cam);
 }
 
-void render::RaylibRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, const Vector3& position, float scale)
+void render::RaylibRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position,
+                                      float scale)
 {
     auto modelIt = this->_models.find(mesh);
     if (modelIt == this->_models.end()) {
@@ -59,7 +60,7 @@ void render::RaylibRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, co
     DrawModel(model, _toRaylibVec3(position), scale, ::WHITE);
 }
 
-void render::RaylibRenderer::drawLine3D(const Vector3& start, const Vector3& end, Color color)
+void render::RaylibRenderer::drawLine3D(const Eigen::Vector3f& start, const Eigen::Vector3f& end, Color color)
 {
     DrawLine3D(_toRaylibVec3(start), _toRaylibVec3(end), _toRaylibColor(color));
 }

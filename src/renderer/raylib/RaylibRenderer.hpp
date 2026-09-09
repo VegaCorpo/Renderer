@@ -2,7 +2,6 @@
 
 #include <GLFW/glfw3.h>
 #include <raylib-cpp.hpp>
-#include <raylib.h>
 #include "ARenderer.hpp"
 
 namespace render {
@@ -26,8 +25,9 @@ namespace render {
             [[nodiscard]] bool windowShouldClose() const override { return WindowShouldClose(); }
             void* getWindowHandle() override { return glfwGetCurrentContext(); }
 
-            void drawMesh(MeshHandle mesh, TextureHandle texture, const Vector3& position, float scale) override;
-            void drawLine3D(const Vector3& start, const Vector3& end, Color color) override;
+            void drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position,
+                          float scale) override;
+            void drawLine3D(const Eigen::Vector3f& start, const Eigen::Vector3f& end, Color color) override;
 
         protected:
             TextureHandle _loadTextureImpl(const std::string& filepath) override;
@@ -42,6 +42,9 @@ namespace render {
             std::unordered_map<MeshHandle, raylib::Model> _models;
 
             static raylib::Color _toRaylibColor(Color c) { return raylib::Color{c.r, c.g, c.b, c.a}; }
-            static raylib::Vector3 _toRaylibVec3(const Vector3& v) { return raylib::Vector3{v.x, v.y, v.z}; }
+            static raylib::Vector3 _toRaylibVec3(const Eigen::Vector3f& v)
+            {
+                return raylib::Vector3{v.x(), v.y(), v.z()};
+            }
     };
 } // namespace render
