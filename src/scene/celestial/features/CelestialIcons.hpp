@@ -9,10 +9,10 @@ namespace render {
 
             static constexpr int DEFAULT_FONT_SIZE = 12;
 
-            void update(entt::entity entity, const CelestialBody& body) override {
+            void update(std::size_t entity, const CelestialBody& body) override {
             } //! to implement to save cameraview and if changed recompute icon
 
-            void draw(entt::entity entity, const CelestialBody& body,
+            void draw(std::size_t entity, const CelestialBody& body,
                       const render::CameraView& cameraView) const override
             {
                 // Eigen::Vector3f pos = body.getScenePosition();

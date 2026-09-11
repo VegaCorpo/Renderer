@@ -3,7 +3,7 @@
 render::VisualScaleMode::VisualScaleMode(const VisualScaleConfig& c) : _config(c)
 {}
 
-void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, CelestialBody>& bodies)
+void render::VisualScaleMode::rescale(std::unordered_map<std::size_t, CelestialBody>& bodies)
 {
     if (bodies.empty())
         return;

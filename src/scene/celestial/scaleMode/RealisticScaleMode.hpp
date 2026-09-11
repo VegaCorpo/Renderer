@@ -7,14 +7,14 @@ namespace render {
         public:
             RealisticScaleMode();
 
-            void rescale(std::unordered_map<entt::entity, CelestialBody>& bodies) override;
+            void rescale(std::unordered_map<std::size_t, CelestialBody>& bodies) override;
 
         private:
             bool _scaleComputed;
             float _distanceScale;
 
-            void _applyScale(std::unordered_map<entt::entity, CelestialBody>& bodies) const;
+            void _applyScale(std::unordered_map<std::size_t, CelestialBody>& bodies) const;
             [[nodiscard]] static float
-            _computeMaxDistance(const std::unordered_map<entt::entity, CelestialBody>& bodies);
+            _computeMaxDistance(const std::unordered_map<std::size_t, CelestialBody>& bodies);
     };
 } // namespace render

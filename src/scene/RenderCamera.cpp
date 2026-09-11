@@ -32,7 +32,7 @@ void render::RenderCamera::update()
     this->_rotate();
 }
 
-void render::RenderCamera::follow(entt::entity entity)
+void render::RenderCamera::follow(std::size_t entity)
 {
     this->_isFollowing = true;
     this->_followedEntity = entity;

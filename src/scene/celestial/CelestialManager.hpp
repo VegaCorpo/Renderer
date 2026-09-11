@@ -1,8 +1,9 @@
 #pragma once
 
-#include <components/position.hpp>
-#include <components/radius.hpp>
-#include <entt/entt.hpp>
+#include <cstddef>
+#include <functional>
+#include <unordered_map>
+#include <types/World.hpp>
 #include <vector>
 #include "ARenderFeature.hpp"
 #include "CelestialBody.hpp"
@@ -22,20 +23,18 @@ namespace render {
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
-            void syncIn(entt::registry& registry);
+            void initBodies(const common::SpecificDataRender& data);
+            void syncIn(const common::WorldState& world);
             void update();
 
-            const std::unordered_map<entt::entity, CelestialBody>& bodies() const { return _bodies; }
+            const std::unordered_map<std::size_t, CelestialBody>& bodies() const { return _bodies; }
 
-            Eigen::Vector3f getBodyPosition(entt::entity entity) const;
+            Eigen::Vector3f getBodyPosition(std::size_t entity) const;
 
             void render3D(const render::CameraView& cameraView) const;
             void render2D(const render::CameraView& cameraView) const;
 
         private:
-            void _addOrUpdateBody(entt::entity entity, entt::registry& registry, common::components::Position pos,
-                                  common::components::Radius radius);
-
             void _updateScaleStrategy();
             [[nodiscard]] bool _hasBodiesBeenModified();
 
@@ -43,7 +42,7 @@ namespace render {
 
             std::unique_ptr<ResourceManager> _resourceManager;
 
-            std::unordered_map<entt::entity, CelestialBody> _bodies;
+            std::unordered_map<std::size_t, CelestialBody> _bodies;
 
             ScaleMode _scaleMode;
             std::unique_ptr<IScaleMode> _scaleStrategy;
