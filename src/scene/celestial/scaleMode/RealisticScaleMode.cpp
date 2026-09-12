@@ -22,15 +22,15 @@ void render::RealisticScaleMode::rescale(std::unordered_map<entt::entity, Celest
 
 float render::RealisticScaleMode::_computeMaxDistance(const std::unordered_map<entt::entity, CelestialBody>& bodies)
 {
-    float maxDist = 0.f;
+    float maxSqDist = 0.f;
 
     for (const auto& [entity, body] : bodies) {
-        Vector3 pos = body.getRealPositionKm();
-        float dist = std::sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
-        if (dist > maxDist)
-            maxDist = dist;
+        float sqDist = body.getRealPositionKm().squaredNorm();
+        if (sqDist > maxSqDist)
+            maxSqDist = sqDist;
     }
-    return maxDist;
+
+    return std::sqrt(maxSqDist);
 }
 
 void render::RealisticScaleMode::_applyScale(std::unordered_map<entt::entity, CelestialBody>& bodies) const

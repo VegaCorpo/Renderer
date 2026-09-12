@@ -1,7 +1,7 @@
 #pragma once
 
 #include <entt/entity/fwd.hpp>
-#include "renderer/RenderTypes.hpp"
+#include "RenderTypes.hpp"
 
 namespace render {
     class RenderCamera {
@@ -15,14 +15,14 @@ namespace render {
 
             void update();
 
-            void addMovement(Vector3 dir);
-            void addRotation(Vector3 rot);
+            void addMovement(Eigen::Vector3f dir);
+            void addRotation(Eigen::Vector3f rot);
 
             [[nodiscard]] bool isFollowing() const { return this->_isFollowing; }
             [[nodiscard]] entt::entity getFollowedEntity() const { return this->_followedEntity; }
 
             void follow(entt::entity entity);
-            void follow(Vector3 targetPos) { this->_cameraView.target = targetPos; }
+            void follow(Eigen::Vector3f targetPos) { this->_cameraView.target = targetPos; }
             void stopFollowing() { this->_isFollowing = false; }
 
         private:
@@ -31,8 +31,8 @@ namespace render {
 
             render::CameraView _cameraView;
 
-            Vector3 _movementDir;
-            Vector3 _rotationDir;
+            Eigen::Vector3f _movementDir;
+            Eigen::Vector3f _rotationDir;
 
             bool _isFollowing;
             entt::entity _followedEntity;

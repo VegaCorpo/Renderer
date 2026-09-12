@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <Eigen/Dense>
 #include <string>
-#include "Vector3.hpp"
 
 namespace render {
     constexpr const char* DEFAULT_TITLE = "Orbital Engine";
@@ -18,9 +18,9 @@ namespace render {
     };
 
     struct CameraView {
-            Vector3 position{};
-            Vector3 target{};
-            Vector3 up{};
+            Eigen::Vector3f position{Eigen::Vector3f::Zero()};
+            Eigen::Vector3f target{Eigen::Vector3f::Zero()};
+            Eigen::Vector3f up{Eigen::Vector3f::UnitY()};
             float fovy = 0;
     };
 

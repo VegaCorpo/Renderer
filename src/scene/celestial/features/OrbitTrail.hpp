@@ -60,6 +60,6 @@ namespace render {
             int _updateInterval;
 
             std::unordered_map<entt::entity, int> _updateCounters;
-            std::unordered_map<entt::entity, std::vector<Vector3>> _trails;
+            std::unordered_map<entt::entity, std::vector<Eigen::Vector3f>> _trails;
     };
 } // namespace render

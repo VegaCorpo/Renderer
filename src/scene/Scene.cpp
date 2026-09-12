@@ -13,7 +13,7 @@ void render::Scene::init(std::shared_ptr<ARenderer>& renderer)
 
     this->_celestialManager = std::make_unique<CelestialManager>(renderer);
 
-    this->_camera->follow(static_cast<entt::entity>(0));
+    this->_camera->follow(static_cast<entt::entity>(3));
 }
 
 void render::Scene::handleAction(common::Action action)
@@ -43,7 +43,7 @@ void render::Scene::update()
     this->_camera->update();
 
     if (this->_camera->isFollowing()) {
-        Vector3 pos = this->_celestialManager->getBodyPosition(this->_camera->getFollowedEntity());
+        Eigen::Vector3f pos = this->_celestialManager->getBodyPosition(this->_camera->getFollowedEntity());
 
         this->_camera->follow(pos);
     }

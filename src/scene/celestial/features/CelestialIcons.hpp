@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ARenderFeature.hpp"
-#include "RenderMath.hpp"
 
 namespace render {
     class CelestialIcons : public ARenderFeature {
@@ -16,12 +15,13 @@ namespace render {
             void draw(entt::entity entity, const CelestialBody& body,
                       const render::CameraView& cameraView) const override
             {
-                Vector3 pos = body.getScenePosition();
+                // Eigen::Vector3f pos = body.getScenePosition();
 
-                auto screenWidth = static_cast<float>(this->_renderer->getWidth());
-                auto screenHeight = static_cast<float>(this->_renderer->getHeight());
+                // auto screenWidth = static_cast<float>(this->_renderer->getWidth());
+                // auto screenHeight = static_cast<float>(this->_renderer->getHeight());
 
-                Vector2 screenPos = Matrix4::GetWorldToScreen(pos, cameraView, screenWidth, screenHeight);
+                // Eigen::Vector2f screenPos = Eigen::Matrix4f::GetWorldToScreen(pos, cameraView, screenWidth,
+                // screenHeight);
 
                 // this->_renderer->drawText(body.getName().c_str(), static_cast<int>(screenPos.x),
                 //                           static_cast<int>(screenPos.y), DEFAULT_FONT_SIZE,

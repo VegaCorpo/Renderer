@@ -13,6 +13,7 @@ include(cmake/CPM.cmake)
 CPMUsePackageLock(package-lock.cmake)
 
 CPMGetPackage("Common")
+CPMGetPackage("Eigen")
 CPMGetPackage("EnTT")
 CPMGetPackage("glfw")
 
@@ -74,6 +75,7 @@ find_package(OpenGL REQUIRED)
 
 target_link_libraries(orbital_render PRIVATE
     Common
+    Eigen3::Eigen
     EnTT::EnTT
     raylib
     raylib_cpp

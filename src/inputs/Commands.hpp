@@ -63,6 +63,7 @@ namespace inputs {
              {inputs::Status::PRESSED, common::Action::ROTATE_CAMERA_RIGHT},
              {inputs::Status::RELEASED, common::Action::ROTATE_CAMERA_LEFT},
          }},
+        {KEY_H, {{inputs::Status::RELEASED, common::Action::CHANGE_RESCALE_MODE}}},
         {KEY_R, {{inputs::Status::RELEASED, common::Action::CHANGE_SELECTION}}},
     };
 

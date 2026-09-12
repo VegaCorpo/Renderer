@@ -1,7 +1,7 @@
 #pragma once
 
+#include <Eigen/Dense>
 #include "IScaleMode.hpp"
-#include "Vector3.hpp"
 
 namespace render {
 
@@ -27,7 +27,8 @@ namespace render {
             VisualScaleConfig _config;
 
             [[nodiscard]] float _logSizeScale(float realRadius, float maxRadius) const;
-            [[nodiscard]] Vector3 _logPositionScale(const Vector3& realPosition, float maxDistance) const;
+            [[nodiscard]] Eigen::Vector3f _logPositionScale(const Eigen::Vector3f& realPosition,
+                                                            float maxDistance) const;
     };
 
 } // namespace render

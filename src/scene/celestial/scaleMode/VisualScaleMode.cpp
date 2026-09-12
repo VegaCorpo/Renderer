@@ -14,7 +14,7 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
     for (const auto& [_, body] : bodies) {
         maxRadius = std::max(maxRadius, body.getRealRadiusKm());
 
-        float dist = (body.getRealPositionKm()).length();
+        float dist = (body.getRealPositionKm()).norm();
         maxDistance = std::max(maxDistance, dist);
     }
 
@@ -32,7 +32,7 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
     }
 
     for (auto& [_, body] : bodies) {
-        Vector3 visualPos = {};
+        Eigen::Vector3f visualPos{Eigen::Vector3f::Zero()};
 
         switch (_config.positionAlgo) {
             case PositionAlgo::LOG:
@@ -50,16 +50,16 @@ void render::VisualScaleMode::rescale(std::unordered_map<entt::entity, Celestial
             if (&bodyA == &bodyB)
                 continue;
 
-            Vector3 delta = bodyB.getScenePosition() - bodyA.getScenePosition();
-            float dist = delta.length();
+            Eigen::Vector3f delta = bodyB.getScenePosition() - bodyA.getScenePosition();
+            float dist = delta.norm();
 
             float minDist = bodyA.getRenderScale() + bodyB.getRenderScale();
 
             if (dist < minDist && dist > 0.0f) {
 
-                Vector3 dir = (bodyB.getScenePosition() - bodyA.getScenePosition()).normalized();
+                Eigen::Vector3f dir = (bodyB.getScenePosition() - bodyA.getScenePosition()).normalized();
 
-                Vector3 corrected = bodyA.getScenePosition() + dir * minDist;
+                Eigen::Vector3f corrected = bodyA.getScenePosition() + dir * minDist;
 
                 bodyB.setScenePosition(corrected);
             }
@@ -82,12 +82,12 @@ float render::VisualScaleMode::_logSizeScale(float realRadius, float maxRadius) 
     return std::max(visual, _config.minVisualRadius);
 }
 
-render::Vector3 render::VisualScaleMode::_logPositionScale(const Vector3& realPos, float maxDistance) const
+Eigen::Vector3f render::VisualScaleMode::_logPositionScale(const Eigen::Vector3f& realPos, float maxDistance) const
 {
     if (maxDistance <= 0.0f)
         return {0, 0, 0};
 
-    const float magnitude = realPos.length();
+    const float magnitude = realPos.norm();
 
     if (magnitude <= 0.0f)
         return {0, 0, 0};
