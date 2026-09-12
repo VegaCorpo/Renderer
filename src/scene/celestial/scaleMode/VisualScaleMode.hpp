@@ -21,7 +21,7 @@ namespace render {
 
             explicit VisualScaleMode(const VisualScaleConfig& config);
 
-            void rescale(std::unordered_map<entt::entity, CelestialBody>& bodies) override;
+            void rescale(std::unordered_map<std::size_t, CelestialBody>& bodies) override;
 
         private:
             VisualScaleConfig _config;

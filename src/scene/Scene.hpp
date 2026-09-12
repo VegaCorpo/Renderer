@@ -1,6 +1,8 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include <types/World.hpp>
+#include <functional>
+#include <unordered_map>
 #include <memory>
 #include <types/types.hpp>
 #include "CelestialManager.hpp"
@@ -13,11 +15,11 @@ namespace render {
             Scene();
             ~Scene() = default;
 
-            void init(std::shared_ptr<ARenderer> &renderer);
+            void init(std::shared_ptr<ARenderer> &renderer, const common::SpecificDataRender& data);
 
             void handleAction(common::Action action);
 
-            void syncIn(entt::registry& registry);
+            void syncIn(const common::WorldState& world);
             void update();
 
             void render();
