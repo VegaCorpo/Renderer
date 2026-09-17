@@ -1,16 +1,16 @@
 #pragma once
 
-#include "ARenderFeature.hpp"
+#include <unordered_map>
+#include "IRenderFeature.hpp"
+#include "LineDrawable.hpp"
 
 namespace render {
-    class OrbitTrail : public ARenderFeature {
+    class OrbitTrail : public IRenderFeature {
         public:
             static constexpr int DEFAULT_UPDATE_INTERVAL = 10;
             static constexpr size_t MAX_TRAIL_POINTS = 1000;
 
-            explicit OrbitTrail(std::shared_ptr<ARenderer>& renderer, int updateInterval = DEFAULT_UPDATE_INTERVAL) :
-                ARenderFeature(renderer), _updateInterval(updateInterval)
-            {}
+            explicit OrbitTrail(int updateInterval = DEFAULT_UPDATE_INTERVAL) : _updateInterval(updateInterval) {}
 
             void update(entt::entity entity, const CelestialBody& body) override
             {
@@ -22,30 +22,25 @@ namespace render {
 
                 counter = 0;
 
-                _trails[entity].push_back(body.getScenePosition());
+                // Trails[entity] is default-constructed on first access, and owns its
+                // own point buffer directly — no separate copy of the trail data.
+                auto& points = _trails[entity].points();
+                points.push_back(body.getScenePosition());
 
-                if (_trails[entity].size() > MAX_TRAIL_POINTS) {
-                    _trails[entity].erase(_trails[entity].begin());
+                if (points.size() > MAX_TRAIL_POINTS) {
+                    points.erase(points.begin());
                 }
             }
 
-            void draw(entt::entity entity, const CelestialBody& body, const render::CameraView&) const override
+            void draw(entt::entity entity, const CelestialBody& body, const render::CameraView&,
+                      GLRenderer& renderer) const override
             {
                 auto it = _trails.find(entity);
                 if (it == _trails.end())
                     return;
 
-                const auto& trail = it->second;
-                if (trail.size() < 2)
-                    return;
-
-                const size_t total = trail.size();
-
-                for (size_t i = 1; i < total; i++) {
-                    float t = static_cast<float>(i) / static_cast<float>(total - 1);
-
-                    this->_renderer->drawLine3D(trail[i - 1], trail[i], body.getModelInfo()->dominantColor);
-                }
+                it->second.setColor(body.getModelInfo()->dominantColor);
+                it->second.draw(renderer, {});
             }
 
             void reset() override
@@ -60,6 +55,8 @@ namespace render {
             int _updateInterval;
 
             std::unordered_map<entt::entity, int> _updateCounters;
-            std::unordered_map<entt::entity, std::vector<Eigen::Vector3f>> _trails;
+            // mutable: draw() only refreshes the cached display color here,
+            // it doesn't change which entities have a trail or their points.
+            mutable std::unordered_map<entt::entity, LineDrawable> _trails;
     };
 } // namespace render

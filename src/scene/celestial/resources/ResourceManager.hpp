@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <utils/assets.hpp>
-#include "renderer/ARenderer.hpp"
+#include "GLRenderer.hpp"
 
 namespace render {
     inline const std::string UVSPHERE_MODEL_PATH = common::ASSETS_PATH + "models/UVSphere.obj";
@@ -16,10 +16,10 @@ namespace render {
 
     class ResourceManager {
         public:
-            explicit ResourceManager(std::shared_ptr<ARenderer> renderer);
+            explicit ResourceManager(std::shared_ptr<GLRenderer> renderer);
             ~ResourceManager() = default;
 
-            [[nodiscard]] MeshHandle getBaseMesh() const { return _baseMesh; }
+            [[nodiscard]] MeshHandle getBaseMesh() const { return this->_baseMesh; }
 
             std::shared_ptr<ModelInfo> getOrCreateModelInfo(const std::string& textureId);
 
@@ -28,7 +28,7 @@ namespace render {
         private:
             std::shared_ptr<ModelInfo> _createModelInfoFromTexture(const std::string& texturePath);
 
-            std::shared_ptr<ARenderer> _renderer;
+            std::shared_ptr<GLRenderer> _renderer;
 
             std::unordered_map<std::string, std::shared_ptr<ModelInfo>> _modelCache;
 

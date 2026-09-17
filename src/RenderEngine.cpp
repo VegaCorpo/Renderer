@@ -1,20 +1,22 @@
 #include "RenderEngine.hpp"
-#include "InputHandler.hpp"
-#include "RaylibRenderer.hpp"
 #include "RenderActions.hpp"
 #include "RenderTypes.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<RaylibRenderer>()), _scene(nullptr)
+render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
 {}
 
 void render::RenderEngine::init()
 {
-    this->_renderer->initialize(RendererConfig());
+    if (!this->_renderer->initialize(RendererConfig())) {
+        // return false; // TODO : convert to bool method
+    }
 
     this->_scene = std::make_unique<Scene>();
     this->_scene->init(this->_renderer);
 
     this->_running = true;
+
+    // return true;
 }
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
@@ -62,7 +64,7 @@ void render::RenderEngine::update()
 
     //! to remove when inputs will be handle in "Inputs" module
     std::queue<common::Action> actions = {};
-    inputs::InputHandler::updateActions(actions);
+    // inputs::InputHandler::updateActions(actions);
     this->handleActions(actions);
 
     this->_scene->update();

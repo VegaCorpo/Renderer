@@ -4,8 +4,8 @@
 #include <memory>
 #include <types/types.hpp>
 #include "CelestialManager.hpp"
+#include "GLRenderer.hpp"
 #include "RenderCamera.hpp"
-#include "renderer/ARenderer.hpp"
 
 namespace render {
     class Scene {
@@ -13,7 +13,7 @@ namespace render {
             Scene();
             ~Scene() = default;
 
-            void init(std::shared_ptr<ARenderer> &renderer);
+            void init(std::shared_ptr<GLRenderer>& renderer);
 
             void handleAction(common::Action action);
 
@@ -23,7 +23,7 @@ namespace render {
             void render();
 
         private:
-            std::shared_ptr<ARenderer> _renderer;
+            std::shared_ptr<GLRenderer> _renderer;
 
             std::unique_ptr<render::RenderCamera> _camera;
 
@@ -40,7 +40,6 @@ namespace render {
                 {common::Action::ROTATE_CAMERA_DOWN, [](Scene& s) { s._camera->addRotation({0, 1, 0}); }},
                 {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s) { s._camera->addRotation({-1, 0, 0}); }},
                 {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s) { s._camera->addRotation({1, 0, 0}); }},
-                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s) { s._celestialManager->changeScaleMode(); }}
-            };
+                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s) { s._celestialManager->changeScaleMode(); }}};
     };
 } // namespace render

@@ -1,5 +1,4 @@
 #include "CelestialBody.hpp"
-#include <raymath.h>
 
 render::CelestialBody::CelestialBody() :
     _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(), _scenePosition(),
@@ -52,13 +51,11 @@ void render::CelestialBody::computeRenderScale(float sizeScaleFactor)
     this->_renderScale = this->_realRadiusKm * sizeScaleFactor;
 }
 
-void render::CelestialBody::draw(const std::shared_ptr<ARenderer>& renderer, MeshHandle baseMesh) const
+void render::CelestialBody::draw(GLRenderer& renderer) const
 {
-    {
-        if (!this->_modelInfo || baseMesh == INVALID_MESH) {
-            return;
-        }
-
-        renderer->drawMesh(baseMesh, this->_modelInfo->texture, this->_scenePosition, this->_renderScale);
+    if (!this->_drawable) {
+        return;
     }
+
+    this->_drawable->draw(renderer, {this->_scenePosition, this->_renderScale});
 }

@@ -1,31 +1,28 @@
 #pragma once
 
-#include "ARenderFeature.hpp"
+#include "IRenderFeature.hpp"
+#include "TextDrawable.hpp"
 
 namespace render {
-    class CelestialIcons : public ARenderFeature {
+    class CelestialIcons : public IRenderFeature {
         public:
-            explicit CelestialIcons(std::shared_ptr<ARenderer>& renderer) : ARenderFeature(renderer) {}
-
             static constexpr int DEFAULT_FONT_SIZE = 12;
 
             void update(entt::entity entity, const CelestialBody& body) override {
             } //! to implement to save cameraview and if changed recompute icon
 
-            void draw(entt::entity entity, const CelestialBody& body,
-                      const render::CameraView& cameraView) const override
+            void draw(entt::entity entity, const CelestialBody& body, const render::CameraView& cameraView,
+                      GLRenderer& renderer) const override
             {
                 // Eigen::Vector3f pos = body.getScenePosition();
 
-                // auto screenWidth = static_cast<float>(this->_renderer->getWidth());
-                // auto screenHeight = static_cast<float>(this->_renderer->getHeight());
+                // auto screenWidth = static_cast<float>(renderer.getWidth());
+                // auto screenHeight = static_cast<float>(renderer.getHeight());
 
-                // Eigen::Vector2f screenPos = Eigen::Matrix4f::GetWorldToScreen(pos, cameraView, screenWidth,
-                // screenHeight);
+                // Eigen::Vector2f screenPos = worldToScreen(pos, cameraView, screenWidth, screenHeight);
 
-                // this->_renderer->drawText(body.getName().c_str(), static_cast<int>(screenPos.x),
-                //                           static_cast<int>(screenPos.y), DEFAULT_FONT_SIZE,
-                //                           body.getModelInfo()->dominantColor);
+                // TextDrawable(body.getName(), body.getModelInfo()->dominantColor)
+                //     .draw(renderer, {{screenPos.x(), screenPos.y(), 0.0f}, 1.0f});
             }
 
             void reset() override {}
