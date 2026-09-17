@@ -16,22 +16,24 @@ CPMGetPackage("Common")
 CPMGetPackage("Eigen")
 CPMGetPackage("EnTT")
 CPMGetPackage("glfw")
+CPMGetPackage("glad")
+CPMGetPackage("stb")
 
 set(glfw3_FOUND TRUE)
 
+# glad2 doesn't provide an out-of-the-box library: its own CMakeLists exposes glad_add_library,
+# which generates the loader for the requested API/profile.
+add_subdirectory("${glad_SOURCE_DIR}/cmake" glad_cmake)
+glad_add_library(glad_gl_core_41 STATIC REPRODUCIBLE API gl:core=4.1)
+
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-CPMGetPackage("raylib")
-CPMGetPackage("raylib_cpp")
 
-# Allow jpg file extension
-target_compile_definitions(raylib PUBLIC SUPPORT_FILEFORMAT_JPG=1)
-
-if (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if (MSVC)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /Od")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
     else()
@@ -40,8 +42,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     endif()
 endif()
 
-if (CMAKE_BUILD_TYPE STREQUAL "Asan")
-    if (MSVC)
+if(CMAKE_BUILD_TYPE STREQUAL "Asan")
+    if(MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /Od")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
     else()
@@ -54,9 +56,21 @@ add_library(orbital_render SHARED
     src/RendererExtern.cpp
     src/RenderEngine.cpp
 
-    src/renderer/ARenderer.cpp
-    src/renderer/raylib/RaylibRenderer.cpp
+    # Drawables
+    src/drawables/MeshDrawable.cpp
+    src/drawables/LineDrawable.cpp
+    src/drawables/TextDrawable.cpp
 
+    # Renderer
+    src/graphics/GLRenderer.cpp
+    src/graphics/GLContext.cpp
+    src/graphics/GLMesh.cpp
+    src/graphics/GLTexture.cpp
+    src/graphics/models/ModelLoader.cpp
+    src/graphics/models/OBJLoader.cpp
+    src/graphics/shaders/Shader.cpp
+
+    # Scene
     src/scene/Scene.cpp
     src/scene/RenderCamera.cpp
 
@@ -67,8 +81,6 @@ add_library(orbital_render SHARED
     src/scene/celestial/scaleMode/RealisticScaleMode.cpp
 
     src/scene/celestial/resources/ResourceManager.cpp
-
-    src/inputs/InputHandler.cpp #! to change
 )
 
 find_package(OpenGL REQUIRED)
@@ -77,10 +89,9 @@ target_link_libraries(orbital_render PRIVATE
     Common
     Eigen3::Eigen
     EnTT::EnTT
-    raylib
-    raylib_cpp
-    OpenGL::GL
     glfw
+    OpenGL::GL
+    glad_gl_core_41
 )
 
 target_include_directories(orbital_render PUBLIC
@@ -90,6 +101,8 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs #! to change
     ${CMAKE_CURRENT_SOURCE_DIR}/src/window
+
+    # Scene
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
@@ -99,9 +112,14 @@ target_include_directories(orbital_render PUBLIC
     # Math
     ${CMAKE_CURRENT_SOURCE_DIR}/src/math
 
-    # Renderer includes (raylib)
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/raylib
+    # Drawables
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/drawables
+
+    # Renderer (OpenGL)
+    ${stb_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/models
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/shaders
 )
 
 if(WIN32)
