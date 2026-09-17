@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include <memory>
 #include <string>
+#include "IDrawable.hpp"
 #include "ResourceManager.hpp"
 
 namespace render {
@@ -41,11 +42,15 @@ namespace render {
             void setModelInfo(std::shared_ptr<ModelInfo> modelInfo) { this->_modelInfo = std::move(modelInfo); }
             [[nodiscard]] const std::shared_ptr<ModelInfo>& getModelInfo() const { return this->_modelInfo; }
 
+            // Owned by CelestialManager: it knows about meshes/textures, this class doesn't.
+            void setDrawable(std::shared_ptr<IDrawable> drawable) { this->_drawable = std::move(drawable); }
+
             void computePositionAndScale(float scaleFactor);
             void computeScenePosition(float scaleFactor);
             void computeRenderScale(float sizeScaleFactor);
 
-            void draw(const std::shared_ptr<ARenderer>& renderer, MeshHandle baseMesh) const;
+            // Only forwards to the drawable — never touches GLRenderer directly.
+            void draw(GLRenderer& renderer) const;
 
         protected:
             bool _hasBeenInitialized;
@@ -60,5 +65,6 @@ namespace render {
             float _renderScale;
 
             std::shared_ptr<render::ModelInfo> _modelInfo;
+            std::shared_ptr<IDrawable> _drawable;
     };
 } // namespace render

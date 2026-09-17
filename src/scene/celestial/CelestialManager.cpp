@@ -2,18 +2,19 @@
 #include <algorithm>
 #include <components/name.hpp>
 #include <utils/assets.hpp>
+#include "MeshDrawable.hpp"
 #include "OrbitTrail.hpp"
 
-render::CelestialManager::CelestialManager(std::shared_ptr<ARenderer>& renderer) :
-    _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _scaleStrategy(nullptr),
-    _visualConfig(), _features()
+render::CelestialManager::CelestialManager(std::shared_ptr<GLRenderer>& renderer) :
+    _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::REALISTIC),
+    _scaleStrategy(nullptr), _visualConfig(), _features()
 {
     this->_resourceManager = std::make_unique<ResourceManager>(this->_renderer);
 
     this->_updateScaleStrategy();
 
-    // this->_features.push_back(std::make_unique<CelestialIcons>(this->_renderer));
-    this->_features.push_back(std::make_unique<OrbitTrail>(this->_renderer));
+    this->_features.push_back(std::make_unique<OrbitTrail>());
+    // this->_features.push_back(std::make_unique<CelestialIcons>());
 }
 
 void render::CelestialManager::changeScaleMode()
@@ -90,16 +91,14 @@ Eigen::Vector3f render::CelestialManager::getBodyPosition(std::size_t entity) co
 
 void render::CelestialManager::render3D(const render::CameraView& cameraView) const
 {
-    MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
-
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (!feature->is2D()) {
-                feature->draw(entity, body, cameraView);
+                feature->draw(entity, body, cameraView, *this->_renderer);
             }
         }
 
-        body.draw(this->_renderer, baseMesh);
+        body.draw(*this->_renderer);
     }
 }
 
@@ -108,7 +107,7 @@ void render::CelestialManager::render2D(const render::CameraView& cameraView) co
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (feature->is2D()) {
-                feature->draw(entity, body, cameraView);
+                feature->draw(entity, body, cameraView, *this->_renderer);
             }
         }
     }
