@@ -11,9 +11,6 @@ namespace render {
             Eigen::Vector2f uv;
     };
 
-    // Possède un triplet VAO/VBO/EBO. Ne connaît ni les matériaux, ni les
-    // textures, ni la scène : uniquement le stockage GPU de la géométrie et
-    // l'appel de dessin.
     class GLMesh {
         public:
             GLMesh() = default;

@@ -2,7 +2,7 @@
 #include <glad/gl.h>
 #include <iostream>
 #include "BasicShaderSources.hpp"
-#include "math/CameraMath.hpp"
+#include "CameraMath.hpp"
 #include "ModelLoader.hpp"
 
 bool render::GLRenderer::initialize(const RendererConfig& config)
@@ -10,10 +10,11 @@ bool render::GLRenderer::initialize(const RendererConfig& config)
     if (!this->_context.create(config))
         return false;
 
-    if (!_loadShaders())
+    if (!this->_loadShaders())
         return false;
 
-    _createLineBuffers();
+    this->_createLineBuffers();
+    this->_createCameraUbo();
     return true;
 }
 
@@ -43,7 +44,19 @@ bool render::GLRenderer::_loadShaders()
     if (!this->_lineShader.compile(shaders::LineVertex, shaders::LineFragment)) {
         return false;
     }
+
+    this->_meshShader.bindUniformBlock("Camera", CAMERA_UBO_BINDING);
+    this->_lineShader.bindUniformBlock("Camera", CAMERA_UBO_BINDING);
     return true;
+}
+
+void render::GLRenderer::_createCameraUbo()
+{
+    glGenBuffers(1, &this->_cameraUbo);
+    glBindBuffer(GL_UNIFORM_BUFFER, this->_cameraUbo);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(Eigen::Matrix4f), nullptr, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, CAMERA_UBO_BINDING, this->_cameraUbo);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void render::GLRenderer::_createLineBuffers()
@@ -53,7 +66,6 @@ void render::GLRenderer::_createLineBuffers()
 
     glBindVertexArray(this->_lineVao);
     glBindBuffer(GL_ARRAY_BUFFER, this->_lineVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Eigen::Vector3f) * 2, nullptr, GL_DYNAMIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Eigen::Vector3f), nullptr);
@@ -73,6 +85,11 @@ void render::GLRenderer::beginMode3D(const CameraView& camera)
 
     this->_viewMatrix = math::buildView(camera);
     this->_projMatrix = math::buildProjection(camera.fovy, aspect, 0.1f, 5000.0f);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, this->_cameraUbo);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Eigen::Matrix4f), this->_viewMatrix.data());
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Eigen::Matrix4f), sizeof(Eigen::Matrix4f), this->_projMatrix.data());
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 render::TextureHandle render::GLRenderer::loadTexture(const std::string& filepath)
@@ -129,8 +146,6 @@ void render::GLRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, const 
 
     this->_meshShader.use();
     this->_meshShader.setMat4("uModel", model);
-    this->_meshShader.setMat4("uView", this->_viewMatrix);
-    this->_meshShader.setMat4("uProjection", this->_projMatrix);
 
     if (auto texIt = this->_textures.find(texture); texIt != this->_textures.end()) {
         glActiveTexture(GL_TEXTURE0);
@@ -147,18 +162,18 @@ void render::GLRenderer::drawText(const std::string& /*text*/, const Eigen::Vect
     // TODO: text rendering (font atlas + glyph quads) is a separate task.
 }
 
-void render::GLRenderer::drawLine3D(const Eigen::Vector3f& start, const Eigen::Vector3f& end, Color color)
+void render::GLRenderer::drawLineStrip(const std::vector<Eigen::Vector3f>& points, Color color)
 {
-    Eigen::Vector3f points[2] = {start, end};
+    if (points.size() < 2)
+        return;
 
     this->_lineShader.use();
-    this->_lineShader.setMat4("uView", this->_viewMatrix);
-    this->_lineShader.setMat4("uProjection", this->_projMatrix);
     this->_lineShader.setVec3("uColor", Eigen::Vector3f(color.r_f(), color.g_f(), color.b_f()));
 
     glBindVertexArray(this->_lineVao);
     glBindBuffer(GL_ARRAY_BUFFER, this->_lineVbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
-    glDrawArrays(GL_LINES, 0, 2);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<long>(points.size() * sizeof(Eigen::Vector3f)), points.data(),
+                 GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_LINE_STRIP, 0, static_cast<int>(points.size()));
     glBindVertexArray(0);
 }

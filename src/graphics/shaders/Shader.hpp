@@ -17,6 +17,8 @@ namespace render {
 
             [[nodiscard]] bool compile(const char* vertexSource, const char* fragmentSource);
 
+            void bindUniformBlock(const char* blockName, unsigned int bindingPoint) const;
+
             void use() const;
 
             void setMat4(const char* name, const Eigen::Matrix4f& value) const;
@@ -29,5 +31,6 @@ namespace render {
             [[nodiscard]] int _uniformLocation(const char* name) const;
 
             unsigned int _program = 0;
+            mutable std::unordered_map<std::string, int> _uniformCache;
     };
 } // namespace render

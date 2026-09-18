@@ -5,9 +5,9 @@
 #include "GLContext.hpp"
 #include "GLMesh.hpp"
 #include "GLTexture.hpp"
+#include "models/ModelLoader.hpp"
 #include "RenderTypes.hpp"
 #include "Shader.hpp"
-#include "models/ModelLoader.hpp"
 
 namespace render {
     class GLRenderer {
@@ -40,14 +40,14 @@ namespace render {
             [[nodiscard]] MeshHandle loadMesh(const std::string& filepath);
 
             void drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position, float scale);
-            void drawLine3D(const Eigen::Vector3f& start, const Eigen::Vector3f& end, Color color);
-
+            void drawLineStrip(const std::vector<Eigen::Vector3f>& points, Color color);
             // TODO: not implemented yet — needs a font atlas + glyph quads.
             void drawText(const std::string& text, const Eigen::Vector2f& screenPosition, Color color);
 
         private:
             [[nodiscard]] bool _loadShaders();
             void _createLineBuffers();
+            void _createCameraUbo();
 
             GLContext _context;
             ModelLoader _modelLoader;
@@ -66,6 +66,8 @@ namespace render {
             std::unordered_map<MeshHandle, GLMesh> _meshes;
             MeshHandle _nextMeshHandle = INVALID_MESH;
 
+            static constexpr unsigned int CAMERA_UBO_BINDING = 0;
+            unsigned int _cameraUbo = 0;
             Eigen::Matrix4f _viewMatrix = Eigen::Matrix4f::Identity();
             Eigen::Matrix4f _projMatrix = Eigen::Matrix4f::Identity();
     };
