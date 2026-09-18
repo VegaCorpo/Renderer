@@ -70,6 +70,15 @@ bool render::Shader::compile(const char* vertexSource, const char* fragmentSourc
     return true;
 }
 
+void render::Shader::bindUniformBlock(const char* blockName, unsigned int bindingPoint) const
+{
+    unsigned int index = glGetUniformBlockIndex(this->_program, blockName);
+
+    if (index != GL_INVALID_INDEX) {
+        glUniformBlockBinding(this->_program, index, bindingPoint);
+    }
+}
+
 void render::Shader::use() const
 {
     glUseProgram(_program);
@@ -77,7 +86,13 @@ void render::Shader::use() const
 
 int render::Shader::_uniformLocation(const char* name) const
 {
-    return glGetUniformLocation(_program, name);
+    if (auto it = this->_uniformCache.find(name); it != this->_uniformCache.end()) {
+        return it->second;
+    }
+
+    int location = glGetUniformLocation(this->_program, name);
+    this->_uniformCache[name] = location;
+    return location;
 }
 
 void render::Shader::setMat4(const char* name, const Eigen::Matrix4f& value) const
