@@ -8,7 +8,7 @@ render::RenderCamera::RenderCamera() :
 
 void render::RenderCamera::init()
 {
-    this->_cameraView.position = {150.f, 20.f, 50.f}; // Camera position
+    this->_cameraView.position = {-30.0f, 10.0f, 15.0f}; // Camera position
     this->_cameraView.target = {0.0f, 0.0f, 0.0f}; // Look at point
     this->_cameraView.up = {0.0f, 1.0f, 0.0f}; // Up vector
     this->_cameraView.fovy = 45.0f; // Field of view
