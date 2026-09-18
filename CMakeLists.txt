@@ -118,6 +118,7 @@ target_include_directories(orbital_render PUBLIC
     # Renderer (OpenGL)
     ${stb_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/utils
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/models
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/shaders
 )
