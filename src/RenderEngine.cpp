@@ -12,7 +12,8 @@ void render::RenderEngine::init(common::SpecificDataRender data)
     this->_renderer->initialize(RendererConfig());
 
     this->_scene = std::make_unique<Scene>();
-    this->_scene->init(this->_renderer, data);
+    auto new_data = std::move(data);
+    this->_scene->init(this->_renderer, new_data);
 
     this->_running = true;
 }
