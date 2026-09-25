@@ -4,7 +4,7 @@
 render::RealisticScaleMode::RealisticScaleMode() : _scaleComputed(false), _distanceScale(1.f)
 {}
 
-void render::RealisticScaleMode::rescale(std::unordered_map<entt::entity, CelestialBody>& bodies)
+void render::RealisticScaleMode::rescale(std::unordered_map<std::size_t, CelestialBody>& bodies)
 {
     if (!_scaleComputed) {
         float maxDistanceKm = _computeMaxDistance(bodies);
@@ -20,7 +20,7 @@ void render::RealisticScaleMode::rescale(std::unordered_map<entt::entity, Celest
     _applyScale(bodies);
 }
 
-float render::RealisticScaleMode::_computeMaxDistance(const std::unordered_map<entt::entity, CelestialBody>& bodies)
+float render::RealisticScaleMode::_computeMaxDistance(const std::unordered_map<std::size_t, CelestialBody>& bodies)
 {
     float maxSqDist = 0.f;
 
@@ -33,7 +33,7 @@ float render::RealisticScaleMode::_computeMaxDistance(const std::unordered_map<e
     return std::sqrt(maxSqDist);
 }
 
-void render::RealisticScaleMode::_applyScale(std::unordered_map<entt::entity, CelestialBody>& bodies) const
+void render::RealisticScaleMode::_applyScale(std::unordered_map<std::size_t, CelestialBody>& bodies) const
 {
     for (auto& [entity, body] : bodies) {
         body.computePositionAndScale(this->_distanceScale);

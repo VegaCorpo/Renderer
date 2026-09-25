@@ -1,7 +1,7 @@
 # Common
 CPMDeclarePackage(Common
     GITHUB_REPOSITORY VegaCorpo/Common
-    GIT_TAG main
+    GIT_TAG v0.2.0
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )

@@ -13,7 +13,7 @@ namespace render {
             RenderEngine();
             ~RenderEngine() = default;
 
-            void init() override;
+            void init(common::SpecificDataRender data) override;
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
@@ -25,7 +25,7 @@ namespace render {
 
             void handleActions(std::queue<common::Action>& actions); //! override
 
-            void syncIn(entt::registry& registry) override;
+            void syncIn(const common::WorldState& world) override;
             void update() override;
 
             void render(std::function<void()> uiRender) override;

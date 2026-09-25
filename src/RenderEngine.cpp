@@ -7,12 +7,12 @@
 render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<RaylibRenderer>()), _scene(nullptr)
 {}
 
-void render::RenderEngine::init()
+void render::RenderEngine::init(common::SpecificDataRender data)
 {
     this->_renderer->initialize(RendererConfig());
 
     this->_scene = std::make_unique<Scene>();
-    this->_scene->init(this->_renderer);
+    this->_scene->init(this->_renderer, data);
 
     this->_running = true;
 }
@@ -43,10 +43,10 @@ void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
     actions = std::move(remaining);
 }
 
-void render::RenderEngine::syncIn(entt::registry& registry)
+void render::RenderEngine::syncIn(const common::WorldState& world)
 {
     if (this->_scene) {
-        this->_scene->syncIn(registry);
+        this->_scene->syncIn(world);
     }
 }
 

@@ -1,4 +1,5 @@
 #include "CelestialManager.hpp"
+#include <algorithm>
 #include <components/name.hpp>
 #include <utils/assets.hpp>
 #include "OrbitTrail.hpp"
@@ -27,40 +28,41 @@ void render::CelestialManager::changeScaleMode()
     }
 }
 
-void render::CelestialManager::_addOrUpdateBody(entt::entity entity, entt::registry& registry,
-                                                common::components::Position pos, common::components::Radius radius)
+void render::CelestialManager::initBodies(const common::SpecificDataRender& data)
 {
-    auto& body = this->_bodies[entity];
+    const std::size_t count =
+        std::min({data.entitiesId.size(), data.names.size(), data.radius.size(), data.textures.size()});
 
-    body.setRealPositionKm(
-        Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
-    body.setRealRadiusKm(radius.value);
+    for (std::size_t i = 0; i < count; i += 1) {
+        auto& body = this->_bodies[data.entitiesId[i]];
 
-    if (body.hasBeenInitialized()) {
-        return;
+        body.setName(data.names[i].value);
+        body.setRealRadiusKm(data.radius[i].value);
+        body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(data.textures[i].path));
+
+        if (!body.getModelInfo()) {
+            body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
+        }
+
+        body.init();
     }
-
-    if (auto nameCpn = registry.try_get<common::components::Name>(entity)) {
-        body.setName(nameCpn->value);
-    }
-
-    if (auto texture = registry.try_get<common::components::Texture>(entity)) {
-        auto model = this->_resourceManager->getOrCreateModelInfo(texture->path);
-        body.setModelInfo(model);
-    }
-
-    if (!body.getModelInfo()) {
-        body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
-    }
-
-    body.init();
 }
 
-void render::CelestialManager::syncIn(entt::registry& registry)
+void render::CelestialManager::syncIn(const common::WorldState& world)
 {
-    registry.view<common::components::Position, common::components::Radius>().each(
-        [&](entt::entity entity, common::components::Position pos, common::components::Radius radius)
-        { _addOrUpdateBody(entity, registry, pos, radius); });
+    const std::size_t count = std::min(world.entitiesId.size(), world.positions.size());
+
+    for (std::size_t i = 0; i < count; i += 1) {
+        auto it = this->_bodies.find(world.entitiesId[i]);
+
+        if (it == this->_bodies.end()) {
+            continue;
+        }
+
+        const auto& pos = world.positions[i];
+        it->second.setRealPositionKm(
+            Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
+    }
 }
 
 void render::CelestialManager::update()
@@ -76,7 +78,7 @@ void render::CelestialManager::update()
     }
 }
 
-Eigen::Vector3f render::CelestialManager::getBodyPosition(entt::entity entity) const
+Eigen::Vector3f render::CelestialManager::getBodyPosition(std::size_t entity) const
 {
     auto it = this->_bodies.find(entity);
 

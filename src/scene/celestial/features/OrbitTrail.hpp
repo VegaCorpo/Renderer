@@ -12,7 +12,7 @@ namespace render {
                 ARenderFeature(renderer), _updateInterval(updateInterval)
             {}
 
-            void update(entt::entity entity, const CelestialBody& body) override
+            void update(std::size_t entity, const CelestialBody& body) override
             {
                 auto& counter = _updateCounters[entity];
                 counter++;
@@ -29,7 +29,7 @@ namespace render {
                 }
             }
 
-            void draw(entt::entity entity, const CelestialBody& body, const render::CameraView&) const override
+            void draw(std::size_t entity, const CelestialBody& body, const render::CameraView&) const override
             {
                 auto it = _trails.find(entity);
                 if (it == _trails.end())
@@ -59,7 +59,7 @@ namespace render {
         private:
             int _updateInterval;
 
-            std::unordered_map<entt::entity, int> _updateCounters;
-            std::unordered_map<entt::entity, std::vector<Eigen::Vector3f>> _trails;
+            std::unordered_map<std::size_t, int> _updateCounters;
+            std::unordered_map<std::size_t, std::vector<Eigen::Vector3f>> _trails;
     };
 } // namespace render

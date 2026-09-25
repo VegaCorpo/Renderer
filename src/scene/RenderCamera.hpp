@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entt/entity/fwd.hpp>
+#include <cstddef>
 #include "RenderTypes.hpp"
 
 namespace render {
@@ -19,9 +19,9 @@ namespace render {
             void addRotation(Eigen::Vector3f rot);
 
             [[nodiscard]] bool isFollowing() const { return this->_isFollowing; }
-            [[nodiscard]] entt::entity getFollowedEntity() const { return this->_followedEntity; }
+            [[nodiscard]] std::size_t getFollowedEntity() const { return this->_followedEntity; }
 
-            void follow(entt::entity entity);
+            void follow(std::size_t entity);
             void follow(Eigen::Vector3f targetPos) { this->_cameraView.target = targetPos; }
             void stopFollowing() { this->_isFollowing = false; }
 
@@ -35,7 +35,7 @@ namespace render {
             Eigen::Vector3f _rotationDir;
 
             bool _isFollowing;
-            entt::entity _followedEntity;
+            std::size_t _followedEntity;
 
             static constexpr float MOVE_SPEED = 0.5f;
             static constexpr float ROTATION_SPEED = 0.02f;

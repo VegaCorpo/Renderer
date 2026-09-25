@@ -1,10 +1,10 @@
 #include "Scene.hpp"
-#include <entt/entity/fwd.hpp>
+#include <cstddef>
 
 render::Scene::Scene() : _camera(nullptr), _celestialManager()
 {}
 
-void render::Scene::init(std::shared_ptr<ARenderer>& renderer)
+void render::Scene::init(std::shared_ptr<ARenderer>& renderer, const common::SpecificDataRender& data)
 {
     this->_renderer = renderer;
 
@@ -12,8 +12,9 @@ void render::Scene::init(std::shared_ptr<ARenderer>& renderer)
     this->_camera->init();
 
     this->_celestialManager = std::make_unique<CelestialManager>(renderer);
+    this->_celestialManager->initBodies(data);
 
-    this->_camera->follow(static_cast<entt::entity>(3));
+    this->_camera->follow(std::size_t{3});
 }
 
 void render::Scene::handleAction(common::Action action)
@@ -25,10 +26,10 @@ void render::Scene::handleAction(common::Action action)
     }
 }
 
-void render::Scene::syncIn(entt::registry& registry)
+void render::Scene::syncIn(const common::WorldState& world)
 {
     if (this->_celestialManager) {
-        this->_celestialManager->syncIn(registry);
+        this->_celestialManager->syncIn(world);
     }
 }
 
