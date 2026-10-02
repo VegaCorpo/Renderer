@@ -1,6 +1,5 @@
 #include <memory>
 #include <queue>
-#include "InputHandler.hpp"
 #include "RenderEngine.hpp"
 #include "types/types.hpp"
 
@@ -17,6 +16,6 @@ extern "C" {
 
     void updateActions(std::queue<common::Action>& actions)
     {
-        inputs::InputHandler::updateActions(actions);
+        // inputs::InputHandler::updateActions(actions);
     }
 }

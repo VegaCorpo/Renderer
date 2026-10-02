@@ -4,7 +4,7 @@
 render::Scene::Scene() : _camera(nullptr), _celestialManager()
 {}
 
-void render::Scene::init(std::shared_ptr<ARenderer>& renderer, const common::SpecificDataRender& data)
+void render::Scene::init(std::shared_ptr<GLRenderer>& renderer, const common::SpecificDataRender& data)
 {
     this->_renderer = renderer;
 
