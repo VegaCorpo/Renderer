@@ -6,20 +6,19 @@ namespace render::shaders {
         layout(location = 0) in vec3 aPosition;
         layout(location = 1) in vec3 aNormal;
         layout(location = 2) in vec2 aUV;
+        layout(location = 3) in mat4 aModel;
 
         layout(std140) uniform Camera {
             mat4 uView;
             mat4 uProjection;
         };
 
-        uniform mat4 uModel;
-
         out vec2 vUV;
 
         void main()
         {
             vUV = aUV;
-            gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+            gl_Position = uProjection * uView * aModel * vec4(aPosition, 1.0);
         }
     )glsl";
 

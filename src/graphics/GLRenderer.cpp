@@ -124,6 +124,7 @@ render::MeshHandle render::GLRenderer::loadMesh(const std::string& filepath)
 
     GLMesh mesh;
     mesh.upload(data.vertices, data.indices);
+    mesh.setupInstancing();
 
     MeshHandle handle = ++this->_nextMeshHandle;
     this->_meshes[handle] = std::move(mesh);
@@ -131,18 +132,17 @@ render::MeshHandle render::GLRenderer::loadMesh(const std::string& filepath)
     return handle;
 }
 
-void render::GLRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position, float scale)
+void render::GLRenderer::drawMeshInstanced(MeshHandle mesh, TextureHandle texture,
+                                           const std::vector<Eigen::Matrix4f>& models)
 {
+    if (models.empty())
+        return;
+
     auto meshIt = this->_meshes.find(mesh);
     if (meshIt == this->_meshes.end())
         return;
 
-    Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
-    model.block<3, 1>(0, 3) = position;
-    model.block<3, 3>(0, 0) *= scale;
-
     this->_meshShader.use();
-    this->_meshShader.setMat4("uModel", model);
 
     if (auto texIt = this->_textures.find(texture); texIt != this->_textures.end()) {
         glActiveTexture(GL_TEXTURE0);
@@ -150,7 +150,8 @@ void render::GLRenderer::drawMesh(MeshHandle mesh, TextureHandle texture, const 
         this->_meshShader.setInt("uTexture", 0);
     }
 
-    meshIt->second.draw();
+    meshIt->second.updateInstances(models);
+    meshIt->second.drawInstanced(models.size());
 }
 
 void render::GLRenderer::drawText(const std::string& /*text*/, const Eigen::Vector2f& /*screenPosition*/,

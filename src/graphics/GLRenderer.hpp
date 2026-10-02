@@ -39,7 +39,7 @@ namespace render {
 
             [[nodiscard]] MeshHandle loadMesh(const std::string& filepath);
 
-            void drawMesh(MeshHandle mesh, TextureHandle texture, const Eigen::Vector3f& position, float scale);
+            void drawMeshInstanced(MeshHandle mesh, TextureHandle texture, const std::vector<Eigen::Matrix4f>& models);
             void drawLineStrip(const std::vector<Eigen::Vector3f>& points, Color color);
             // TODO: not implemented yet — needs a font atlas + glyph quads.
             void drawText(const std::string& text, const Eigen::Vector2f& screenPosition, Color color);

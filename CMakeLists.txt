@@ -57,7 +57,6 @@ add_library(orbital_render SHARED
     src/RenderEngine.cpp
 
     # Drawables
-    src/drawables/MeshDrawable.cpp
     src/drawables/LineDrawable.cpp
     src/drawables/TextDrawable.cpp
 

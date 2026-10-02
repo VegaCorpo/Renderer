@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <components/name.hpp>
 #include <utils/assets.hpp>
-#include "MeshDrawable.hpp"
 #include "OrbitTrail.hpp"
 
 render::CelestialManager::CelestialManager(std::shared_ptr<GLRenderer>& renderer) :
@@ -44,6 +43,8 @@ void render::CelestialManager::initBodies(const common::SpecificDataRender& data
         if (!body.getModelInfo()) {
             body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
         }
+
+        this->_batchesByTexture[body.getModelInfo()->texture].push_back(entity);
 
         body.init();
     }
@@ -91,14 +92,21 @@ Eigen::Vector3f render::CelestialManager::getBodyPosition(std::size_t entity) co
 
 void render::CelestialManager::render3D(const render::CameraView& cameraView) const
 {
-    for (auto& [entity, body] : this->_bodies) {
-        for (auto& feature : this->_features) {
-            if (!feature->is2D()) {
-                feature->draw(entity, body, cameraView, *this->_renderer);
-            }
+    MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
+
+    // Use Batched map to draw bodies efficiently by textures
+    for (const auto& [texture, entities] : this->_batchesByTexture) {
+        std::vector<Eigen::Matrix4f> models;
+        models.reserve(entities.size());
+
+        for (entt::entity entity : entities) {
+            const CelestialBody& body = this->_bodies.at(entity);
+
+            models.push_back(_buildModelMatrix(body));
+            _drawBodyFeatures(entity, body, cameraView);
         }
 
-        body.draw(*this->_renderer);
+        this->_renderer->drawMeshInstanced(baseMesh, texture, models);
     }
 }
 
@@ -134,4 +142,22 @@ bool render::CelestialManager::_hasBodiesBeenModified()
     }
 
     return isModified;
+}
+
+void render::CelestialManager::_drawBodyFeatures(std::size_t entity, const CelestialBody& body,
+                                                 const CameraView& cameraView) const
+{
+    for (auto& feature : this->_features) {
+        if (!feature->is2D()) {
+            feature->draw(entity, body, cameraView, *this->_renderer);
+        }
+    }
+}
+
+Eigen::Matrix4f render::CelestialManager::_buildModelMatrix(const CelestialBody& body)
+{
+    Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+    model.block<3, 1>(0, 3) = body.getScenePosition();
+    model.block<3, 3>(0, 0) *= body.getRenderScale();
+    return model;
 }

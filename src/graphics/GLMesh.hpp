@@ -26,7 +26,7 @@ namespace render {
 
             void upload(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
             void setupInstancing();
-            void updateInstances(const std::vector<Eigen::Matrix4f>& models);
+            void updateInstances(const std::vector<Eigen::Matrix4f>& models) const;
 
             void draw() const;
             void drawInstanced(std::size_t instanceCount) const;
