@@ -44,7 +44,7 @@ void render::CelestialManager::initBodies(const common::SpecificDataRender& data
             body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
         }
 
-        this->_batchesByTexture[body.getModelInfo()->texture].push_back(entity);
+        this->_batchesByTexture[body.getModelInfo()->texture].push_back(data.entitiesId[i]);
 
         body.init();
     }
@@ -99,7 +99,7 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
         std::vector<Eigen::Matrix4f> models;
         models.reserve(entities.size());
 
-        for (entt::entity entity : entities) {
+        for (std::size_t entity : entities) {
             const CelestialBody& body = this->_bodies.at(entity);
 
             models.push_back(_buildModelMatrix(body));
