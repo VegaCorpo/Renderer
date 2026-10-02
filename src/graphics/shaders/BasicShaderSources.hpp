@@ -2,7 +2,7 @@
 
 namespace render::shaders {
     inline constexpr const char* MeshVertex = R"glsl(
-        #version 410 core
+        #version 460 core
         layout(location = 0) in vec3 aPosition;
         layout(location = 1) in vec3 aNormal;
         layout(location = 2) in vec2 aUV;
@@ -24,7 +24,7 @@ namespace render::shaders {
     )glsl";
 
     inline constexpr const char* MeshFragment = R"glsl(
-        #version 410 core
+        #version 460 core
         in vec2 vUV;
         out vec4 FragColor;
 
@@ -37,7 +37,7 @@ namespace render::shaders {
     )glsl";
 
     inline constexpr const char* LineVertex = R"glsl(
-        #version 410 core
+        #version 460 core
         layout(location = 0) in vec3 aPosition;
 
         layout(std140) uniform Camera {
@@ -52,7 +52,7 @@ namespace render::shaders {
     )glsl";
 
     inline constexpr const char* LineFragment = R"glsl(
-        #version 410 core
+        #version 460 core
         out vec4 FragColor;
 
         uniform vec3 uColor;

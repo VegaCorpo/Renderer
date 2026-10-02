@@ -44,9 +44,6 @@ bool render::GLRenderer::_loadShaders()
     if (!this->_lineShader.compile(shaders::LineVertex, shaders::LineFragment)) {
         return false;
     }
-
-    this->_meshShader.bindUniformBlock("Camera", CAMERA_UBO_BINDING);
-    this->_lineShader.bindUniformBlock("Camera", CAMERA_UBO_BINDING);
     return true;
 }
 

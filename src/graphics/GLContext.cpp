@@ -15,12 +15,10 @@ bool render::GLContext::create(const RendererConfig& config)
         return false;
     }
 
+    // Version of OpenGL (Also written in Shader files "#version 460 core")
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-#endif
 
     this->_window = glfwCreateWindow(config.width, config.height, config.title.c_str(), nullptr, nullptr);
     if (!this->_window) {
