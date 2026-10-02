@@ -14,14 +14,6 @@ CPMDeclarePackage(Eigen
         EXCLUDE_FROM_ALL YES
 )
 
-#entt
-CPMDeclarePackage(EnTT
-    GITHUB_REPOSITORY skypjack/entt
-    GIT_TAG v3.16.0
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-)
-
 # glfw
 CPMDeclarePackage(glfw
     GITHUB_REPOSITORY glfw/glfw

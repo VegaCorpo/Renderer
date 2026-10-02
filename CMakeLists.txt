@@ -14,7 +14,6 @@ CPMUsePackageLock(package-lock.cmake)
 
 CPMGetPackage("Common")
 CPMGetPackage("Eigen")
-CPMGetPackage("EnTT")
 CPMGetPackage("glfw")
 CPMGetPackage("glad")
 CPMGetPackage("stb")
