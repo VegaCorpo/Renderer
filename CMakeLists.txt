@@ -86,7 +86,6 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(orbital_render PRIVATE
     Common
     Eigen3::Eigen
-    EnTT::EnTT
     glfw
     OpenGL::GL
     glad_gl_core_41
