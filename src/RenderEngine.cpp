@@ -5,10 +5,10 @@
 render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
 {}
 
-void render::RenderEngine::init(common::SpecificDataRender data)
+bool render::RenderEngine::init(common::SpecificDataRender data)
 {
     if (!this->_renderer->initialize(RendererConfig())) {
-        // return false; // TODO : convert to bool method
+        return false;
     }
 
     this->_scene = std::make_unique<Scene>();
@@ -16,7 +16,7 @@ void render::RenderEngine::init(common::SpecificDataRender data)
 
     this->_running = true;
 
-    // return true;
+    return true;
 }
 
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)

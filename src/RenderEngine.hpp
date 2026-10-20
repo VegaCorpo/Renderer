@@ -13,7 +13,7 @@ namespace render {
             RenderEngine();
             ~RenderEngine() = default;
 
-            void init(common::SpecificDataRender data) override;
+            bool init(common::SpecificDataRender data) override;
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
