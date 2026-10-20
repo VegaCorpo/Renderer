@@ -29,18 +29,10 @@ CPMDeclarePackage(glfw
     EXCLUDE_FROM_ALL YES
 )
 
-# glad
-CPMDeclarePackage(glad
-    GITHUB_REPOSITORY Dav1dde/glad
-    GIT_TAG glad2
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-)
-
 # stb (stb_image.h, header-only)
 CPMDeclarePackage(stb
     GITHUB_REPOSITORY nothings/stb
-    GIT_TAG master
+    GIT_TAG a7d4c2175630e1ea5b6f8dd00ab96fed0b97b96d
     DOWNLOAD_ONLY YES
     SYSTEM YES
     EXCLUDE_FROM_ALL YES

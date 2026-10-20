@@ -8,6 +8,15 @@ render::GLContext::~GLContext()
     destroy();
 }
 
+void render::GLContext::destroy()
+{
+    if (this->_window) {
+        glfwDestroyWindow(this->_window);
+        this->_window = nullptr;
+    }
+    glfwTerminate();
+}
+
 bool render::GLContext::create(const RendererConfig& config)
 {
     if (!glfwInit()) {
@@ -47,15 +56,6 @@ bool render::GLContext::create(const RendererConfig& config)
     glEnable(GL_DEPTH_TEST);
 
     return true;
-}
-
-void render::GLContext::destroy()
-{
-    if (this->_window) {
-        glfwDestroyWindow(this->_window);
-        this->_window = nullptr;
-    }
-    glfwTerminate();
 }
 
 void render::GLContext::pollEvents() const

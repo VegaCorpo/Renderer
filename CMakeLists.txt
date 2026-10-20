@@ -15,15 +15,13 @@ CPMUsePackageLock(package-lock.cmake)
 CPMGetPackage("Common")
 CPMGetPackage("Eigen")
 CPMGetPackage("glfw")
-CPMGetPackage("glad")
 CPMGetPackage("stb")
 
 set(glfw3_FOUND TRUE)
 
-# glad2 doesn't provide an out-of-the-box library: its own CMakeLists exposes glad_add_library,
-# which generates the loader for the requested API/profile.
-add_subdirectory("${glad_SOURCE_DIR}/cmake" glad_cmake)
-glad_add_library(glad_gl_core_41 STATIC REPRODUCIBLE API gl:core=4.1)
+# Glad library definition
+add_library(glad STATIC third_party/glad/src/gl.c)
+target_include_directories(glad PUBLIC third_party/glad/include)
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
@@ -88,7 +86,7 @@ target_link_libraries(orbital_render PRIVATE
     Eigen3::Eigen
     glfw
     OpenGL::GL
-    glad_gl_core_41
+    glad
 )
 
 target_include_directories(orbital_render PUBLIC
