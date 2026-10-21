@@ -4,7 +4,7 @@
 #include <queue>
 #include "GLFW/glfw3.h"
 #include "interfaces/IRenderEngine.hpp"
-#include "renderer/ARenderer.hpp"
+#include "GLRenderer.hpp"
 #include "Scene.hpp"
 
 namespace render {
@@ -13,7 +13,7 @@ namespace render {
             RenderEngine();
             ~RenderEngine() = default;
 
-            void init(common::SpecificDataRender data) override;
+            bool init(common::SpecificDataRender data) override;
 
             [[nodiscard]] bool isRunning() const override { return this->_running; }
 
@@ -34,7 +34,7 @@ namespace render {
             bool _running;
             bool _drawUI;
 
-            std::shared_ptr<ARenderer> _renderer;
+            std::shared_ptr<GLRenderer> _renderer;
 
             std::unique_ptr<Scene> _scene;
     };

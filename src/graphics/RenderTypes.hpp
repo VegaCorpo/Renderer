@@ -21,7 +21,7 @@ namespace render {
             Eigen::Vector3f position{Eigen::Vector3f::Zero()};
             Eigen::Vector3f target{Eigen::Vector3f::Zero()};
             Eigen::Vector3f up{Eigen::Vector3f::UnitY()};
-            float fovy = 0;
+            float fovy = 45.0f;
     };
 
     using TextureHandle = uint64_t;
@@ -32,6 +32,15 @@ namespace render {
 
     struct Color {
             unsigned char r, g, b, a;
+
+            // Returns red value as float between 0 and 1
+            [[nodiscard]] float r_f() const { return static_cast<float>(r) / 255.0f; }
+            // Returns green value as float between 0 and 1
+            [[nodiscard]] float g_f() const { return static_cast<float>(g) / 255.0f; }
+            // Returns blue value as float between 0 and 1
+            [[nodiscard]] float b_f() const { return static_cast<float>(b) / 255.0f; }
+            // Returns alpha value as float between 0 and 1
+            [[nodiscard]] float a_f() const { return static_cast<float>(a) / 255.0f; }
 
             static Color White() { return {255, 255, 255, 255}; }
             static Color Black() { return {0, 0, 0, 255}; }

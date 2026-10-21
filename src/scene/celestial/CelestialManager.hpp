@@ -2,11 +2,10 @@
 
 #include <cstddef>
 #include <functional>
-#include <unordered_map>
 #include <types/World.hpp>
-#include <vector>
-#include "ARenderFeature.hpp"
+#include <unordered_map>
 #include "CelestialBody.hpp"
+#include "IRenderFeature.hpp"
 #include "RealisticScaleMode.hpp"
 #include "ResourceManager.hpp"
 #include "VisualScaleMode.hpp"
@@ -16,7 +15,7 @@ namespace render {
         public:
             enum class ScaleMode { VISUAL, REALISTIC, SCALE_MODE_NUMBER };
 
-            explicit CelestialManager(std::shared_ptr<ARenderer>& renderer);
+            explicit CelestialManager(std::shared_ptr<GLRenderer>& renderer);
             ~CelestialManager() = default;
 
             void changeScaleMode();
@@ -37,18 +36,21 @@ namespace render {
         private:
             void _updateScaleStrategy();
             [[nodiscard]] bool _hasBodiesBeenModified();
+            void _drawBodyFeatures(std::size_t entity, const CelestialBody& body, const CameraView& cameraView) const;
+            [[nodiscard]] static Eigen::Matrix4f _buildModelMatrix(const CelestialBody& body);
 
-            std::shared_ptr<ARenderer> _renderer;
+            std::shared_ptr<GLRenderer> _renderer;
 
             std::unique_ptr<ResourceManager> _resourceManager;
 
             std::unordered_map<std::size_t, CelestialBody> _bodies;
+            std::unordered_map<TextureHandle, std::vector<std::size_t>> _batchesByTexture;
 
             ScaleMode _scaleMode;
             std::unique_ptr<IScaleMode> _scaleStrategy;
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
-            std::vector<std::unique_ptr<ARenderFeature>> _features;
+            std::vector<std::unique_ptr<IRenderFeature>> _features;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},

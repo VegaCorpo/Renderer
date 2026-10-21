@@ -1,7 +1,7 @@
 # Common
 CPMDeclarePackage(Common
     GITHUB_REPOSITORY VegaCorpo/Common
-    GIT_TAG v0.2.0
+    GIT_TAG v0.3.4
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )
@@ -14,36 +14,7 @@ CPMDeclarePackage(Eigen
         EXCLUDE_FROM_ALL YES
 )
 
-#entt
-CPMDeclarePackage(EnTT
-    GITHUB_REPOSITORY skypjack/entt
-    GIT_TAG v3.16.0
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-)
-
-#raylib
-CPMDeclarePackage(raylib
-    GITHUB_REPOSITORY raysan5/raylib
-    GIT_TAG 6.0
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-    OPTIONS
-        "BUILD_SHARED_LIBS ON"
-        "BUILD_EXAMPLES OFF"
-        "BUILD_GAMES OFF"
-        "GLFW_BUILD_WAYLAND OFF"
-)
-
-# raylib-cpp
-CPMDeclarePackage(raylib_cpp
-    GITHUB_REPOSITORY robloach/raylib-cpp
-    GIT_TAG v6.0.2
-    SYSTEM YES
-    EXCLUDE_FROM_ALL YES
-)
-
-# GLFW
+# glfw
 CPMDeclarePackage(glfw
     GITHUB_REPOSITORY glfw/glfw
     GIT_TAG 3.4
@@ -54,6 +25,15 @@ CPMDeclarePackage(glfw
         "BUILD_SHARED_LIBS ON"
         "GLFW_BUILD_X11 ON"
         "GLFW_BUILD_WAYLAND OFF"
+    SYSTEM YES
+    EXCLUDE_FROM_ALL YES
+)
+
+# stb (stb_image.h, header-only)
+CPMDeclarePackage(stb
+    GITHUB_REPOSITORY nothings/stb
+    GIT_TAG a7d4c2175630e1ea5b6f8dd00ab96fed0b97b96d
+    DOWNLOAD_ONLY YES
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )

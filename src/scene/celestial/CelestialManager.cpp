@@ -4,16 +4,16 @@
 #include <utils/assets.hpp>
 #include "OrbitTrail.hpp"
 
-render::CelestialManager::CelestialManager(std::shared_ptr<ARenderer>& renderer) :
-    _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::VISUAL), _scaleStrategy(nullptr),
-    _visualConfig(), _features()
+render::CelestialManager::CelestialManager(std::shared_ptr<GLRenderer>& renderer) :
+    _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::REALISTIC),
+    _scaleStrategy(nullptr), _visualConfig(), _features()
 {
     this->_resourceManager = std::make_unique<ResourceManager>(this->_renderer);
 
     this->_updateScaleStrategy();
 
-    // this->_features.push_back(std::make_unique<CelestialIcons>(this->_renderer));
-    this->_features.push_back(std::make_unique<OrbitTrail>(this->_renderer));
+    this->_features.push_back(std::make_unique<OrbitTrail>());
+    // this->_features.push_back(std::make_unique<CelestialIcons>());
 }
 
 void render::CelestialManager::changeScaleMode()
@@ -43,6 +43,8 @@ void render::CelestialManager::initBodies(const common::SpecificDataRender& data
         if (!body.getModelInfo()) {
             body.setModelInfo(this->_resourceManager->getOrCreateModelInfo(common::DEFAULT_TEXTURE_PATH));
         }
+
+        this->_batchesByTexture[body.getModelInfo()->texture].push_back(data.entitiesId[i]);
 
         body.init();
     }
@@ -92,14 +94,19 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
 {
     MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
 
-    for (auto& [entity, body] : this->_bodies) {
-        for (auto& feature : this->_features) {
-            if (!feature->is2D()) {
-                feature->draw(entity, body, cameraView);
-            }
+    // Use Batched map to draw bodies efficiently by textures
+    for (const auto& [texture, entities] : this->_batchesByTexture) {
+        std::vector<Eigen::Matrix4f> models;
+        models.reserve(entities.size());
+
+        for (std::size_t entity : entities) {
+            const CelestialBody& body = this->_bodies.at(entity);
+
+            models.push_back(_buildModelMatrix(body));
+            _drawBodyFeatures(entity, body, cameraView);
         }
 
-        body.draw(this->_renderer, baseMesh);
+        this->_renderer->drawMeshInstanced(baseMesh, texture, models);
     }
 }
 
@@ -108,7 +115,7 @@ void render::CelestialManager::render2D(const render::CameraView& cameraView) co
     for (auto& [entity, body] : this->_bodies) {
         for (auto& feature : this->_features) {
             if (feature->is2D()) {
-                feature->draw(entity, body, cameraView);
+                feature->draw(entity, body, cameraView, *this->_renderer);
             }
         }
     }
@@ -135,4 +142,22 @@ bool render::CelestialManager::_hasBodiesBeenModified()
     }
 
     return isModified;
+}
+
+void render::CelestialManager::_drawBodyFeatures(std::size_t entity, const CelestialBody& body,
+                                                 const CameraView& cameraView) const
+{
+    for (auto& feature : this->_features) {
+        if (!feature->is2D()) {
+            feature->draw(entity, body, cameraView, *this->_renderer);
+        }
+    }
+}
+
+Eigen::Matrix4f render::CelestialManager::_buildModelMatrix(const CelestialBody& body)
+{
+    Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+    model.block<3, 1>(0, 3) = body.getScenePosition();
+    model.block<3, 3>(0, 0) *= body.getRenderScale();
+    return model;
 }
