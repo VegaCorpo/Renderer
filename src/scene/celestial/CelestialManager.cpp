@@ -64,6 +64,13 @@ void render::CelestialManager::syncIn(const common::WorldState& world)
         const auto& pos = world.positions[i];
         it->second.setRealPositionKm(
             Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
+
+        if (i < world.orientations.size()) {
+            const auto& rot = world.orientations[i];
+            it->second.setOrientation(Eigen::Quaternionf(static_cast<float>(rot.scalar), static_cast<float>(rot.x),
+                                                         static_cast<float>(rot.y), static_cast<float>(rot.z))
+                                          .normalized());
+        }
     }
 }
 
@@ -154,10 +161,19 @@ void render::CelestialManager::_drawBodyFeatures(std::size_t entity, const Celes
     }
 }
 
+const Eigen::Quaternionf& render::CelestialManager::_meshToBodyFrame()
+{
+    // The sphere mesh has its poles on Y, while physics spins bodies around their local Z axis
+    // (common::rotation::BODY_SPIN_AXIS): rotate the mesh once so its poles line up with Z.
+    static const Eigen::Quaternionf meshToBodyFrame(
+        Eigen::AngleAxisf(static_cast<float>(EIGEN_PI) / 2.0f, Eigen::Vector3f::UnitX()));
+    return meshToBodyFrame;
+}
+
 Eigen::Matrix4f render::CelestialManager::_buildModelMatrix(const CelestialBody& body)
 {
     Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
     model.block<3, 1>(0, 3) = body.getScenePosition();
-    model.block<3, 3>(0, 0) *= body.getRenderScale();
+    model.block<3, 3>(0, 0) = (body.getOrientation() * _meshToBodyFrame()).toRotationMatrix() * body.getRenderScale();
     return model;
 }
