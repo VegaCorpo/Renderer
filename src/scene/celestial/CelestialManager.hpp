@@ -39,6 +39,7 @@ namespace render {
             void _drawBodyFeatures(std::size_t entity, const CelestialBody& body, const CameraView& cameraView) const;
             [[nodiscard]] static Eigen::Matrix4f _buildModelMatrix(const CelestialBody& body);
             [[nodiscard]] static const Eigen::Quaternionf& _meshToBodyFrame();
+            [[nodiscard]] static const Eigen::Quaternionf& _physicsToRenderFrame();
 
             std::shared_ptr<GLRenderer> _renderer;
 

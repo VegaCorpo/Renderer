@@ -63,13 +63,15 @@ void render::CelestialManager::syncIn(const common::WorldState& world)
 
         const auto& pos = world.positions[i];
         it->second.setRealPositionKm(
+            _physicsToRenderFrame() *
             Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
 
         if (i < world.orientations.size()) {
             const auto& rot = world.orientations[i];
-            it->second.setOrientation(Eigen::Quaternionf(static_cast<float>(rot.scalar), static_cast<float>(rot.x),
-                                                         static_cast<float>(rot.y), static_cast<float>(rot.z))
-                                          .normalized());
+            it->second.setOrientation(
+                (_physicsToRenderFrame() * Eigen::Quaternionf(static_cast<float>(rot.scalar), static_cast<float>(rot.x),
+                                                              static_cast<float>(rot.y), static_cast<float>(rot.z)))
+                    .normalized());
         }
     }
 }
@@ -168,6 +170,15 @@ const Eigen::Quaternionf& render::CelestialManager::_meshToBodyFrame()
     static const Eigen::Quaternionf meshToBodyFrame(
         Eigen::AngleAxisf(static_cast<float>(EIGEN_PI) / 2.0f, Eigen::Vector3f::UnitX()));
     return meshToBodyFrame;
+}
+
+const Eigen::Quaternionf& render::CelestialManager::_physicsToRenderFrame()
+{
+    // Physics is Z-up (orbital plane XY) while the renderer is Y-up: rotate -90° around X,
+    // (x, y, z) -> (x, z, -y). A rotation, not a Y/Z swap, so the scene isn't mirrored.
+    static const Eigen::Quaternionf physicsToRenderFrame(
+        Eigen::AngleAxisf(-static_cast<float>(EIGEN_PI) / 2.0f, Eigen::Vector3f::UnitX()));
+    return physicsToRenderFrame;
 }
 
 Eigen::Matrix4f render::CelestialManager::_buildModelMatrix(const CelestialBody& body)
