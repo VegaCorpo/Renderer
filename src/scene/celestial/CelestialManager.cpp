@@ -46,6 +46,11 @@ void render::CelestialManager::initBodies(const common::SpecificDataRender& data
 
         this->_batchesByTexture[body.getModelInfo()->texture].push_back(data.entitiesId[i]);
 
+        if (!this->_lightSource ||
+            body.getRealRadiusKm() > this->_bodies.at(*this->_lightSource).getRealRadiusKm()) {
+            this->_lightSource = data.entitiesId[i];
+        }
+
         body.init();
     }
 }
@@ -102,6 +107,11 @@ Eigen::Vector3f render::CelestialManager::getBodyPosition(std::size_t entity) co
 void render::CelestialManager::render3D(const render::CameraView& cameraView) const
 {
     MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
+    const CelestialBody* lightBody = this->_lightSource ? &this->_bodies.at(*this->_lightSource) : nullptr;
+
+    if (lightBody) {
+        this->_renderer->setLightPosition(lightBody->getScenePosition());
+    }
 
     // Use Batched map to draw bodies efficiently by textures
     for (const auto& [texture, entities] : this->_batchesByTexture) {
@@ -111,11 +121,20 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
         for (std::size_t entity : entities) {
             const CelestialBody& body = this->_bodies.at(entity);
 
-            models.push_back(_buildModelMatrix(body));
             _drawBodyFeatures(entity, body, cameraView);
+
+            if (&body != lightBody) {
+                models.push_back(_buildModelMatrix(body));
+            }
         }
 
         this->_renderer->drawMeshInstanced(baseMesh, texture, models);
+    }
+
+    // The light source can't light itself: draw it on its own, unlit
+    if (lightBody) {
+        this->_renderer->drawMeshInstanced(baseMesh, lightBody->getModelInfo()->texture, {_buildModelMatrix(*lightBody)},
+                                           false);
     }
 }
 

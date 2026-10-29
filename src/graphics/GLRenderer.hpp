@@ -39,7 +39,11 @@ namespace render {
 
             [[nodiscard]] MeshHandle loadMesh(const std::string& filepath);
 
-            void drawMeshInstanced(MeshHandle mesh, TextureHandle texture, const std::vector<Eigen::Matrix4f>& models);
+            // Point light used by lit meshes, in scene coordinates
+            void setLightPosition(const Eigen::Vector3f& position) { _lightPosition = position; }
+
+            void drawMeshInstanced(MeshHandle mesh, TextureHandle texture, const std::vector<Eigen::Matrix4f>& models,
+                                   bool lit = true);
             void drawLineStrip(const std::vector<Eigen::Vector3f>& points, Color color);
             // TODO: not implemented yet — needs a font atlas + glyph quads.
             void drawText(const std::string& text, const Eigen::Vector2f& screenPosition, Color color);
@@ -70,5 +74,7 @@ namespace render {
             unsigned int _cameraUbo = 0;
             Eigen::Matrix4f _viewMatrix = Eigen::Matrix4f::Identity();
             Eigen::Matrix4f _projMatrix = Eigen::Matrix4f::Identity();
+
+            Eigen::Vector3f _lightPosition = Eigen::Vector3f::Zero();
     };
 } // namespace render

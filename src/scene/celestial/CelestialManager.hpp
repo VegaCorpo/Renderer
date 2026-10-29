@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <functional>
+#include <optional>
 #include <types/World.hpp>
 #include <unordered_map>
 #include "CelestialBody.hpp"
@@ -47,6 +48,9 @@ namespace render {
 
             std::unordered_map<std::size_t, CelestialBody> _bodies;
             std::unordered_map<TextureHandle, std::vector<std::size_t>> _batchesByTexture;
+
+            // Biggest body: emits the scene light and is drawn unlit
+            std::optional<std::size_t> _lightSource;
 
             ScaleMode _scaleMode;
             std::unique_ptr<IScaleMode> _scaleStrategy;
