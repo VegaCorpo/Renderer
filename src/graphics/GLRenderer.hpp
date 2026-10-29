@@ -41,6 +41,8 @@ namespace render {
 
             // Point light used by lit meshes, in scene coordinates
             void setLightPosition(const Eigen::Vector3f& position) { _lightPosition = position; }
+            // Smallest on-screen radius in pixels of instanced meshes, 0 to disable
+            void setMinPixelRadius(float radius) { _minPixelRadius = radius; }
 
             void drawMeshInstanced(MeshHandle mesh, TextureHandle texture, const std::vector<Eigen::Matrix4f>& models,
                                    bool lit = true);
@@ -76,5 +78,6 @@ namespace render {
             Eigen::Matrix4f _projMatrix = Eigen::Matrix4f::Identity();
 
             Eigen::Vector3f _lightPosition = Eigen::Vector3f::Zero();
+            float _minPixelRadius = 0.0f;
     };
 } // namespace render

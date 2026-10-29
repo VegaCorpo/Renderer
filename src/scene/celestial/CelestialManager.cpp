@@ -152,6 +152,7 @@ void render::CelestialManager::render2D(const render::CameraView& cameraView) co
 void render::CelestialManager::_updateScaleStrategy()
 {
     this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)();
+    this->_renderer->setMinPixelRadius(this->_scaleStrategy->getMinPixelRadius());
 
     for (auto& feature : this->_features) {
         feature->reset();

@@ -1,4 +1,5 @@
 #include "GLRenderer.hpp"
+#include <algorithm>
 #include <glad/gl.h>
 #include <iostream>
 #include "BasicShaderSources.hpp"
@@ -145,6 +146,8 @@ void render::GLRenderer::drawMeshInstanced(MeshHandle mesh, TextureHandle textur
     this->_meshShader.use();
     this->_meshShader.setVec3("uLightPosition", this->_lightPosition);
     this->_meshShader.setInt("uLit", lit ? 1 : 0);
+    this->_meshShader.setFloat("uMinPixelRadius", this->_minPixelRadius);
+    this->_meshShader.setFloat("uViewportHeight", static_cast<float>(std::max(getHeight(), 1)));
 
     if (auto texIt = this->_textures.find(texture); texIt != this->_textures.end()) {
         glActiveTexture(GL_TEXTURE0);

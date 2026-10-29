@@ -13,13 +13,23 @@ namespace render::shaders {
             mat4 uProjection;
         };
 
+        // Smallest on-screen radius in pixels: below ~1px the GPU may cover no pixel center and skip the mesh
+        uniform float uMinPixelRadius;
+        uniform float uViewportHeight;
+
         out vec2 vUV;
         out vec3 vWorldPosition;
         out vec3 vNormal;
 
         void main()
         {
-            vec4 worldPosition = aModel * vec4(aPosition, 1.0);
+            // World size of one pixel at the instance depth: 2 * depth / (proj[1][1] * height)
+            float depth = max(-(uView * aModel[3]).z, 0.0);
+            float minScale = uMinPixelRadius * 2.0 * depth / (uProjection[1][1] * uViewportHeight);
+            float scale = length(aModel[0].xyz);
+            float grow = scale > 0.0 ? max(1.0, minScale / scale) : 1.0;
+
+            vec4 worldPosition = aModel * vec4(aPosition * grow, 1.0);
 
             vUV = aUV;
             vWorldPosition = worldPosition.xyz;
