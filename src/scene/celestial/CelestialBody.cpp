@@ -2,7 +2,7 @@
 
 render::CelestialBody::CelestialBody() :
     _hasBeenInitialized(false), _hasBeenModified(true), _name(), _realPositionKm(), _scenePosition(),
-    _realRadiusKm(0.0f), _renderScale(0.0f), _modelInfo(nullptr)
+    _orientation(Eigen::Quaternionf::Identity()), _realRadiusKm(0.0f), _renderScale(0.0f), _modelInfo(nullptr)
 {}
 
 bool render::CelestialBody::hasBeenModified()
@@ -49,13 +49,4 @@ void render::CelestialBody::computeScenePosition(float scaleFactor)
 void render::CelestialBody::computeRenderScale(float sizeScaleFactor)
 {
     this->_renderScale = this->_realRadiusKm * sizeScaleFactor;
-}
-
-void render::CelestialBody::draw(GLRenderer& renderer) const
-{
-    if (!this->_drawable) {
-        return;
-    }
-
-    this->_drawable->draw(renderer, {this->_scenePosition, this->_renderScale});
 }
