@@ -46,6 +46,11 @@ void render::CelestialManager::initBodies(const common::SpecificDataRender& data
 
         this->_batchesByTexture[body.getModelInfo()->texture].push_back(data.entitiesId[i]);
 
+        if (!this->_lightSource ||
+            body.getRealRadiusKm() > this->_bodies.at(*this->_lightSource).getRealRadiusKm()) {
+            this->_lightSource = data.entitiesId[i];
+        }
+
         body.init();
     }
 }
@@ -63,7 +68,16 @@ void render::CelestialManager::syncIn(const common::WorldState& world)
 
         const auto& pos = world.positions[i];
         it->second.setRealPositionKm(
+            _physicsToRenderFrame() *
             Eigen::Vector3f(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)));
+
+        if (i < world.orientations.size()) {
+            const auto& rot = world.orientations[i];
+            it->second.setOrientation(
+                (_physicsToRenderFrame() * Eigen::Quaternionf(static_cast<float>(rot.scalar), static_cast<float>(rot.x),
+                                                              static_cast<float>(rot.y), static_cast<float>(rot.z)))
+                    .normalized());
+        }
     }
 }
 
@@ -93,6 +107,11 @@ Eigen::Vector3f render::CelestialManager::getBodyPosition(std::size_t entity) co
 void render::CelestialManager::render3D(const render::CameraView& cameraView) const
 {
     MeshHandle baseMesh = this->_resourceManager->getBaseMesh();
+    const CelestialBody* lightBody = this->_lightSource ? &this->_bodies.at(*this->_lightSource) : nullptr;
+
+    if (lightBody) {
+        this->_renderer->setLightPosition(lightBody->getScenePosition());
+    }
 
     // Use Batched map to draw bodies efficiently by textures
     for (const auto& [texture, entities] : this->_batchesByTexture) {
@@ -102,11 +121,20 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
         for (std::size_t entity : entities) {
             const CelestialBody& body = this->_bodies.at(entity);
 
-            models.push_back(_buildModelMatrix(body));
             _drawBodyFeatures(entity, body, cameraView);
+
+            if (&body != lightBody) {
+                models.push_back(_buildModelMatrix(body));
+            }
         }
 
         this->_renderer->drawMeshInstanced(baseMesh, texture, models);
+    }
+
+    // The light source can't light itself: draw it on its own, unlit
+    if (lightBody) {
+        this->_renderer->drawMeshInstanced(baseMesh, lightBody->getModelInfo()->texture, {_buildModelMatrix(*lightBody)},
+                                           false);
     }
 }
 
@@ -124,6 +152,7 @@ void render::CelestialManager::render2D(const render::CameraView& cameraView) co
 void render::CelestialManager::_updateScaleStrategy()
 {
     this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)();
+    this->_renderer->setMinPixelRadius(this->_scaleStrategy->getMinPixelRadius());
 
     for (auto& feature : this->_features) {
         feature->reset();
@@ -154,10 +183,28 @@ void render::CelestialManager::_drawBodyFeatures(std::size_t entity, const Celes
     }
 }
 
+const Eigen::Quaternionf& render::CelestialManager::_meshToBodyFrame()
+{
+    // The sphere mesh has its poles on Y, while physics spins bodies around their local Z axis
+    // (common::rotation::BODY_SPIN_AXIS): rotate the mesh once so its poles line up with Z.
+    static const Eigen::Quaternionf meshToBodyFrame(
+        Eigen::AngleAxisf(static_cast<float>(EIGEN_PI) / 2.0f, Eigen::Vector3f::UnitX()));
+    return meshToBodyFrame;
+}
+
+const Eigen::Quaternionf& render::CelestialManager::_physicsToRenderFrame()
+{
+    // Physics is Z-up (orbital plane XY) while the renderer is Y-up: rotate -90° around X,
+    // (x, y, z) -> (x, z, -y). A rotation, not a Y/Z swap, so the scene isn't mirrored.
+    static const Eigen::Quaternionf physicsToRenderFrame(
+        Eigen::AngleAxisf(-static_cast<float>(EIGEN_PI) / 2.0f, Eigen::Vector3f::UnitX()));
+    return physicsToRenderFrame;
+}
+
 Eigen::Matrix4f render::CelestialManager::_buildModelMatrix(const CelestialBody& body)
 {
     Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
     model.block<3, 1>(0, 3) = body.getScenePosition();
-    model.block<3, 3>(0, 0) *= body.getRenderScale();
+    model.block<3, 3>(0, 0) = (body.getOrientation() * _meshToBodyFrame()).toRotationMatrix() * body.getRenderScale();
     return model;
 }
