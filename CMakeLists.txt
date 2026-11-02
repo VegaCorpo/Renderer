@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(orbital_render)
+project(orbital_render VERSION 0.1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
@@ -116,6 +116,11 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/utils
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/models
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/shaders
+)
+
+target_compile_definitions(orbital_render PRIVATE
+    ORBITAL_MODULE_NAME="${PROJECT_NAME}"
+    ORBITAL_MODULE_VERSION="${PROJECT_VERSION}"
 )
 
 if(WIN32)
