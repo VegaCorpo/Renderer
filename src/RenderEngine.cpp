@@ -62,11 +62,6 @@ void render::RenderEngine::update()
         return;
     }
 
-    //! to remove when inputs will be handle in "Inputs" module
-    std::queue<common::Action> actions = {};
-    // inputs::InputHandler::updateActions(actions);
-    this->handleActions(actions);
-
     this->_scene->update();
 }
 

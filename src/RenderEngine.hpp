@@ -23,7 +23,7 @@ namespace render {
 
             void setVertexBuffer(common::RenderDataBuffer& buffer) override;
 
-            void handleActions(std::queue<common::Action>& actions); //! override
+            void handleActions(std::queue<common::Action>& actions) override;
 
             void syncIn(const common::WorldState& world) override;
             void update() override;
