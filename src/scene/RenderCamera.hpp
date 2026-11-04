@@ -21,7 +21,7 @@ namespace render {
             [[nodiscard]] bool isFollowing() const { return this->_isFollowing; }
             [[nodiscard]] std::size_t getFollowedEntity() const { return this->_followedEntity; }
 
-            void follow(std::size_t entity);
+            void follow(std::size_t entity = SIZE_MAX);
             void follow(Eigen::Vector3f targetPos) { this->_cameraView.target = targetPos; }
             void stopFollowing() { this->_isFollowing = false; }
 

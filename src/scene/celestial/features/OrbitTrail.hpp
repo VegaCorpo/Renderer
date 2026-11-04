@@ -8,7 +8,7 @@ namespace render {
     class OrbitTrail : public IRenderFeature {
         public:
             static constexpr int DEFAULT_UPDATE_INTERVAL = 10;
-            static constexpr size_t MAX_TRAIL_POINTS = 1000;
+            static constexpr size_t MAX_TRAIL_POINTS = 500;
 
             explicit OrbitTrail(int updateInterval = DEFAULT_UPDATE_INTERVAL) : _updateInterval(updateInterval) {}
 
