@@ -12,6 +12,8 @@ void render::RenderCamera::init()
     this->_cameraView.target = {0.0f, 0.0f, 0.0f}; // Look at point
     this->_cameraView.up = {0.0f, 1.0f, 0.0f}; // Up vector
     this->_cameraView.fovy = 45.0f; // Field of view
+
+    this->follow();
 }
 
 void render::RenderCamera::addMovement(Eigen::Vector3f dir)
@@ -34,6 +36,12 @@ void render::RenderCamera::update()
 
 void render::RenderCamera::follow(std::size_t entity)
 {
+    if (entity == SIZE_MAX) {
+        this->_isFollowing = false;
+        this->_followedEntity = SIZE_MAX;
+        return;
+    }
+
     this->_isFollowing = true;
     this->_followedEntity = entity;
 }

@@ -1,5 +1,4 @@
 #include "Scene.hpp"
-#include <cstddef>
 
 render::Scene::Scene() : _camera(nullptr), _celestialManager()
 {}
@@ -13,8 +12,6 @@ void render::Scene::init(std::shared_ptr<GLRenderer>& renderer, const common::Sp
 
     this->_celestialManager = std::make_unique<CelestialManager>(renderer);
     this->_celestialManager->initBodies(data);
-
-    this->_camera->follow(std::size_t{3});
 }
 
 void render::Scene::handleAction(common::Action action)
