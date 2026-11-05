@@ -24,7 +24,7 @@ extern "C" {
         };
     }
 
-    void updateActions(std::queue<common::Action>& actions)
+    void updateActions(std::queue<common::InputAction>& actions)
     {
         // inputs::InputHandler::updateActions(actions);
     }

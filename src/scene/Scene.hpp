@@ -17,7 +17,7 @@ namespace render {
 
             void init(std::shared_ptr<GLRenderer>& renderer, const common::SpecificDataRender& data);
 
-            void handleAction(common::Action action);
+            void handleAction(const common::InputAction& action);
 
             void syncIn(const common::WorldState& world);
             void update();
@@ -25,23 +25,26 @@ namespace render {
             void render();
 
         private:
+            using ActionHandler = std::function<void(Scene&, const common::InputAction&)>;
+
             std::shared_ptr<GLRenderer> _renderer;
 
             std::unique_ptr<render::RenderCamera> _camera;
 
             std::unique_ptr<CelestialManager> _celestialManager;
 
-            const std::unordered_map<common::Action, std::function<void(Scene&)>> dispatchTable = {
-                {common::Action::MOVE_CAMERA_FORWARD, [](Scene& s) { s._camera->addMovement({0, 0, 1}); }},
-                {common::Action::MOVE_CAMERA_BACKWARD, [](Scene& s) { s._camera->addMovement({0, 0, -1}); }},
-                {common::Action::MOVE_CAMERA_UP, [](Scene& s) { s._camera->addMovement({0, 1, 0}); }},
-                {common::Action::MOVE_CAMERA_DOWN, [](Scene& s) { s._camera->addMovement({0, -1, 0}); }},
-                {common::Action::MOVE_CAMERA_LEFT, [](Scene& s) { s._camera->addMovement({-1, 0, 0}); }},
-                {common::Action::MOVE_CAMERA_RIGHT, [](Scene& s) { s._camera->addMovement({1, 0, 0}); }},
-                {common::Action::ROTATE_CAMERA_UP, [](Scene& s) { s._camera->addRotation({0, -1, 0}); }},
-                {common::Action::ROTATE_CAMERA_DOWN, [](Scene& s) { s._camera->addRotation({0, 1, 0}); }},
-                {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s) { s._camera->addRotation({-1, 0, 0}); }},
-                {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s) { s._camera->addRotation({1, 0, 0}); }},
-                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s) { s._celestialManager->changeScaleMode(); }}};
+            const std::unordered_map<common::Action, ActionHandler> dispatchTable = {
+                {common::Action::MOVE_CAMERA_FORWARD, [](Scene& s, auto&) { s._camera->addMovement({0, 0, 1}); }},
+                {common::Action::MOVE_CAMERA_BACKWARD, [](Scene& s, auto&) { s._camera->addMovement({0, 0, -1}); }},
+                {common::Action::MOVE_CAMERA_UP, [](Scene& s, auto&) { s._camera->addMovement({0, 1, 0}); }},
+                {common::Action::MOVE_CAMERA_DOWN, [](Scene& s, auto&) { s._camera->addMovement({0, -1, 0}); }},
+                {common::Action::MOVE_CAMERA_LEFT, [](Scene& s, auto&) { s._camera->addMovement({-1, 0, 0}); }},
+                {common::Action::MOVE_CAMERA_RIGHT, [](Scene& s, auto&) { s._camera->addMovement({1, 0, 0}); }},
+                {common::Action::ROTATE_CAMERA_UP, [](Scene& s, auto&) { s._camera->addRotation({0, -1, 0}); }},
+                {common::Action::ROTATE_CAMERA_DOWN, [](Scene& s, auto&) { s._camera->addRotation({0, 1, 0}); }},
+                {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s, auto&) { s._camera->addRotation({-1, 0, 0}); }},
+                {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s, auto&) { s._camera->addRotation({1, 0, 0}); }},
+                {common::Action::ROTATE_CAMERA_MOUSE, [](Scene& s, auto& a) { s._camera->addMouseRotation(a.x, a.y); }},
+                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s, auto&) { s._celestialManager->changeScaleMode(); }}};
     };
 } // namespace render

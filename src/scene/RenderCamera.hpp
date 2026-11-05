@@ -18,6 +18,11 @@ namespace render {
             void addMovement(Eigen::Vector3f dir);
             void addRotation(Eigen::Vector3f rot);
 
+            /**
+             * @brief Rotate the camera instantly from a mouse delta (in pixels)
+             */
+            void addMouseRotation(float deltaX, float deltaY);
+
             [[nodiscard]] bool isFollowing() const { return this->_isFollowing; }
             [[nodiscard]] std::size_t getFollowedEntity() const { return this->_followedEntity; }
 
@@ -28,6 +33,7 @@ namespace render {
         private:
             void _move();
             void _rotate();
+            void _applyRotation(float yaw, float pitch, float roll);
 
             render::CameraView _cameraView;
 
@@ -39,5 +45,6 @@ namespace render {
 
             static constexpr float MOVE_SPEED = 0.5f;
             static constexpr float ROTATION_SPEED = 0.02f;
+            static constexpr float MOUSE_SENSITIVITY = 0.003f; // radians per pixel
     };
 } // namespace render

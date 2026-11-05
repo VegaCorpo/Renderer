@@ -22,17 +22,17 @@ bool render::RenderEngine::init(common::SpecificDataRender data)
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {}
 
-void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
+void render::RenderEngine::handleActions(std::queue<common::InputAction>& actions)
 {
-    std::queue<common::Action> remaining;
+    std::queue<common::InputAction> remaining;
 
     while (!actions.empty()) {
-        common::Action action = actions.front();
+        const common::InputAction action = actions.front();
         actions.pop();
 
         bool consumed = false;
 
-        if (this->_scene && std::ranges::find(render::sceneActions, action) != render::sceneActions.end()) {
+        if (this->_scene && std::ranges::find(render::sceneActions, action.action) != render::sceneActions.end()) {
             this->_scene->handleAction(action);
             consumed = true;
         }

@@ -1,7 +1,7 @@
 # Common
 CPMDeclarePackage(Common
     GITHUB_REPOSITORY VegaCorpo/Common
-    GIT_TAG v0.4.2
+    GIT_TAG features/camera_mouse_rotation
     SYSTEM YES
     EXCLUDE_FROM_ALL YES
 )

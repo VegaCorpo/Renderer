@@ -62,24 +62,35 @@ void render::RenderCamera::_move()
     _cameraView.target += moveWorld;
 }
 
+void render::RenderCamera::addMouseRotation(float deltaX, float deltaY)
+{
+    this->_applyRotation(deltaX * MOUSE_SENSITIVITY, deltaY * MOUSE_SENSITIVITY, 0.0f);
+}
+
 void render::RenderCamera::_rotate()
 {
     if (_rotationDir.squaredNorm() <= 0.000001f)
         return;
 
+    this->_applyRotation(_rotationDir.x() * ROTATION_SPEED, _rotationDir.y() * ROTATION_SPEED,
+                         _rotationDir.z() * ROTATION_SPEED);
+}
+
+void render::RenderCamera::_applyRotation(float yaw, float pitch, float roll)
+{
     Eigen::Vector3f forward = (_cameraView.target - _cameraView.position).normalized();
 
-    if (std::abs(_rotationDir.x()) > 0.0001f) {
-        forward = render::math::rotateY(forward, -_rotationDir.x() * ROTATION_SPEED);
+    if (std::abs(yaw) > 0.000001f) {
+        forward = render::math::rotateY(forward, -yaw);
     }
 
-    if (std::abs(_rotationDir.y()) > 0.0001f) {
+    if (std::abs(pitch) > 0.000001f) {
         Eigen::Vector3f right = forward.cross(_cameraView.up).normalized();
-        forward = render::math::rotateAxis(forward, right, -_rotationDir.y() * ROTATION_SPEED);
+        forward = render::math::rotateAxis(forward, right, -pitch);
     }
 
-    if (std::abs(_rotationDir.z()) > 0.0001f) {
-        _cameraView.up = render::math::rotateAxis(_cameraView.up, forward, _rotationDir.z() * ROTATION_SPEED);
+    if (std::abs(roll) > 0.000001f) {
+        _cameraView.up = render::math::rotateAxis(_cameraView.up, forward, roll);
     }
 
     _cameraView.target = _cameraView.position + forward;

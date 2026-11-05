@@ -14,12 +14,12 @@ void render::Scene::init(std::shared_ptr<GLRenderer>& renderer, const common::Sp
     this->_celestialManager->initBodies(data);
 }
 
-void render::Scene::handleAction(common::Action action)
+void render::Scene::handleAction(const common::InputAction& action)
 {
-    auto it = dispatchTable.find(action);
+    auto it = dispatchTable.find(action.action);
 
     if (it != dispatchTable.end()) {
-        it->second(*this);
+        it->second(*this, action);
     }
 }
 
