@@ -30,6 +30,13 @@ void render::Scene::syncIn(const common::WorldState& world)
     }
 }
 
+void render::Scene::syncUIData(const common::SpecificDataUI& data)
+{
+    if (this->_camera) {
+        this->_camera->follow(data.camFocusEnt);
+    }
+}
+
 void render::Scene::update()
 {
     if (!this->_camera || !this->_celestialManager) {
@@ -40,10 +47,26 @@ void render::Scene::update()
 
     this->_camera->update();
 
-    if (this->_camera->isFollowing()) {
-        Eigen::Vector3f pos = this->_celestialManager->getBodyPosition(this->_camera->getFollowedEntity());
+    std::optional<BoundingSphere> followedBounds;
 
-        this->_camera->follow(pos);
+    if (this->_camera->isFollowing()) {
+        followedBounds = this->_celestialManager->getBodyBounds(this->_camera->getFollowedEntity());
+
+        if (!followedBounds) {
+            this->_camera->follow();
+        }
+    }
+
+    if (this->_camera->isZooming()) {
+        const auto bounds = this->_camera->isFollowing() ? followedBounds : this->_celestialManager->getSceneBounds();
+
+        if (bounds) {
+            this->_camera->updateZoom(*bounds);
+        } else {
+            this->_camera->cancelZoom();
+        }
+    } else if (followedBounds) {
+        this->_camera->updateFollow(followedBounds->center);
     }
 }
 

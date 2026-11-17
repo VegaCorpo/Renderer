@@ -3,8 +3,8 @@
 #include <memory>
 #include <queue>
 #include "GLFW/glfw3.h"
-#include "interfaces/IRenderEngine.hpp"
 #include "GLRenderer.hpp"
+#include "interfaces/IRenderEngine.hpp"
 #include "Scene.hpp"
 
 namespace render {
@@ -26,6 +26,7 @@ namespace render {
             void handleActions(std::queue<common::InputAction>& actions) override;
 
             void syncIn(const common::WorldState& world) override;
+            void syncUIData(const common::SpecificDataUI& data) override;
             void update() override;
 
             void render(std::function<void()> uiRender) override;

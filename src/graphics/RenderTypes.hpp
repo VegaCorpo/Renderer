@@ -24,6 +24,11 @@ namespace render {
             float fovy = 45.0f;
     };
 
+    struct BoundingSphere {
+            Eigen::Vector3f center{Eigen::Vector3f::Zero()};
+            float radius = 0.0f;
+    };
+
     using TextureHandle = uint64_t;
     using MeshHandle = uint64_t;
 

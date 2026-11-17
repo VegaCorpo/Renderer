@@ -1,9 +1,12 @@
 #include "RenderCamera.hpp"
+#include <algorithm>
+#include <cmath>
+#include <numbers>
 #include "RenderMath.hpp"
 
 render::RenderCamera::RenderCamera() :
-    _cameraView(), _movementDir(Eigen::Vector3f::Zero()), _rotationDir(Eigen::Vector3f::Zero()), _isFollowing(false),
-    _followedEntity()
+    _cameraView(), _movementDir(Eigen::Vector3f::Zero()), _rotationDir(Eigen::Vector3f::Zero()),
+    _followedEntity(SIZE_MAX), _lastFollowedPos(), _zooming(false)
 {}
 
 void render::RenderCamera::init()
@@ -36,14 +39,52 @@ void render::RenderCamera::update()
 
 void render::RenderCamera::follow(std::size_t entity)
 {
-    if (entity == SIZE_MAX) {
-        this->_isFollowing = false;
-        this->_followedEntity = SIZE_MAX;
+    if (entity == this->_followedEntity)
         return;
-    }
 
-    this->_isFollowing = true;
     this->_followedEntity = entity;
+    this->_lastFollowedPos.reset();
+    this->_zooming = true;
+}
+
+void render::RenderCamera::updateFollow(const Eigen::Vector3f& entityPos)
+{
+    if (this->_lastFollowedPos) {
+        const Eigen::Vector3f displacement = entityPos - *this->_lastFollowedPos;
+
+        _cameraView.position += displacement;
+        _cameraView.target += displacement;
+    }
+    this->_lastFollowedPos = entityPos;
+}
+
+void render::RenderCamera::updateZoom(const BoundingSphere& bounds)
+{
+    const float margin = this->isFollowing() ? ENTITY_ZOOM_MARGIN : SCENE_ZOOM_MARGIN;
+    const float halfFovRad = _cameraView.fovy * 0.5f * std::numbers::pi_v<float> / 180.0f;
+    const float distance = std::max(bounds.radius * margin / std::sin(halfFovRad), MIN_ZOOM_DISTANCE);
+
+    const Eigen::Vector3f forward = (_cameraView.target - _cameraView.position).normalized();
+    Eigen::Vector3f offset = _cameraView.position - bounds.center;
+    const float offsetNorm = offset.norm();
+    const Eigen::Vector3f fromCenter = offsetNorm > 0.000001f ? Eigen::Vector3f(offset / offsetNorm) : -forward;
+    const Eigen::Vector3f desiredOffset = fromCenter * distance;
+
+    // Done relative to the center so the zoom keeps up with a moving entity
+    offset += (desiredOffset - offset) * ZOOM_SMOOTHING;
+    _cameraView.position = bounds.center + offset;
+
+    Eigen::Vector3f lookDir = forward + (-fromCenter - forward) * ZOOM_SMOOTHING;
+    if (lookDir.squaredNorm() <= 0.000001f)
+        lookDir = -fromCenter;
+    lookDir.normalize();
+    _cameraView.target = _cameraView.position + lookDir;
+
+    const float endDistance = distance * ZOOM_END_RATIO;
+    if ((desiredOffset - offset).squaredNorm() <= endDistance * endDistance && lookDir.dot(-fromCenter) > 0.9999f) {
+        this->_zooming = false;
+        this->_lastFollowedPos = bounds.center;
+    }
 }
 
 void render::RenderCamera::_move()

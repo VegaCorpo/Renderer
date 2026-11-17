@@ -1,10 +1,10 @@
 #pragma once
 
-#include <types/World.hpp>
 #include <functional>
-#include <unordered_map>
 #include <memory>
 #include <types/types.hpp>
+#include <types/World.hpp>
+#include <unordered_map>
 #include "CelestialManager.hpp"
 #include "GLRenderer.hpp"
 #include "RenderCamera.hpp"
@@ -20,6 +20,7 @@ namespace render {
             void handleAction(const common::InputAction& action);
 
             void syncIn(const common::WorldState& world);
+            void syncUIData(const common::SpecificDataUI& data);
             void update();
 
             void render();
@@ -45,6 +46,8 @@ namespace render {
                 {common::Action::ROTATE_CAMERA_LEFT, [](Scene& s, auto&) { s._camera->addRotation({-1, 0, 0}); }},
                 {common::Action::ROTATE_CAMERA_RIGHT, [](Scene& s, auto&) { s._camera->addRotation({1, 0, 0}); }},
                 {common::Action::ROTATE_CAMERA_MOUSE, [](Scene& s, auto& a) { s._camera->addMouseRotation(a.x, a.y); }},
-                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s, auto&) { s._celestialManager->changeScaleMode(); }}};
+                {common::Action::CHANGE_RESCALE_MODE, [](Scene& s, auto&) { s._celestialManager->changeScaleMode(); }},
+                {common::Action::TOGGLE_TRAILS,
+                 [](Scene& s, auto&) { s._celestialManager->toggleFeature(CelestialManager::Feature::TRAILS); }}};
     };
 } // namespace render

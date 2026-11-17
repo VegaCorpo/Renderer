@@ -2,7 +2,8 @@
 #include "RenderActions.hpp"
 #include "RenderTypes.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
+render::RenderEngine::RenderEngine() :
+    _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
 {}
 
 bool render::RenderEngine::init(common::SpecificDataRender data)
@@ -49,6 +50,13 @@ void render::RenderEngine::syncIn(const common::WorldState& world)
 {
     if (this->_scene) {
         this->_scene->syncIn(world);
+    }
+}
+
+void render::RenderEngine::syncUIData(const common::SpecificDataUI& data)
+{
+    if (this->_scene) {
+        this->_scene->syncUIData(data);
     }
 }
 
