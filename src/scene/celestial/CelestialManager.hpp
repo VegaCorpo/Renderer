@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <bitset>
 #include <cstddef>
 #include <functional>
 #include <optional>
@@ -15,11 +17,13 @@ namespace render {
     class CelestialManager {
         public:
             enum class ScaleMode { VISUAL, REALISTIC, SCALE_MODE_NUMBER };
+            enum class Feature { TRAILS, LABELS, ICONS, FEATURE_NUMBER };
 
             explicit CelestialManager(std::shared_ptr<GLRenderer>& renderer);
             ~CelestialManager() = default;
 
             void changeScaleMode();
+            void toggleFeature(Feature feature);
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
@@ -29,7 +33,8 @@ namespace render {
 
             const std::unordered_map<std::size_t, CelestialBody>& bodies() const { return _bodies; }
 
-            Eigen::Vector3f getBodyPosition(std::size_t entity) const;
+            [[nodiscard]] std::optional<BoundingSphere> getBodyBounds(std::size_t entity) const;
+            [[nodiscard]] std::optional<BoundingSphere> getSceneBounds() const;
 
             void render3D(const render::CameraView& cameraView) const;
             void render2D(const render::CameraView& cameraView) const;
@@ -41,6 +46,9 @@ namespace render {
             [[nodiscard]] static Eigen::Matrix4f _buildModelMatrix(const CelestialBody& body);
             [[nodiscard]] static const Eigen::Quaternionf& _meshToBodyFrame();
             [[nodiscard]] static const Eigen::Quaternionf& _physicsToRenderFrame();
+
+            template <typename Func>
+            void _forEachEnabledFeature(Func&& func) const;
 
             std::shared_ptr<GLRenderer> _renderer;
 
@@ -56,7 +64,11 @@ namespace render {
             std::unique_ptr<IScaleMode> _scaleStrategy;
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
-            std::vector<std::unique_ptr<IRenderFeature>> _features;
+            static constexpr std::size_t FEATURE_COUNT = static_cast<std::size_t>(Feature::FEATURE_NUMBER);
+
+            // Indexed by Feature, nullptr when the feature isn't implemented yet
+            std::array<std::unique_ptr<IRenderFeature>, FEATURE_COUNT> _features;
+            std::bitset<FEATURE_COUNT> _enabledFeatures;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},

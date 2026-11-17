@@ -2,7 +2,8 @@
 #include "RenderActions.hpp"
 #include "RenderTypes.hpp"
 
-render::RenderEngine::RenderEngine() : _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
+render::RenderEngine::RenderEngine() :
+    _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
 {}
 
 bool render::RenderEngine::init(common::SpecificDataRender data)
@@ -22,17 +23,17 @@ bool render::RenderEngine::init(common::SpecificDataRender data)
 void render::RenderEngine::setVertexBuffer(common::RenderDataBuffer& buffer)
 {}
 
-void render::RenderEngine::handleActions(std::queue<common::Action>& actions)
+void render::RenderEngine::handleActions(std::queue<common::InputAction>& actions)
 {
-    std::queue<common::Action> remaining;
+    std::queue<common::InputAction> remaining;
 
     while (!actions.empty()) {
-        common::Action action = actions.front();
+        const common::InputAction action = actions.front();
         actions.pop();
 
         bool consumed = false;
 
-        if (this->_scene && std::ranges::find(render::sceneActions, action) != render::sceneActions.end()) {
+        if (this->_scene && std::ranges::find(render::sceneActions, action.action) != render::sceneActions.end()) {
             this->_scene->handleAction(action);
             consumed = true;
         }
@@ -49,6 +50,13 @@ void render::RenderEngine::syncIn(const common::WorldState& world)
 {
     if (this->_scene) {
         this->_scene->syncIn(world);
+    }
+}
+
+void render::RenderEngine::syncUIData(const common::SpecificDataUI& data)
+{
+    if (this->_scene) {
+        this->_scene->syncUIData(data);
     }
 }
 
