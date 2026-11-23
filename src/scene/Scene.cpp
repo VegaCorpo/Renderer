@@ -37,6 +37,14 @@ void render::Scene::syncUIData(const common::SpecificDataUI& data)
     }
 }
 
+std::vector<common::DisplayOption> render::Scene::getDisplayOptions() const
+{
+    if (!this->_celestialManager) {
+        return {};
+    }
+    return this->_celestialManager->getDisplayOptions();
+}
+
 void render::Scene::update()
 {
     if (!this->_camera || !this->_celestialManager) {

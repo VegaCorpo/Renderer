@@ -25,6 +25,8 @@ namespace render {
 
             void handleActions(std::queue<common::InputAction>& actions) override;
 
+            const common::PublishedDataRender& publishDataRender() override;
+
             void syncIn(const common::WorldState& world) override;
             void syncUIData(const common::SpecificDataUI& data) override;
             void update() override;
@@ -38,5 +40,7 @@ namespace render {
             std::shared_ptr<GLRenderer> _renderer;
 
             std::unique_ptr<Scene> _scene;
+
+            common::PublishedDataRender _publishedData;
     };
 } // namespace render

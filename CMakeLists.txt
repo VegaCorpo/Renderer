@@ -102,7 +102,7 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/display_options
 
     # Math
     ${CMAKE_CURRENT_SOURCE_DIR}/src/math

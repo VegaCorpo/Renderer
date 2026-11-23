@@ -23,6 +23,8 @@ namespace render {
             void syncUIData(const common::SpecificDataUI& data);
             void update();
 
+            [[nodiscard]] std::vector<common::DisplayOption> getDisplayOptions() const;
+
             void render();
 
         private:
@@ -48,6 +50,6 @@ namespace render {
                 {common::Action::ROTATE_CAMERA_MOUSE, [](Scene& s, auto& a) { s._camera->addMouseRotation(a.x, a.y); }},
                 {common::Action::CHANGE_RESCALE_MODE, [](Scene& s, auto&) { s._celestialManager->changeScaleMode(); }},
                 {common::Action::TOGGLE_TRAILS,
-                 [](Scene& s, auto&) { s._celestialManager->toggleFeature(CelestialManager::Feature::TRAILS); }}};
+                 [](Scene& s, auto&) { s._celestialManager->toggleDisplayOption(common::DisplayOptionId::TRAILS); }}};
     };
 } // namespace render

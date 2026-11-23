@@ -3,7 +3,7 @@
 #include "RenderTypes.hpp"
 
 render::RenderEngine::RenderEngine() :
-    _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr)
+    _running(false), _drawUI(true), _renderer(std::make_shared<GLRenderer>()), _scene(nullptr), _publishedData()
 {}
 
 bool render::RenderEngine::init(common::SpecificDataRender data)
@@ -58,6 +58,16 @@ void render::RenderEngine::syncUIData(const common::SpecificDataUI& data)
     if (this->_scene) {
         this->_scene->syncUIData(data);
     }
+}
+
+const common::PublishedDataRender& render::RenderEngine::publishDataRender()
+{
+    if (this->_scene) {
+        this->_publishedData.displayOptions = this->_scene->getDisplayOptions();
+    } else {
+        this->_publishedData.displayOptions.reset();
+    }
+    return this->_publishedData;
 }
 
 void render::RenderEngine::update()

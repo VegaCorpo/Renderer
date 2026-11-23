@@ -1,11 +1,11 @@
 #pragma once
 
 #include <unordered_map>
-#include "IRenderFeature.hpp"
+#include "IDisplayOption.hpp"
 #include "LineDrawable.hpp"
 
 namespace render {
-    class OrbitTrail : public IRenderFeature {
+    class OrbitTrail : public IDisplayOption {
         public:
             static constexpr int DEFAULT_UPDATE_INTERVAL = 10;
             static constexpr size_t MAX_TRAIL_POINTS = 500;
@@ -51,7 +51,16 @@ namespace render {
 
             [[nodiscard]] bool is2D() const override { return false; }
 
+            [[nodiscard]] std::vector<common::DisplayOptionParam> params() const override
+            {
+                return {
+                    {"max_points", "Maximum number of points in a trail", _maxTrailPoints},
+                    {"update_interval", "Number of frames between two points of the trail", _updateInterval},
+                };
+            }
+
         private:
+            int _maxTrailPoints = MAX_TRAIL_POINTS;
             int _updateInterval;
 
             std::unordered_map<std::size_t, int> _updateCounters;
