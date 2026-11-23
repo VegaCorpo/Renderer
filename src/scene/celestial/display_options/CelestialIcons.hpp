@@ -1,19 +1,18 @@
 #pragma once
 
-#include "IDisplayOption.hpp"
+#include "ADisplayOption.hpp"
 
 namespace render {
-    class CelestialIcons : public IDisplayOption {
+    class CelestialIcons : public ADisplayOption {
         public:
-            void update(std::size_t entity, const CelestialBody& body) override {
-            } //! to implement to save cameraview and if changed recompute icon
+            static constexpr const char* NAME = "Icons";
+            static constexpr const char* DESCRIPTION = "Displays an icon on each body";
 
+            CelestialIcons();
+
+            void update(std::size_t entity, const CelestialBody& body) override;
             void draw(std::size_t entity, const CelestialBody& body, const render::CameraView& cameraView,
-                      GLRenderer& renderer) const override
-            {}
-
-            void reset() override {}
-
-            [[nodiscard]] bool is2D() const override { return true; }
+                      GLRenderer& renderer) const override;
+            void reset() override;
     };
 } // namespace render

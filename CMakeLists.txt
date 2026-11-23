@@ -72,6 +72,9 @@ add_library(orbital_render SHARED
 
     src/scene/celestial/CelestialManager.cpp
     src/scene/celestial/CelestialBody.cpp
+    src/scene/celestial/display_options/ADisplayOption.cpp
+    src/scene/celestial/display_options/CelestialIcons.cpp
+    src/scene/celestial/display_options/OrbitTrail.cpp
 
     src/scene/celestial/scaleMode/VisualScaleMode.cpp
     src/scene/celestial/scaleMode/RealisticScaleMode.cpp

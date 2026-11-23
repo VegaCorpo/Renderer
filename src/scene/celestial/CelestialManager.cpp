@@ -7,36 +7,44 @@
 
 render::CelestialManager::CelestialManager(std::shared_ptr<GLRenderer>& renderer) :
     _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::REALISTIC),
-    _scaleStrategy(nullptr), _visualConfig(), _displayOptions(), _enabledDisplayOptions()
+    _scaleStrategy(nullptr), _visualConfig(), _displayOptions()
 {
     this->_resourceManager = std::make_unique<ResourceManager>(this->_renderer);
 
     this->_updateScaleStrategy();
 
     this->_displayOptions[static_cast<std::size_t>(common::DisplayOptionId::TRAILS)] = std::make_unique<OrbitTrail>();
-    this->_enabledDisplayOptions.set();
 }
 
 template <typename Func>
 void render::CelestialManager::_forEachEnabledDisplayOption(Func&& func) const
 {
     for (std::size_t i = 0; i < DISPLAY_OPTION_COUNT; i += 1) {
-        if (this->_enabledDisplayOptions.test(i) && this->_displayOptions[i]) {
+        if (this->_displayOptions[i] && this->_displayOptions[i]->isEnabled()) {
             func(*this->_displayOptions[i]);
         }
     }
 }
 
-void render::CelestialManager::toggleDisplayOption(common::DisplayOptionId option)
+void render::CelestialManager::toggleDisplayOption(const common::DisplayOptionId option)
 {
     const auto index = static_cast<std::size_t>(option);
 
-    this->_enabledDisplayOptions.flip(index);
-
-    // Restart from scratch so a trail doesn't join its old and new points
-    if (this->_enabledDisplayOptions.test(index) && this->_displayOptions[index]) {
-        this->_displayOptions[index]->reset();
+    if (index >= DISPLAY_OPTION_COUNT || !this->_displayOptions[index]) {
+        return;
     }
+    this->_displayOptions[index]->setEnabled(!this->_displayOptions[index]->isEnabled());
+}
+
+void render::CelestialManager::updateDisplayOption(const common::DisplayOption& option)
+{
+    const auto index = static_cast<std::size_t>(option.id);
+
+    if (index >= DISPLAY_OPTION_COUNT || !this->_displayOptions[index]) {
+        return;
+    }
+    this->_displayOptions[index]->setEnabled(option.enabled);
+    this->_displayOptions[index]->setParams(option.params);
 }
 
 std::vector<common::DisplayOption> render::CelestialManager::getDisplayOptions() const
@@ -45,13 +53,10 @@ std::vector<common::DisplayOption> render::CelestialManager::getDisplayOptions()
 
     options.reserve(DISPLAY_OPTION_COUNT);
     for (std::size_t i = 0; i < DISPLAY_OPTION_COUNT; i += 1) {
-        options.push_back({
-            .id = static_cast<common::DisplayOptionId>(i),
-            .enabled = this->_enabledDisplayOptions.test(i),
-            .name = _displayOptionsInfo[i].name,
-            .description = _displayOptionsInfo[i].description,
-            .params = this->_displayOptions[i] ? this->_displayOptions[i]->params() : std::vector<common::DisplayOptionParam>{},
-        });
+        // Options that aren't implemented yet aren't exposed
+        if (this->_displayOptions[i]) {
+            options.push_back(this->_displayOptions[i]->toDisplayOption(static_cast<common::DisplayOptionId>(i)));
+        }
     }
     return options;
 }

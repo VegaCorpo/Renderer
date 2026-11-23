@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <bitset>
 #include <cstddef>
 #include <functional>
 #include <optional>
@@ -37,6 +36,7 @@ namespace render {
             [[nodiscard]] std::optional<BoundingSphere> getSceneBounds() const;
 
             [[nodiscard]] std::vector<common::DisplayOption> getDisplayOptions() const;
+            void updateDisplayOption(const common::DisplayOption& option);
 
             void render3D(const render::CameraView& cameraView) const;
             void render2D(const render::CameraView& cameraView) const;
@@ -70,21 +70,8 @@ namespace render {
             static constexpr std::size_t DISPLAY_OPTION_COUNT =
                 static_cast<std::size_t>(common::DisplayOptionId::DISPLAY_OPTION_COUNT);
 
-            struct DisplayOptionInfo {
-                    const char* name;
-                    const char* description;
-            };
-
-            // Indexed by DisplayOptionId
-            static constexpr std::array<DisplayOptionInfo, DISPLAY_OPTION_COUNT> _displayOptionsInfo = {{
-                {"Trails", "Draws the path followed by each body"},
-                {"Labels", "Displays the name of each body"},
-                {"Icons", "Displays an icon on each body"},
-            }};
-
             // Indexed by DisplayOptionId, nullptr when the option isn't implemented yet
             std::array<std::unique_ptr<IDisplayOption>, DISPLAY_OPTION_COUNT> _displayOptions;
-            std::bitset<DISPLAY_OPTION_COUNT> _enabledDisplayOptions;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},

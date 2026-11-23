@@ -1,69 +1,39 @@
 #pragma once
 
+#include <cstddef>
 #include <unordered_map>
-#include "IDisplayOption.hpp"
+#include "ADisplayOption.hpp"
 #include "LineDrawable.hpp"
 
 namespace render {
-    class OrbitTrail : public IDisplayOption {
+    class OrbitTrail : public ADisplayOption {
         public:
-            static constexpr int DEFAULT_UPDATE_INTERVAL = 10;
-            static constexpr size_t MAX_TRAIL_POINTS = 500;
+            static constexpr const char* NAME = "Trails";
+            static constexpr const char* DESCRIPTION = "Draws the path followed by each body";
 
-            explicit OrbitTrail(int updateInterval = DEFAULT_UPDATE_INTERVAL) : _updateInterval(updateInterval) {}
+            static constexpr const char* PARAM_MAX_POINTS = "max_points";
+            static constexpr const char* PARAM_MAX_POINTS_DESCRIPTION = "Maximum number of points in a trail";
+            static constexpr const char* PARAM_MIN_DISTANCE = "min_distance";
+            static constexpr const char* PARAM_MIN_DISTANCE_DESCRIPTION =
+                "Minimum distance between two points of the trail, in scene units";
 
-            void update(std::size_t entity, const CelestialBody& body) override
-            {
-                auto& counter = _updateCounters[entity];
-                counter++;
+            // Scene units, the scene fits in IScaleMode::MAX_SCENE_DISTANCE
+            static constexpr float DEFAULT_MIN_DISTANCE = 1.f;
+            static constexpr std::size_t MAX_TRAIL_POINTS = 500;
+            // A fixed point plus the last one, which follows the body
+            static constexpr std::size_t MIN_TRAIL_POINTS = 2;
 
-                if (counter < _updateInterval)
-                    return;
+            explicit OrbitTrail(float minDistance = DEFAULT_MIN_DISTANCE);
 
-                counter = 0;
-
-                // Trails[entity] is default-constructed on first access, and owns its
-                // own point buffer directly — no separate copy of the trail data.
-                auto& points = _trails[entity].points();
-                points.push_back(body.getScenePosition());
-
-                if (points.size() > MAX_TRAIL_POINTS) {
-                    points.erase(points.begin());
-                }
-            }
-
-            void draw(std::size_t entity, const CelestialBody& body, const render::CameraView&,
-                      GLRenderer& renderer) const override
-            {
-                auto it = _trails.find(entity);
-                if (it == _trails.end())
-                    return;
-
-                it->second.setColor(body.getModelInfo()->dominantColor);
-                it->second.draw(renderer, {});
-            }
-
-            void reset() override
-            {
-                _trails.clear();
-                _updateCounters.clear();
-            }
-
-            [[nodiscard]] bool is2D() const override { return false; }
-
-            [[nodiscard]] std::vector<common::DisplayOptionParam> params() const override
-            {
-                return {
-                    {"max_points", "Maximum number of points in a trail", _maxTrailPoints},
-                    {"update_interval", "Number of frames between two points of the trail", _updateInterval},
-                };
-            }
+            void update(std::size_t entity, const CelestialBody& body) override;
+            void draw(std::size_t entity, const CelestialBody& body, const render::CameraView& cameraView,
+                      GLRenderer& renderer) const override;
+            void reset() override;
 
         private:
-            int _maxTrailPoints = MAX_TRAIL_POINTS;
-            int _updateInterval;
+            std::size_t _maxTrailPoints;
+            float _minDistance;
 
-            std::unordered_map<std::size_t, int> _updateCounters;
             // mutable: draw() only refreshes the cached display color here,
             // it doesn't change which entities have a trail or their points.
             mutable std::unordered_map<std::size_t, LineDrawable> _trails;

@@ -24,6 +24,7 @@ namespace render {
             void update();
 
             [[nodiscard]] std::vector<common::DisplayOption> getDisplayOptions() const;
+            void updateDisplayOptions(const std::vector<common::DisplayOption>& options);
 
             void render();
 

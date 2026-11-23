@@ -45,6 +45,16 @@ std::vector<common::DisplayOption> render::Scene::getDisplayOptions() const
     return this->_celestialManager->getDisplayOptions();
 }
 
+void render::Scene::updateDisplayOptions(const std::vector<common::DisplayOption>& options)
+{
+    if (!this->_celestialManager) {
+        return;
+    }
+    for (const auto& option : options) {
+        this->_celestialManager->updateDisplayOption(option);
+    }
+}
+
 void render::Scene::update()
 {
     if (!this->_camera || !this->_celestialManager) {
