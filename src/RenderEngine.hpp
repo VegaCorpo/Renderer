@@ -27,6 +27,7 @@ namespace render {
 
             void syncIn(const common::WorldState& world) override;
             void syncUIData(const common::SpecificDataUI& data) override;
+            void updateBodies(const common::SpecificDataRender& data) override;
             void update() override;
 
             void render(std::function<void()> uiRender) override;

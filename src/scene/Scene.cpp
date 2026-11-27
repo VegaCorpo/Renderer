@@ -30,6 +30,13 @@ void render::Scene::syncIn(const common::WorldState& world)
     }
 }
 
+void render::Scene::updateBodies(const common::SpecificDataRender& data)
+{
+    if (this->_celestialManager) {
+        this->_celestialManager->updateBodies(data);
+    }
+}
+
 void render::Scene::syncUIData(const common::SpecificDataUI& data)
 {
     if (this->_camera) {

@@ -53,6 +53,13 @@ void render::RenderEngine::syncIn(const common::WorldState& world)
     }
 }
 
+void render::RenderEngine::updateBodies(const common::SpecificDataRender& data)
+{
+    if (this->_scene) {
+        this->_scene->updateBodies(data);
+    }
+}
+
 void render::RenderEngine::syncUIData(const common::SpecificDataUI& data)
 {
     if (this->_scene) {

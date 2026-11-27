@@ -21,6 +21,7 @@ namespace render {
 
             void syncIn(const common::WorldState& world);
             void syncUIData(const common::SpecificDataUI& data);
+            void updateBodies(const common::SpecificDataRender& data);
             void update();
 
             void render();
