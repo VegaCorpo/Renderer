@@ -28,6 +28,7 @@ namespace render {
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
             void initBodies(const common::SpecificDataRender& data);
+            void updateBodies(const common::SpecificDataRender& data);
             void syncIn(const common::WorldState& world);
             void update();
 

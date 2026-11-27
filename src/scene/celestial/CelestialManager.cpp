@@ -103,6 +103,22 @@ void render::CelestialManager::syncIn(const common::WorldState& world)
     }
 }
 
+void render::CelestialManager::updateBodies(const common::SpecificDataRender& data)
+{
+    const std::size_t count = std::min({data.entitiesId.size(), data.names.size(), data.radius.size()});
+
+    for (std::size_t i = 0; i < count; i += 1) {
+        auto it = this->_bodies.find(data.entitiesId[i]);
+
+        if (it == this->_bodies.end()) {
+            continue;
+        }
+
+        it->second.setName(data.names[i].value);
+        it->second.setRealRadiusKm(data.radius[i].value);
+    }
+}
+
 void render::CelestialManager::update()
 {
     if (this->_scaleStrategy && this->_hasBodiesBeenModified()) {
