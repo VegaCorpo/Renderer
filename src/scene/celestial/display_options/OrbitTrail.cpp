@@ -13,13 +13,9 @@ render::OrbitTrail::OrbitTrail(const float minDistance) :
 
 void render::OrbitTrail::update(const std::size_t entity, const CelestialBody& body)
 {
-    // Trails[entity] is default-constructed on first access, and owns its
-    // own point buffer directly — no separate copy of the trail data.
     auto& points = this->_trails[entity].points();
     const Eigen::Vector3f& position = body.getScenePosition();
 
-    // The last point always sticks to the body; it only becomes a fixed
-    // point once the body is far enough from the previous one
     if (points.size() >= MIN_TRAIL_POINTS) {
         const Eigen::Vector3f& lastFixedPoint = *std::next(points.rbegin());
 

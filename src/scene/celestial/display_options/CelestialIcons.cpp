@@ -3,7 +3,6 @@
 render::CelestialIcons::CelestialIcons() : ADisplayOption(NAME, DESCRIPTION, Layer::SCREEN_2D)
 {}
 
-//! to implement to save cameraview and if changed recompute icon
 void render::CelestialIcons::update(const std::size_t /*entity*/, const CelestialBody& /*body*/)
 {}
 

@@ -9,8 +9,6 @@
 namespace render {
     class GLRenderer;
 
-    // A display option only receives the renderer as a draw()-time parameter — it
-    // never stores it, so it stays decoupled from the graphics backend
     class IDisplayOption {
         public:
             virtual ~IDisplayOption() = default;
@@ -26,12 +24,9 @@ namespace render {
             [[nodiscard]] virtual bool isEnabled() const = 0;
             virtual void setEnabled(bool enabled) = 0;
 
-            // Tunable parameters exposed to the UI
             [[nodiscard]] virtual std::vector<common::DisplayOptionParam> params() const = 0;
-            // Apply the parameters sent back by the UI, unknown names or wrong types are ignored
             virtual void setParams(const std::vector<common::DisplayOptionParam>& params) = 0;
 
-            // Everything the UI needs to know about this option
             [[nodiscard]] virtual common::DisplayOption toDisplayOption(common::DisplayOptionId id) const = 0;
     };
 } // namespace render

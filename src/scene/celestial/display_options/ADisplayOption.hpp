@@ -9,8 +9,6 @@
 #include "IDisplayOption.hpp"
 
 namespace render {
-    // Handles everything a display option has in common (name, description,
-    // activation, parameters), so a concrete option only has to update and draw
     class ADisplayOption : public IDisplayOption {
         public:
             enum class Layer { SCENE_3D, SCREEN_2D };
@@ -20,7 +18,6 @@ namespace render {
             ADisplayOption(std::string_view name, std::string_view description, Layer layer);
             ~ADisplayOption() override = default;
 
-            // Parameters are bound to members of the option, so it must never be copied or moved
             ADisplayOption(const ADisplayOption&) = delete;
             ADisplayOption& operator=(const ADisplayOption&) = delete;
             ADisplayOption(ADisplayOption&&) = delete;

@@ -53,7 +53,6 @@ std::vector<common::DisplayOption> render::CelestialManager::getDisplayOptions()
 
     options.reserve(DISPLAY_OPTION_COUNT);
     for (std::size_t i = 0; i < DISPLAY_OPTION_COUNT; i += 1) {
-        // Options that aren't implemented yet aren't exposed
         if (this->_displayOptions[i]) {
             options.push_back(this->_displayOptions[i]->toDisplayOption(static_cast<common::DisplayOptionId>(i)));
         }

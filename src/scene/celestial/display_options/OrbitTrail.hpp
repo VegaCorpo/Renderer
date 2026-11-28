@@ -20,7 +20,6 @@ namespace render {
             // Scene units, the scene fits in IScaleMode::MAX_SCENE_DISTANCE
             static constexpr float DEFAULT_MIN_DISTANCE = 1.f;
             static constexpr std::size_t MAX_TRAIL_POINTS = 500;
-            // A fixed point plus the last one, which follows the body
             static constexpr std::size_t MIN_TRAIL_POINTS = 2;
 
             explicit OrbitTrail(float minDistance = DEFAULT_MIN_DISTANCE);
@@ -34,8 +33,6 @@ namespace render {
             std::size_t _maxTrailPoints;
             float _minDistance;
 
-            // mutable: draw() only refreshes the cached display color here,
-            // it doesn't change which entities have a trail or their points.
             mutable std::unordered_map<std::size_t, LineDrawable> _trails;
     };
 } // namespace render
