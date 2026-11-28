@@ -7,36 +7,57 @@
 
 render::CelestialManager::CelestialManager(std::shared_ptr<GLRenderer>& renderer) :
     _renderer(renderer), _resourceManager(nullptr), _bodies(), _scaleMode(ScaleMode::REALISTIC),
-    _scaleStrategy(nullptr), _visualConfig(), _features(), _enabledFeatures()
+    _scaleStrategy(nullptr), _visualConfig(), _displayOptions()
 {
     this->_resourceManager = std::make_unique<ResourceManager>(this->_renderer);
 
     this->_updateScaleStrategy();
 
-    this->_features[static_cast<std::size_t>(Feature::TRAILS)] = std::make_unique<OrbitTrail>();
-    this->_enabledFeatures.set();
+    this->_displayOptions[static_cast<std::size_t>(common::DisplayOptionId::TRAILS)] = std::make_unique<OrbitTrail>();
 }
 
 template <typename Func>
-void render::CelestialManager::_forEachEnabledFeature(Func&& func) const
+void render::CelestialManager::_forEachEnabledDisplayOption(Func&& func) const
 {
-    for (std::size_t i = 0; i < FEATURE_COUNT; i += 1) {
-        if (this->_enabledFeatures.test(i) && this->_features[i]) {
-            func(*this->_features[i]);
+    for (std::size_t i = 0; i < DISPLAY_OPTION_COUNT; i += 1) {
+        if (this->_displayOptions[i] && this->_displayOptions[i]->isEnabled()) {
+            func(*this->_displayOptions[i]);
         }
     }
 }
 
-void render::CelestialManager::toggleFeature(Feature feature)
+void render::CelestialManager::toggleDisplayOption(const common::DisplayOptionId option)
 {
-    const auto index = static_cast<std::size_t>(feature);
+    const auto index = static_cast<std::size_t>(option);
 
-    this->_enabledFeatures.flip(index);
-
-    // Restart from scratch so a trail doesn't join its old and new points
-    if (this->_enabledFeatures.test(index) && this->_features[index]) {
-        this->_features[index]->reset();
+    if (index >= DISPLAY_OPTION_COUNT || !this->_displayOptions[index]) {
+        return;
     }
+    this->_displayOptions[index]->setEnabled(!this->_displayOptions[index]->isEnabled());
+}
+
+void render::CelestialManager::updateDisplayOption(const common::DisplayOption& option)
+{
+    const auto index = static_cast<std::size_t>(option.id);
+
+    if (index >= DISPLAY_OPTION_COUNT || !this->_displayOptions[index]) {
+        return;
+    }
+    this->_displayOptions[index]->setEnabled(option.enabled);
+    this->_displayOptions[index]->setParams(option.params);
+}
+
+std::vector<common::DisplayOption> render::CelestialManager::getDisplayOptions() const
+{
+    std::vector<common::DisplayOption> options;
+
+    options.reserve(DISPLAY_OPTION_COUNT);
+    for (std::size_t i = 0; i < DISPLAY_OPTION_COUNT; i += 1) {
+        if (this->_displayOptions[i]) {
+            options.push_back(this->_displayOptions[i]->toDisplayOption(static_cast<common::DisplayOptionId>(i)));
+        }
+    }
+    return options;
 }
 
 void render::CelestialManager::changeScaleMode()
@@ -110,7 +131,7 @@ void render::CelestialManager::update()
     }
 
     for (auto& [entity, body] : this->_bodies) {
-        this->_forEachEnabledFeature([&](IRenderFeature& feature) { feature.update(entity, body); });
+        this->_forEachEnabledDisplayOption([&](IDisplayOption& option) { option.update(entity, body); });
     }
 }
 
@@ -166,7 +187,7 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
         for (std::size_t entity : entities) {
             const CelestialBody& body = this->_bodies.at(entity);
 
-            _drawBodyFeatures(entity, body, cameraView);
+            _drawBodyDisplayOptions(entity, body, cameraView);
 
             if (&body != lightBody) {
                 models.push_back(_buildModelMatrix(body));
@@ -186,11 +207,11 @@ void render::CelestialManager::render3D(const render::CameraView& cameraView) co
 void render::CelestialManager::render2D(const render::CameraView& cameraView) const
 {
     for (auto& [entity, body] : this->_bodies) {
-        this->_forEachEnabledFeature(
-            [&](IRenderFeature& feature)
+        this->_forEachEnabledDisplayOption(
+            [&](IDisplayOption& option)
             {
-                if (feature.is2D()) {
-                    feature.draw(entity, body, cameraView, *this->_renderer);
+                if (option.is2D()) {
+                    option.draw(entity, body, cameraView, *this->_renderer);
                 }
             });
     }
@@ -201,9 +222,9 @@ void render::CelestialManager::_updateScaleStrategy()
     this->_scaleStrategy = this->_scaleModes.at(this->_scaleMode)();
     this->_renderer->setMinPixelRadius(this->_scaleStrategy->getMinPixelRadius());
 
-    for (auto& feature : this->_features) {
-        if (feature) {
-            feature->reset();
+    for (auto& option : this->_displayOptions) {
+        if (option) {
+            option->reset();
         }
     }
 }
@@ -222,14 +243,14 @@ bool render::CelestialManager::_hasBodiesBeenModified()
     return isModified;
 }
 
-void render::CelestialManager::_drawBodyFeatures(std::size_t entity, const CelestialBody& body,
+void render::CelestialManager::_drawBodyDisplayOptions(std::size_t entity, const CelestialBody& body,
                                                  const CameraView& cameraView) const
 {
-    this->_forEachEnabledFeature(
-        [&](IRenderFeature& feature)
+    this->_forEachEnabledDisplayOption(
+        [&](IDisplayOption& option)
         {
-            if (!feature.is2D()) {
-                feature.draw(entity, body, cameraView, *this->_renderer);
+            if (!option.is2D()) {
+                option.draw(entity, body, cameraView, *this->_renderer);
             }
         });
 }

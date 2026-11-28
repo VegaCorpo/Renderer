@@ -1,14 +1,14 @@
 #pragma once
 
 #include <array>
-#include <bitset>
 #include <cstddef>
 #include <functional>
 #include <optional>
+#include <types/DisplayOption.hpp>
 #include <types/World.hpp>
 #include <unordered_map>
 #include "CelestialBody.hpp"
-#include "IRenderFeature.hpp"
+#include "IDisplayOption.hpp"
 #include "RealisticScaleMode.hpp"
 #include "ResourceManager.hpp"
 #include "VisualScaleMode.hpp"
@@ -17,13 +17,12 @@ namespace render {
     class CelestialManager {
         public:
             enum class ScaleMode { VISUAL, REALISTIC, SCALE_MODE_NUMBER };
-            enum class Feature { TRAILS, LABELS, ICONS, FEATURE_NUMBER };
 
             explicit CelestialManager(std::shared_ptr<GLRenderer>& renderer);
             ~CelestialManager() = default;
 
             void changeScaleMode();
-            void toggleFeature(Feature feature);
+            void toggleDisplayOption(common::DisplayOptionId option);
             void setScaleMode(ScaleMode mode) { _scaleMode = mode; }
             void setVisualScaleConfig(const VisualScaleMode::VisualScaleConfig& config) { _visualConfig = config; }
 
@@ -36,19 +35,23 @@ namespace render {
             [[nodiscard]] std::optional<BoundingSphere> getBodyBounds(std::size_t entity) const;
             [[nodiscard]] std::optional<BoundingSphere> getSceneBounds() const;
 
+            [[nodiscard]] std::vector<common::DisplayOption> getDisplayOptions() const;
+            void updateDisplayOption(const common::DisplayOption& option);
+
             void render3D(const render::CameraView& cameraView) const;
             void render2D(const render::CameraView& cameraView) const;
 
         private:
             void _updateScaleStrategy();
             [[nodiscard]] bool _hasBodiesBeenModified();
-            void _drawBodyFeatures(std::size_t entity, const CelestialBody& body, const CameraView& cameraView) const;
+            void _drawBodyDisplayOptions(std::size_t entity, const CelestialBody& body,
+                                         const CameraView& cameraView) const;
             [[nodiscard]] static Eigen::Matrix4f _buildModelMatrix(const CelestialBody& body);
             [[nodiscard]] static const Eigen::Quaternionf& _meshToBodyFrame();
             [[nodiscard]] static const Eigen::Quaternionf& _physicsToRenderFrame();
 
             template <typename Func>
-            void _forEachEnabledFeature(Func&& func) const;
+            void _forEachEnabledDisplayOption(Func&& func) const;
 
             std::shared_ptr<GLRenderer> _renderer;
 
@@ -64,11 +67,11 @@ namespace render {
             std::unique_ptr<IScaleMode> _scaleStrategy;
             VisualScaleMode::VisualScaleConfig _visualConfig;
 
-            static constexpr std::size_t FEATURE_COUNT = static_cast<std::size_t>(Feature::FEATURE_NUMBER);
+            static constexpr std::size_t DISPLAY_OPTION_COUNT =
+                static_cast<std::size_t>(common::DisplayOptionId::DISPLAY_OPTION_COUNT);
 
-            // Indexed by Feature, nullptr when the feature isn't implemented yet
-            std::array<std::unique_ptr<IRenderFeature>, FEATURE_COUNT> _features;
-            std::bitset<FEATURE_COUNT> _enabledFeatures;
+            // Indexed by DisplayOptionId, nullptr when the option isn't implemented yet
+            std::array<std::unique_ptr<IDisplayOption>, DISPLAY_OPTION_COUNT> _displayOptions;
 
             const std::unordered_map<ScaleMode, std::function<std::unique_ptr<IScaleMode>()>> _scaleModes = {
                 {ScaleMode::REALISTIC, [this]() { return std::make_unique<RealisticScaleMode>(); }},

@@ -6,7 +6,7 @@
 
 namespace render {
     // Draws a poly-line through a set of points, e.g. an orbit trail.
-    // Owns its point buffer directly so the feature that fills it (OrbitTrail)
+    // Owns its point buffer directly so the display option that fills it (OrbitTrail)
     // doesn't need to keep a separate copy of the same data.
     class LineDrawable : public IDrawable {
         public:

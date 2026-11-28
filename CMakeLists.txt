@@ -72,6 +72,9 @@ add_library(orbital_render SHARED
 
     src/scene/celestial/CelestialManager.cpp
     src/scene/celestial/CelestialBody.cpp
+    src/scene/celestial/display_options/ADisplayOption.cpp
+    src/scene/celestial/display_options/CelestialIcons.cpp
+    src/scene/celestial/display_options/OrbitTrail.cpp
 
     src/scene/celestial/scaleMode/VisualScaleMode.cpp
     src/scene/celestial/scaleMode/RealisticScaleMode.cpp
@@ -102,7 +105,7 @@ target_include_directories(orbital_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/scaleMode
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/resources
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/features
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scene/celestial/display_options
 
     # Math
     ${CMAKE_CURRENT_SOURCE_DIR}/src/math

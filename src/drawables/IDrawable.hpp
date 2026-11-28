@@ -11,7 +11,7 @@ namespace render {
     };
 
     // Base class for anything that can put pixels on screen. Scene-side code
-    // (CelestialBody, features) only ever talks to this interface — it never
+    // (CelestialBody, display options) only ever talks to this interface — it never
     // includes GLRenderer.hpp or calls a GL function directly.
     class IDrawable {
         public:
